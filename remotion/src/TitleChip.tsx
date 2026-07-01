@@ -28,7 +28,7 @@ export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, 
         borderRadius: radius.card,
         background: theme.glassFill,
         border: `1px solid ${theme.glassBorder}`,
-        boxShadow: `0 30px 80px rgba(0,0,0,0.45), inset 0 1px 0 ${theme.glassHi}, 0 0 ${glow}px rgba(46,151,214,0.35)`,
+        boxShadow: `0 30px 80px rgba(0,0,0,0.45), inset 0 1px 0 ${theme.glassHi}, 0 0 ${glow}px rgba(0,172,237,0.35)`,
       }}
     >
       {/* window traffic lights + tag */}

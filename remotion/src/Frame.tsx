@@ -42,7 +42,7 @@ export const Frame: React.FC<{
         height: h,
         borderRadius: radius.card,
         border: `1.5px solid ${accent}`,
-        boxShadow: `0 0 ${glow}px rgba(46,151,214,0.45), inset 0 0 0 1px rgba(255,255,255,0.06)`,
+        boxShadow: `0 0 ${glow}px rgba(0,172,237,0.45), inset 0 0 0 1px rgba(255,255,255,0.06)`,
       }}
     >
       <Bracket corner="tl" c={accent} />
