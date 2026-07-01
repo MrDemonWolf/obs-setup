@@ -27,6 +27,11 @@ the group and pick Color.
 | Wolfathon   | Teal         | Wheel of Dares, Rewards, Timer        |
 | Audio       | Gray (light) | Discord, Google Chrome, Apple Music   |
 
+For each Audio source: Add Source, pick **macOS Audio Capture**, set Method to
+**Application**, choose the app. That is the newest-OBS way (OBS 30+, macOS 13+,
+ScreenCaptureKit) and needs no BlackHole or Loopback.
+Docs: https://obsproject.com/kb/macos-desktop-audio-capture-guide
+
 ## Standalone sources
 
 | Source              | OBS source type      | Color       |
