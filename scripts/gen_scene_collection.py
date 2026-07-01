@@ -30,14 +30,19 @@ NS = uuid.uuid5(uuid.NAMESPACE_URL, "obs-setup/macbook-pro")
 
 # --- Colour palette (source of truth: docs/color-coding.md) ------------------
 # category -> hex. Stored per-item as ABGR int; the previewer reads it back.
+# The 8 OBS built-in preset colors (right-click a source -> Color). 9 categories
+# share them: VTuber reuses Green (both are "you, live"); Audio + Background take
+# the two grays.
 PALETTE = {
-    "camera": "#2EA043",   # green  - you, on cam
-    "alerts": "#8957E5",   # purple - notifications
-    "widgets": "#1F9EA6",  # teal   - cowork widgets
-    "cowork_alerts": "#388BFD",  # blue - cowork alerts
-    "screen": "#BB8009",   # amber  - screen / display capture
-    "standby": "#DA3633",  # red    - offline / standby text
-    "vtuber": "#DB61A2",   # pink   - vtuber avatar
+    "camera": "#2EA043",   # green        - you, on cam
+    "vtuber": "#2EA043",   # green        - vtuber avatar (same as camera)
+    "alerts": "#8957E5",   # purple       - alert box + sound / Twitch alerts
+    "widgets": "#1F9EA6",  # teal         - cowork widgets (task + timer)
+    "cowork_alerts": "#388BFD",  # blue   - cowork alerts
+    "screen": "#BB8009",   # yellow       - screen / display capture
+    "standby": "#DA3633",  # red          - offline / standby text
+    "audio": "#8B949E",    # gray (light) - audio group (Discord / Music / Chrome)
+    "background": "#6E7681",  # gray (dark) - background layer
 }
 
 
@@ -60,7 +65,11 @@ LEAVES = [
      "settings": {}},
     {"name": "Alert Box", "id": "browser_source", "cat": "alerts",
      "settings": {"url": "", "width": 1920, "height": 1080}},
-    {"name": "Cowork Widgets Web", "id": "browser_source", "cat": "widgets",
+    {"name": "Sound Alerts", "id": "browser_source", "cat": "alerts",
+     "settings": {"url": "", "width": 1920, "height": 1080}},
+    {"name": "Cowork Task", "id": "browser_source", "cat": "widgets",
+     "settings": {"url": "", "width": 1920, "height": 1080}},
+    {"name": "Cowork Timer", "id": "browser_source", "cat": "widgets",
      "settings": {"url": "", "width": 1920, "height": 1080}},
     {"name": "Cowork Alerts Web", "id": "browser_source", "cat": "cowork_alerts",
      "settings": {"url": "", "width": 1920, "height": 1080}},
@@ -68,6 +77,14 @@ LEAVES = [
      "settings": {}},
     {"name": "VTuber Avatar", "id": "browser_source", "cat": "vtuber",
      "settings": {"url": "", "width": 1920, "height": 1080}},
+    {"name": "Discord Audio", "id": "coreaudio_output_capture", "cat": "audio",
+     "settings": {}},
+    {"name": "Music Audio", "id": "coreaudio_output_capture", "cat": "audio",
+     "settings": {}},
+    {"name": "Chrome Audio", "id": "coreaudio_output_capture", "cat": "audio",
+     "settings": {}},
+    {"name": "Background", "id": "image_source", "cat": "background",
+     "settings": {}},
 ]
 TEXT_LEAVES = [
     {"name": "Txt Starting Soon", "text": "Starting Soon", "cat": "standby"},
@@ -78,21 +95,31 @@ TEXT_LEAVES = [
 # [src] wrapper scenes: reusable building blocks holding one leaf each.
 SRC_SCENES = [
     {"name": "[src] Camera", "items": [("Camera Device", "camera")]},
-    {"name": "[src] Alerts", "items": [("Alert Box", "alerts")]},
-    {"name": "[src] Cowork Widgets", "items": [("Cowork Widgets Web", "widgets")]},
+    {"name": "[src] Alerts", "items": [("Alert Box", "alerts"), ("Sound Alerts", "alerts")]},
+    {"name": "[src] Cowork Widgets", "items": [("Cowork Task", "widgets"), ("Cowork Timer", "widgets")]},
     {"name": "[src] Cowork Alerts", "items": [("Cowork Alerts Web", "cowork_alerts")]},
     {"name": "[src] Screen Capture", "items": [("Display Capture", "screen")]},
+    {"name": "[src] Audio", "items": [("Discord Audio", "audio"), ("Music Audio", "audio"), ("Chrome Audio", "audio")]},
+    {"name": "[src] Background", "items": [("Background", "background")]},
 ]
 
 # Main scenes reference [src] scenes and text leaves.
+# Item order = top to bottom in OBS; [src] Background sits last so it's the
+# bottom layer, [src] Audio just above it (audio has no visible pixels anyway).
 MAIN_SCENES = [
-    {"name": "Starting Soon", "items": [("Txt Starting Soon", "standby"), ("[src] Alerts", "alerts")]},
-    {"name": "Be Right Back", "items": [("Txt Be Right Back", "standby"), ("[src] Alerts", "alerts")]},
-    {"name": "Ending", "items": [("Txt Ending", "standby"), ("[src] Alerts", "alerts")]},
-    {"name": "Chat — VTuber", "items": [("VTuber Avatar", "vtuber"), ("[src] Alerts", "alerts")]},
-    {"name": "Chat — Camera", "items": [("[src] Camera", "camera"), ("[src] Alerts", "alerts")]},
+    {"name": "Starting Soon", "items": [("Txt Starting Soon", "standby"), ("[src] Alerts", "alerts"),
+                                        ("[src] Audio", "audio"), ("[src] Background", "background")]},
+    {"name": "Be Right Back", "items": [("Txt Be Right Back", "standby"), ("[src] Alerts", "alerts"),
+                                        ("[src] Audio", "audio"), ("[src] Background", "background")]},
+    {"name": "Ending", "items": [("Txt Ending", "standby"), ("[src] Alerts", "alerts"),
+                                 ("[src] Audio", "audio"), ("[src] Background", "background")]},
+    {"name": "Chat — VTuber", "items": [("VTuber Avatar", "vtuber"), ("[src] Alerts", "alerts"),
+                                        ("[src] Audio", "audio"), ("[src] Background", "background")]},
+    {"name": "Chat — Camera", "items": [("[src] Camera", "camera"), ("[src] Alerts", "alerts"),
+                                        ("[src] Audio", "audio"), ("[src] Background", "background")]},
     {"name": "Co-working", "items": [("[src] Camera", "camera"), ("[src] Screen Capture", "screen"),
-                                     ("[src] Cowork Widgets", "widgets"), ("[src] Cowork Alerts", "cowork_alerts")]},
+                                     ("[src] Cowork Widgets", "widgets"), ("[src] Cowork Alerts", "cowork_alerts"),
+                                     ("[src] Audio", "audio"), ("[src] Background", "background")]},
 ]
 
 # Empty scenes used as visual dividers in the scene list (community trick).

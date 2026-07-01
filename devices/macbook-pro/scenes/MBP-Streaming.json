@@ -40,6 +40,12 @@
     },
     {
       "name": "[src] Screen Capture"
+    },
+    {
+      "name": "[src] Audio"
+    },
+    {
+      "name": "[src] Background"
     }
   ],
   "name": "MBP Streaming",
@@ -97,8 +103,64 @@
       "filters": []
     },
     {
-      "name": "Cowork Widgets Web",
-      "uuid": "a4476445-d979-5ad2-82ce-1f94497a94ec",
+      "name": "Sound Alerts",
+      "uuid": "4c5cdd54-5617-5408-8969-ede7429992fe",
+      "id": "browser_source",
+      "versioned_id": "browser_source",
+      "settings": {
+        "url": "",
+        "width": 1920,
+        "height": 1080
+      },
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
+      "name": "Cowork Task",
+      "uuid": "5eeac20b-80e5-5f3e-bfaf-447b2bee20a4",
+      "id": "browser_source",
+      "versioned_id": "browser_source",
+      "settings": {
+        "url": "",
+        "width": 1920,
+        "height": 1080
+      },
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
+      "name": "Cowork Timer",
+      "uuid": "a917973e-287d-517b-ba3f-50b963171e61",
       "id": "browser_source",
       "versioned_id": "browser_source",
       "settings": {
@@ -186,6 +248,102 @@
         "width": 1920,
         "height": 1080
       },
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
+      "name": "Discord Audio",
+      "uuid": "8be77e92-0d87-5058-9eaf-0871a4f069c9",
+      "id": "coreaudio_output_capture",
+      "versioned_id": "coreaudio_output_capture",
+      "settings": {},
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
+      "name": "Music Audio",
+      "uuid": "6cf9ff99-2a36-590e-8afe-449cf23ae3d2",
+      "id": "coreaudio_output_capture",
+      "versioned_id": "coreaudio_output_capture",
+      "settings": {},
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
+      "name": "Chrome Audio",
+      "uuid": "42e27d3b-9510-5632-a8a7-0105e0cb031d",
+      "id": "coreaudio_output_capture",
+      "versioned_id": "coreaudio_output_capture",
+      "settings": {},
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
+      "name": "Background",
+      "uuid": "b8a202ab-8394-51c2-85b6-9f960c6dc9df",
+      "id": "image_source",
+      "versioned_id": "image_source",
+      "settings": {},
       "mixers": 0,
       "sync": 0,
       "flags": 0,
@@ -385,7 +543,7 @@
       "id": "scene",
       "versioned_id": "scene",
       "settings": {
-        "id_counter": 1,
+        "id_counter": 2,
         "custom_size": false,
         "items": [
           {
@@ -428,6 +586,47 @@
               "color": -1747063,
               "color-preset": 0
             }
+          },
+          {
+            "name": "Sound Alerts",
+            "source_uuid": "4c5cdd54-5617-5408-8969-ede7429992fe",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 2,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -1747063,
+              "color-preset": 0
+            }
           }
         ]
       },
@@ -455,12 +654,12 @@
       "id": "scene",
       "versioned_id": "scene",
       "settings": {
-        "id_counter": 1,
+        "id_counter": 2,
         "custom_size": false,
         "items": [
           {
-            "name": "Cowork Widgets Web",
-            "source_uuid": "a4476445-d979-5ad2-82ce-1f94497a94ec",
+            "name": "Cowork Task",
+            "source_uuid": "5eeac20b-80e5-5f3e-bfaf-447b2bee20a4",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -484,6 +683,47 @@
             "crop_right": 0,
             "crop_bottom": 0,
             "id": 1,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -5857761,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "Cowork Timer",
+            "source_uuid": "a917973e-287d-517b-ba3f-50b963171e61",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 2,
             "group_item_backup": false,
             "scale_filter": "disable",
             "blend_method": "default",
@@ -660,12 +900,234 @@
       "filters": []
     },
     {
+      "name": "[src] Audio",
+      "uuid": "804756b4-cd04-59bf-a168-48be5d5710ec",
+      "id": "scene",
+      "versioned_id": "scene",
+      "settings": {
+        "id_counter": 3,
+        "custom_size": false,
+        "items": [
+          {
+            "name": "Discord Audio",
+            "source_uuid": "8be77e92-0d87-5058-9eaf-0871a4f069c9",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 1,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -6384501,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "Music Audio",
+            "source_uuid": "6cf9ff99-2a36-590e-8afe-449cf23ae3d2",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 2,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -6384501,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "Chrome Audio",
+            "source_uuid": "42e27d3b-9510-5632-a8a7-0105e0cb031d",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 3,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -6384501,
+              "color-preset": 0
+            }
+          }
+        ]
+      },
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
+      "name": "[src] Background",
+      "uuid": "a9e66c63-fa1e-56eb-960e-6cfcc40e01ac",
+      "id": "scene",
+      "versioned_id": "scene",
+      "settings": {
+        "id_counter": 1,
+        "custom_size": false,
+        "items": [
+          {
+            "name": "Background",
+            "source_uuid": "b8a202ab-8394-51c2-85b6-9f960c6dc9df",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 1,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -8292754,
+              "color-preset": 0
+            }
+          }
+        ]
+      },
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
       "name": "Starting Soon",
       "uuid": "3a73de18-ff8a-5728-9bcc-c7eeec26f6e4",
       "id": "scene",
       "versioned_id": "scene",
       "settings": {
-        "id_counter": 2,
+        "id_counter": 4,
         "custom_size": false,
         "items": [
           {
@@ -749,6 +1211,88 @@
               "color": -1747063,
               "color-preset": 0
             }
+          },
+          {
+            "name": "[src] Audio",
+            "source_uuid": "804756b4-cd04-59bf-a168-48be5d5710ec",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 3,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -6384501,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "[src] Background",
+            "source_uuid": "a9e66c63-fa1e-56eb-960e-6cfcc40e01ac",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 4,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -8292754,
+              "color-preset": 0
+            }
           }
         ]
       },
@@ -776,7 +1320,7 @@
       "id": "scene",
       "versioned_id": "scene",
       "settings": {
-        "id_counter": 2,
+        "id_counter": 4,
         "custom_size": false,
         "items": [
           {
@@ -860,6 +1404,88 @@
               "color": -1747063,
               "color-preset": 0
             }
+          },
+          {
+            "name": "[src] Audio",
+            "source_uuid": "804756b4-cd04-59bf-a168-48be5d5710ec",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 3,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -6384501,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "[src] Background",
+            "source_uuid": "a9e66c63-fa1e-56eb-960e-6cfcc40e01ac",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 4,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -8292754,
+              "color-preset": 0
+            }
           }
         ]
       },
@@ -887,7 +1513,7 @@
       "id": "scene",
       "versioned_id": "scene",
       "settings": {
-        "id_counter": 2,
+        "id_counter": 4,
         "custom_size": false,
         "items": [
           {
@@ -971,6 +1597,88 @@
               "color": -1747063,
               "color-preset": 0
             }
+          },
+          {
+            "name": "[src] Audio",
+            "source_uuid": "804756b4-cd04-59bf-a168-48be5d5710ec",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 3,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -6384501,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "[src] Background",
+            "source_uuid": "a9e66c63-fa1e-56eb-960e-6cfcc40e01ac",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 4,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -8292754,
+              "color-preset": 0
+            }
           }
         ]
       },
@@ -998,7 +1706,7 @@
       "id": "scene",
       "versioned_id": "scene",
       "settings": {
-        "id_counter": 2,
+        "id_counter": 4,
         "custom_size": false,
         "items": [
           {
@@ -1038,7 +1746,7 @@
               "duration": 0
             },
             "private_settings": {
-              "color": -6135333,
+              "color": -12345298,
               "color-preset": 0
             }
           },
@@ -1082,6 +1790,88 @@
               "color": -1747063,
               "color-preset": 0
             }
+          },
+          {
+            "name": "[src] Audio",
+            "source_uuid": "804756b4-cd04-59bf-a168-48be5d5710ec",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 3,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -6384501,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "[src] Background",
+            "source_uuid": "a9e66c63-fa1e-56eb-960e-6cfcc40e01ac",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 4,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -8292754,
+              "color-preset": 0
+            }
           }
         ]
       },
@@ -1109,7 +1899,7 @@
       "id": "scene",
       "versioned_id": "scene",
       "settings": {
-        "id_counter": 2,
+        "id_counter": 4,
         "custom_size": false,
         "items": [
           {
@@ -1193,6 +1983,88 @@
               "color": -1747063,
               "color-preset": 0
             }
+          },
+          {
+            "name": "[src] Audio",
+            "source_uuid": "804756b4-cd04-59bf-a168-48be5d5710ec",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 3,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -6384501,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "[src] Background",
+            "source_uuid": "a9e66c63-fa1e-56eb-960e-6cfcc40e01ac",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 4,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -8292754,
+              "color-preset": 0
+            }
           }
         ]
       },
@@ -1220,7 +2092,7 @@
       "id": "scene",
       "versioned_id": "scene",
       "settings": {
-        "id_counter": 4,
+        "id_counter": 6,
         "custom_size": false,
         "items": [
           {
@@ -1384,6 +2256,88 @@
             },
             "private_settings": {
               "color": -160968,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "[src] Audio",
+            "source_uuid": "804756b4-cd04-59bf-a168-48be5d5710ec",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 5,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -6384501,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "[src] Background",
+            "source_uuid": "a9e66c63-fa1e-56eb-960e-6cfcc40e01ac",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 6,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -8292754,
               "color-preset": 0
             }
           }
