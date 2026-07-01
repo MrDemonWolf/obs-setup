@@ -224,9 +224,11 @@
     {
       "name": "Discord",
       "uuid": "81ef7468-a6a4-5b1a-885a-c8fccf568d1d",
-      "id": "coreaudio_output_capture",
-      "versioned_id": "coreaudio_output_capture",
-      "settings": {},
+      "id": "sck_audio_capture",
+      "versioned_id": "sck_audio_capture",
+      "settings": {
+        "application": "com.hnc.Discord"
+      },
       "mixers": 0,
       "sync": 0,
       "flags": 0,
@@ -248,9 +250,11 @@
     {
       "name": "Google Chrome",
       "uuid": "52a8bdd7-8751-5de4-8fb3-137a6035ad7b",
-      "id": "coreaudio_output_capture",
-      "versioned_id": "coreaudio_output_capture",
-      "settings": {},
+      "id": "sck_audio_capture",
+      "versioned_id": "sck_audio_capture",
+      "settings": {
+        "application": "com.google.Chrome"
+      },
       "mixers": 0,
       "sync": 0,
       "flags": 0,
@@ -272,9 +276,11 @@
     {
       "name": "Apple Music",
       "uuid": "f60df9e6-c743-5f96-9ba8-b37e1a21d795",
-      "id": "coreaudio_output_capture",
-      "versioned_id": "coreaudio_output_capture",
-      "settings": {},
+      "id": "sck_audio_capture",
+      "versioned_id": "sck_audio_capture",
+      "settings": {
+        "application": "com.apple.Music"
+      },
       "mixers": 0,
       "sync": 0,
       "flags": 0,

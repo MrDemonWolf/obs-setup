@@ -78,11 +78,11 @@ from its `private_settings.color`; empty dash-named scenes render as dividers.
 - **Devices:** adding a Mac means a new `case` in `scripts/backup.sh`, a new
   slug in `DEVICES` in `index.html`, and a `devices/<slug>/` folder.
 - **OBS source ids** in the generator (`av_capture_input`, `browser_source`,
-  `coreaudio_output_capture`, `image_source`, `ffmpeg_source`) are macOS/OBS-
-  version specific; OBS flags a source to reconfigure rather than failing import
-  if one is off. Per-app audio (Discord/Chrome/Apple Music) really needs OBS 30+
-  "macOS Audio Capture" or a virtual device; the generator seeds
-  `coreaudio_output_capture` placeholders.
+  `sck_audio_capture`, `image_source`, `ffmpeg_source`) are macOS/OBS-version
+  specific; OBS flags a source to reconfigure rather than failing import if one
+  is off. Per-app audio (Discord/Chrome/Apple Music) uses newest OBS (30+)
+  "macOS Audio Capture" = `sck_audio_capture` (ScreenCaptureKit, macOS 13+), set
+  to Application mode. Ref: obsproject.com/kb/macos-desktop-audio-capture-guide.
 
 ## Animated overlays (`remotion/`)
 
