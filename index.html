@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OBS Setup Previewer</title>
+<style>
+  :root {
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2230; --line:#30363d;
+    --text:#e6edf3; --dim:#8b949e; --accent:#58a6ff;
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--text);
+  }
+  header {
+    padding:20px 24px; border-bottom:1px solid var(--line);
+    position:sticky; top:0; background:var(--bg); z-index:5;
+  }
+  h1 { margin:0 0 4px; font-size:20px; }
+  .sub { color:var(--dim); font-size:13px; }
+  main { padding:24px; max-width:1100px; margin:0 auto; }
+
+  /* Legend */
+  .legend { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .legend .key {
+    display:flex; align-items:center; gap:7px; background:var(--panel);
+    border:1px solid var(--line); border-radius:20px; padding:4px 12px 4px 8px; font-size:13px;
+  }
+  .dot { width:13px; height:13px; border-radius:50%; flex:none; }
+
+  /* Device sections */
+  .device { margin-bottom:32px; }
+  .device > h2 { font-size:16px; border-bottom:1px solid var(--line); padding-bottom:8px; }
+  .count { color:var(--dim); font-weight:normal; font-size:13px; }
+
+  /* Divider scenes */
+  .divider {
+    text-align:center; color:var(--dim); letter-spacing:2px; font-size:13px;
+    margin:20px 0 8px; text-transform:uppercase;
+  }
+
+  /* Scene grid */
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; }
+  .scene {
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:14px 16px; border-left:5px solid var(--line);
+  }
+  .scene.src { background:var(--panel2); border-style:dashed; }
+  .scene h3 { margin:0 0 2px; font-size:15px; display:flex; align-items:center; gap:8px; }
+  .badge {
+    font-size:10px; letter-spacing:.5px; background:#3b2f00; color:#e3b341;
+    border-radius:5px; padding:1px 6px; text-transform:uppercase;
+  }
+  .scene .meta { color:var(--dim); font-size:12px; margin-bottom:10px; }
+  ul.items { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
+  li.item {
+    display:flex; align-items:center; gap:9px; background:#0d1117;
+    border:1px solid var(--line); border-left:4px solid var(--line);
+    border-radius:7px; padding:6px 10px; font-size:13px;
+  }
+  li.item .type { color:var(--dim); font-size:11px; margin-left:auto; }
+  .empty { color:var(--dim); font-style:italic; font-size:13px; }
+
+  /* Drop zone / fallback */
+  #drop {
+    border:2px dashed var(--line); border-radius:12px; padding:26px; text-align:center;
+    color:var(--dim); margin-bottom:24px;
+  }
+  #drop.hover { border-color:var(--accent); color:var(--text); }
+  #drop b { color:var(--text); }
+  code { background:var(--panel); padding:1px 6px; border-radius:5px; font-size:12px; }
+  .note { color:var(--dim); font-size:13px; }
+  a { color:var(--accent); }
+</style>
+</head>
+<body>
+<header>
+  <h1>OBS Setup Previewer</h1>
+  <div class="sub">Color-coded view of your scene collections. Colors come straight from OBS (<code>private_settings.color</code>).</div>
+  <div class="legend" id="legend"></div>
+</header>
+<main>
+  <div id="drop">
+    <b>Drag an exported OBS scene <code>.json</code> here</b> to preview it —
+    or run <code>make preview</code> and it auto-loads your saved devices.
+    <div class="note" style="margin-top:6px">Opening this file directly (<code>file://</code>) can't auto-load; use <code>make preview</code>.</div>
+  </div>
+  <div id="out"></div>
+</main>
+
+<script>
+// Category legend — mirror of PALETTE in scripts/gen_scene_collection.py
+const LEGEND = [
+  ["#2EA043","Camera (you)"], ["#8957E5","Alerts"], ["#1F9EA6","Cowork widgets"],
+  ["#388BFD","Cowork alerts"], ["#BB8009","Screen capture"],
+  ["#DA3633","Standby text"], ["#DB61A2","VTuber"],
+];
+const DEVICES = ["macbook-pro","mac-mini"]; // add slugs here if you add a Mac
+
+const TYPES = {
+  scene:["Scene","▦"], browser_source:["Browser","◈"],
+  av_capture_input:["Camera","●"], "macos-avcapture":["Camera","●"],
+  screen_capture:["Screen","▣"], text_ft2_source:["Text","T"],
+  coreaudio_input_capture:["Mic","♪"], coreaudio_output_capture:["Audio","♪"],
+};
+
+// ABGR signed int (OBS) -> css color, or null when no color set.
+function abgrToCss(v){
+  if(v===undefined||v===null) return null;
+  let u = v < 0 ? v + 0x100000000 : v;
+  const b=(u>>>16)&255, g=(u>>>8)&255, r=u&255;
+  return `rgb(${r},${g},${b})`;
+}
+
+function typeInfo(id){ return TYPES[id] || TYPES[(id||"").replace(/_v\d+$/,"")] || [id||"?","•"]; }
+
+function renderLegend(){
+  document.getElementById("legend").innerHTML = LEGEND.map(([hex,label]) =>
+    `<span class="key"><span class="dot" style="background:${hex}"></span>${label}</span>`).join("");
+}
+
+function isDivider(name){ return /^[\s─—–\-]*(src)?[\s─—–\-]*$/i.test(name.replace(/\[|\]/g,"")); }
+
+// Render one scene collection object into a container element.
+function renderCollection(coll, host, title){
+  const byName = {};
+  (coll.sources||[]).forEach(s => byName[s.name] = s);
+  const order = (coll.scene_order||[]).map(o => o.name);
+  const scenes = order.filter(n => byName[n] && byName[n].id === "scene");
+  const mains = scenes.filter(n => !n.startsWith("[src]") && !isDivider(n));
+  const srcs  = scenes.filter(n => n.startsWith("[src]"));
+
+  const wrap = document.createElement("div");
+  wrap.className = "device";
+  wrap.innerHTML = `<h2>${title} <span class="count">— ${mains.length} scenes, ${srcs.length} building blocks</span></h2>`;
+
+  let grid = null;
+  order.forEach(name => {
+    const s = byName[name];
+    if(!s || s.id !== "scene") return;
+    if(isDivider(name)){
+      wrap.insertAdjacentHTML("beforeend", `<div class="divider">${name || "———"}</div>`);
+      grid = null; return;
+    }
+    if(!grid){ grid = document.createElement("div"); grid.className = "grid"; wrap.appendChild(grid); }
+    const items = (s.settings && s.settings.items) || [];
+    const isSrc = name.startsWith("[src]");
+    const rows = items.length ? items.map(it => {
+      const ref = byName[it.name];
+      const [tlabel,ticon] = typeInfo(ref ? ref.id : "");
+      const col = abgrToCss(it.private_settings && it.private_settings.color) || "var(--line)";
+      return `<li class="item" style="border-left-color:${col}">
+        <span style="color:${col}">${ticon}</span>${it.name}
+        <span class="type">${tlabel}</span></li>`;
+    }).join("") : `<div class="empty">empty</div>`;
+    grid.insertAdjacentHTML("beforeend", `
+      <div class="scene ${isSrc?"src":""}">
+        <h3>${name} ${isSrc?'<span class="badge">src</span>':""}</h3>
+        <div class="meta">${items.length} source${items.length===1?"":"s"}</div>
+        <ul class="items">${rows}</ul>
+      </div>`);
+  });
+  host.appendChild(wrap);
+}
+
+async function autoLoad(){
+  const out = document.getElementById("out");
+  let loadedAny = false;
+  for(const slug of DEVICES){
+    try {
+      const idx = await (await fetch(`devices/${slug}/index.json`, {cache:"no-store"})).json();
+      for(const rel of (idx.scenes||[])){
+        const coll = await (await fetch(`devices/${slug}/${rel}`, {cache:"no-store"})).json();
+        renderCollection(coll, out, `${idx.label||slug} — ${coll.name||rel}`);
+        loadedAny = true;
+      }
+    } catch(e){ /* device not saved yet, or file:// — ignore */ }
+  }
+  if(loadedAny) document.getElementById("drop").style.display = "none";
+}
+
+// Drag & drop fallback (works even on file://)
+const drop = document.getElementById("drop");
+["dragover","dragenter"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("hover"); }));
+["dragleave","drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("hover"); }));
+drop.addEventListener("drop", async e => {
+  for(const f of e.dataTransfer.files){
+    try { renderCollection(JSON.parse(await f.text()), document.getElementById("out"), f.name); }
+    catch(err){ alert(`${f.name}: not a valid OBS scene JSON`); }
+  }
+});
+
+renderLegend();
+autoLoad();
+</script>
+</body>
+</html>
