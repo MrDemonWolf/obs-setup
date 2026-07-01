@@ -93,9 +93,9 @@
 <script>
 // Category legend — mirror of PALETTE in scripts/gen_scene_collection.py
 const LEGEND = [
-  ["#2EA043","Camera (you)"], ["#8957E5","Alerts"], ["#1F9EA6","Cowork widgets"],
-  ["#388BFD","Cowork alerts"], ["#BB8009","Screen capture"],
-  ["#DA3633","Standby text"], ["#DB61A2","VTuber"],
+  ["#2EA043","Camera / VTuber"], ["#8957E5","Alerts"], ["#1F9EA6","Cowork widgets"],
+  ["#388BFD","Cowork alerts"], ["#BB8009","Screen"],
+  ["#DA3633","Standby text"], ["#8B949E","Audio"], ["#6E7681","Background"],
 ];
 const DEVICES = ["macbook-pro","mac-mini"]; // add slugs here if you add a Mac
 
@@ -104,6 +104,7 @@ const TYPES = {
   av_capture_input:["Camera","●"], "macos-avcapture":["Camera","●"],
   screen_capture:["Screen","▣"], text_ft2_source:["Text","T"],
   coreaudio_input_capture:["Mic","♪"], coreaudio_output_capture:["Audio","♪"],
+  image_source:["Image","▨"], ffmpeg_source:["Media","►"], group:["Group","▤"],
 };
 
 // ABGR signed int (OBS) -> css color, or null when no color set.
