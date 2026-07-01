@@ -9,50 +9,29 @@
       "name": "Be Right Back"
     },
     {
-      "name": "Ending"
+      "name": "Stream"
+    },
+    {
+      "name": "Co-Working"
     },
     {
       "name": "──────"
     },
     {
-      "name": "Chat — VTuber"
-    },
-    {
-      "name": "Chat — Camera"
-    },
-    {
-      "name": "Co-working"
-    },
-    {
-      "name": "────── src ──────"
-    },
-    {
-      "name": "[src] Camera"
-    },
-    {
       "name": "[src] Alerts"
     },
     {
-      "name": "[src] Cowork Widgets"
-    },
-    {
-      "name": "[src] Cowork Alerts"
-    },
-    {
-      "name": "[src] Screen Capture"
+      "name": "[src] Wolfathon"
     },
     {
       "name": "[src] Audio"
-    },
-    {
-      "name": "[src] Background"
     }
   ],
   "name": "MBP Streaming",
   "sources": [
     {
-      "name": "Camera Device",
-      "uuid": "964f3db8-d784-5736-a31f-b1521ece8f6d",
+      "name": "Webcam",
+      "uuid": "c42399d7-6f5b-57f2-a7e9-0858915333ec",
       "id": "av_capture_input",
       "versioned_id": "av_capture_input",
       "settings": {},
@@ -75,8 +54,8 @@
       "filters": []
     },
     {
-      "name": "Alert Box",
-      "uuid": "89b8bcdf-15f8-5c54-9215-b995e70c4075",
+      "name": "Sound Alerts Box",
+      "uuid": "d10b0093-9d0d-53e0-9201-1f3651ff3b75",
       "id": "browser_source",
       "versioned_id": "browser_source",
       "settings": {
@@ -103,8 +82,8 @@
       "filters": []
     },
     {
-      "name": "Sound Alerts",
-      "uuid": "4c5cdd54-5617-5408-8969-ede7429992fe",
+      "name": "Twitch Alerts Box",
+      "uuid": "53e53c96-02e3-5d6f-afdc-d27d6eefd092",
       "id": "browser_source",
       "versioned_id": "browser_source",
       "settings": {
@@ -131,8 +110,8 @@
       "filters": []
     },
     {
-      "name": "Cowork Task",
-      "uuid": "5eeac20b-80e5-5f3e-bfaf-447b2bee20a4",
+      "name": "Wheel of Dares",
+      "uuid": "88c3ec1d-759c-56b0-aac6-d482013f989b",
       "id": "browser_source",
       "versioned_id": "browser_source",
       "settings": {
@@ -159,8 +138,8 @@
       "filters": []
     },
     {
-      "name": "Cowork Timer",
-      "uuid": "a917973e-287d-517b-ba3f-50b963171e61",
+      "name": "Rewards",
+      "uuid": "863fe977-7633-51b4-9e70-35fc344ee32a",
       "id": "browser_source",
       "versioned_id": "browser_source",
       "settings": {
@@ -187,8 +166,8 @@
       "filters": []
     },
     {
-      "name": "Cowork Alerts Web",
-      "uuid": "cae3e1eb-658b-5cdc-a40a-d1f057484c51",
+      "name": "Timer",
+      "uuid": "de313b39-f340-577f-a7d1-2b33ee9da250",
       "id": "browser_source",
       "versioned_id": "browser_source",
       "settings": {
@@ -215,32 +194,8 @@
       "filters": []
     },
     {
-      "name": "Display Capture",
-      "uuid": "b8910f7a-0aeb-5179-874d-a4c337f3ec3a",
-      "id": "screen_capture",
-      "versioned_id": "screen_capture",
-      "settings": {},
-      "mixers": 0,
-      "sync": 0,
-      "flags": 0,
-      "volume": 1.0,
-      "balance": 0.5,
-      "enabled": true,
-      "muted": false,
-      "push-to-mute": false,
-      "push-to-mute-delay": 0,
-      "push-to-talk": false,
-      "push-to-talk-delay": 0,
-      "hotkeys": {},
-      "deinterlace_mode": 0,
-      "deinterlace_field_order": 0,
-      "monitoring_type": 0,
-      "private_settings": {},
-      "filters": []
-    },
-    {
-      "name": "VTuber Avatar",
-      "uuid": "a1a045f4-2fab-534e-96a5-8889f52b32f5",
+      "name": "WolfWave Widget",
+      "uuid": "4a03b9a0-3e21-51d1-8c1a-14251f23e172",
       "id": "browser_source",
       "versioned_id": "browser_source",
       "settings": {
@@ -267,8 +222,8 @@
       "filters": []
     },
     {
-      "name": "Discord Audio",
-      "uuid": "8be77e92-0d87-5058-9eaf-0871a4f069c9",
+      "name": "Discord",
+      "uuid": "81ef7468-a6a4-5b1a-885a-c8fccf568d1d",
       "id": "coreaudio_output_capture",
       "versioned_id": "coreaudio_output_capture",
       "settings": {},
@@ -291,8 +246,8 @@
       "filters": []
     },
     {
-      "name": "Music Audio",
-      "uuid": "6cf9ff99-2a36-590e-8afe-449cf23ae3d2",
+      "name": "Google Chrome",
+      "uuid": "52a8bdd7-8751-5de4-8fb3-137a6035ad7b",
       "id": "coreaudio_output_capture",
       "versioned_id": "coreaudio_output_capture",
       "settings": {},
@@ -315,11 +270,38 @@
       "filters": []
     },
     {
-      "name": "Chrome Audio",
-      "uuid": "42e27d3b-9510-5632-a8a7-0105e0cb031d",
+      "name": "Apple Music",
+      "uuid": "f60df9e6-c743-5f96-9ba8-b37e1a21d795",
       "id": "coreaudio_output_capture",
       "versioned_id": "coreaudio_output_capture",
       "settings": {},
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
+      "name": "Starting Soon Video",
+      "uuid": "2d9a5ca2-70a8-5d8d-9f51-8557c2c785af",
+      "id": "ffmpeg_source",
+      "versioned_id": "ffmpeg_source",
+      "settings": {
+        "local_file": "/Users/nathanialhenniges/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/MultiMedia Projects/Social Media/Twitch/Scenes Images/",
+        "looping": true
+      },
       "mixers": 0,
       "sync": 0,
       "flags": 0,
@@ -343,181 +325,8 @@
       "uuid": "b8a202ab-8394-51c2-85b6-9f960c6dc9df",
       "id": "image_source",
       "versioned_id": "image_source",
-      "settings": {},
-      "mixers": 0,
-      "sync": 0,
-      "flags": 0,
-      "volume": 1.0,
-      "balance": 0.5,
-      "enabled": true,
-      "muted": false,
-      "push-to-mute": false,
-      "push-to-mute-delay": 0,
-      "push-to-talk": false,
-      "push-to-talk-delay": 0,
-      "hotkeys": {},
-      "deinterlace_mode": 0,
-      "deinterlace_field_order": 0,
-      "monitoring_type": 0,
-      "private_settings": {},
-      "filters": []
-    },
-    {
-      "name": "Txt Starting Soon",
-      "uuid": "7ccf4a57-c093-5a28-a9f4-db52cd144e42",
-      "id": "text_ft2_source",
-      "versioned_id": "text_ft2_source_v2",
       "settings": {
-        "text": "Starting Soon",
-        "font": {
-          "face": "Helvetica Neue",
-          "flags": 0,
-          "size": 96,
-          "style": "Bold"
-        },
-        "color1": 4294967295,
-        "color2": 4294967295,
-        "outline": true
-      },
-      "mixers": 0,
-      "sync": 0,
-      "flags": 0,
-      "volume": 1.0,
-      "balance": 0.5,
-      "enabled": true,
-      "muted": false,
-      "push-to-mute": false,
-      "push-to-mute-delay": 0,
-      "push-to-talk": false,
-      "push-to-talk-delay": 0,
-      "hotkeys": {},
-      "deinterlace_mode": 0,
-      "deinterlace_field_order": 0,
-      "monitoring_type": 0,
-      "private_settings": {},
-      "filters": []
-    },
-    {
-      "name": "Txt Be Right Back",
-      "uuid": "b225079a-80b9-5fa5-9a02-65ba805749bc",
-      "id": "text_ft2_source",
-      "versioned_id": "text_ft2_source_v2",
-      "settings": {
-        "text": "Be Right Back",
-        "font": {
-          "face": "Helvetica Neue",
-          "flags": 0,
-          "size": 96,
-          "style": "Bold"
-        },
-        "color1": 4294967295,
-        "color2": 4294967295,
-        "outline": true
-      },
-      "mixers": 0,
-      "sync": 0,
-      "flags": 0,
-      "volume": 1.0,
-      "balance": 0.5,
-      "enabled": true,
-      "muted": false,
-      "push-to-mute": false,
-      "push-to-mute-delay": 0,
-      "push-to-talk": false,
-      "push-to-talk-delay": 0,
-      "hotkeys": {},
-      "deinterlace_mode": 0,
-      "deinterlace_field_order": 0,
-      "monitoring_type": 0,
-      "private_settings": {},
-      "filters": []
-    },
-    {
-      "name": "Txt Ending",
-      "uuid": "d82c0c83-ef5f-5733-88a9-fe73e6ca6277",
-      "id": "text_ft2_source",
-      "versioned_id": "text_ft2_source_v2",
-      "settings": {
-        "text": "Thanks for watching!",
-        "font": {
-          "face": "Helvetica Neue",
-          "flags": 0,
-          "size": 96,
-          "style": "Bold"
-        },
-        "color1": 4294967295,
-        "color2": 4294967295,
-        "outline": true
-      },
-      "mixers": 0,
-      "sync": 0,
-      "flags": 0,
-      "volume": 1.0,
-      "balance": 0.5,
-      "enabled": true,
-      "muted": false,
-      "push-to-mute": false,
-      "push-to-mute-delay": 0,
-      "push-to-talk": false,
-      "push-to-talk-delay": 0,
-      "hotkeys": {},
-      "deinterlace_mode": 0,
-      "deinterlace_field_order": 0,
-      "monitoring_type": 0,
-      "private_settings": {},
-      "filters": []
-    },
-    {
-      "name": "[src] Camera",
-      "uuid": "00d3476a-99a3-561a-8fb1-a9001bcaddce",
-      "id": "scene",
-      "versioned_id": "scene",
-      "settings": {
-        "id_counter": 1,
-        "custom_size": false,
-        "items": [
-          {
-            "name": "Camera Device",
-            "source_uuid": "964f3db8-d784-5736-a31f-b1521ece8f6d",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 1,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -12345298,
-              "color-preset": 0
-            }
-          }
-        ]
+        "file": "/Users/nathanialhenniges/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/MultiMedia Projects/Social Media/Twitch/Scenes Images/"
       },
       "mixers": 0,
       "sync": 0,
@@ -547,8 +356,8 @@
         "custom_size": false,
         "items": [
           {
-            "name": "Alert Box",
-            "source_uuid": "89b8bcdf-15f8-5c54-9215-b995e70c4075",
+            "name": "Sound Alerts Box",
+            "source_uuid": "d10b0093-9d0d-53e0-9201-1f3651ff3b75",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -588,8 +397,8 @@
             }
           },
           {
-            "name": "Sound Alerts",
-            "source_uuid": "4c5cdd54-5617-5408-8969-ede7429992fe",
+            "name": "Twitch Alerts Box",
+            "source_uuid": "53e53c96-02e3-5d6f-afdc-d27d6eefd092",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -649,17 +458,17 @@
       "filters": []
     },
     {
-      "name": "[src] Cowork Widgets",
-      "uuid": "f4ed9553-ad17-553e-8262-7399f594f1ac",
+      "name": "[src] Wolfathon",
+      "uuid": "0f7c9363-9a46-543a-8284-700b17b1b65f",
       "id": "scene",
       "versioned_id": "scene",
       "settings": {
-        "id_counter": 2,
+        "id_counter": 3,
         "custom_size": false,
         "items": [
           {
-            "name": "Cowork Task",
-            "source_uuid": "5eeac20b-80e5-5f3e-bfaf-447b2bee20a4",
+            "name": "Wheel of Dares",
+            "source_uuid": "88c3ec1d-759c-56b0-aac6-d482013f989b",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -699,8 +508,8 @@
             }
           },
           {
-            "name": "Cowork Timer",
-            "source_uuid": "a917973e-287d-517b-ba3f-50b963171e61",
+            "name": "Rewards",
+            "source_uuid": "863fe977-7633-51b4-9e70-35fc344ee32a",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -738,39 +547,10 @@
               "color": -5857761,
               "color-preset": 0
             }
-          }
-        ]
-      },
-      "mixers": 0,
-      "sync": 0,
-      "flags": 0,
-      "volume": 1.0,
-      "balance": 0.5,
-      "enabled": true,
-      "muted": false,
-      "push-to-mute": false,
-      "push-to-mute-delay": 0,
-      "push-to-talk": false,
-      "push-to-talk-delay": 0,
-      "hotkeys": {},
-      "deinterlace_mode": 0,
-      "deinterlace_field_order": 0,
-      "monitoring_type": 0,
-      "private_settings": {},
-      "filters": []
-    },
-    {
-      "name": "[src] Cowork Alerts",
-      "uuid": "ccea98b6-5209-50b3-b99b-66da7d1a3b73",
-      "id": "scene",
-      "versioned_id": "scene",
-      "settings": {
-        "id_counter": 1,
-        "custom_size": false,
-        "items": [
+          },
           {
-            "name": "Cowork Alerts Web",
-            "source_uuid": "cae3e1eb-658b-5cdc-a40a-d1f057484c51",
+            "name": "Timer",
+            "source_uuid": "de313b39-f340-577f-a7d1-2b33ee9da250",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -793,7 +573,7 @@
             "crop_top": 0,
             "crop_right": 0,
             "crop_bottom": 0,
-            "id": 1,
+            "id": 3,
             "group_item_backup": false,
             "scale_filter": "disable",
             "blend_method": "default",
@@ -805,77 +585,7 @@
               "duration": 0
             },
             "private_settings": {
-              "color": -160968,
-              "color-preset": 0
-            }
-          }
-        ]
-      },
-      "mixers": 0,
-      "sync": 0,
-      "flags": 0,
-      "volume": 1.0,
-      "balance": 0.5,
-      "enabled": true,
-      "muted": false,
-      "push-to-mute": false,
-      "push-to-mute-delay": 0,
-      "push-to-talk": false,
-      "push-to-talk-delay": 0,
-      "hotkeys": {},
-      "deinterlace_mode": 0,
-      "deinterlace_field_order": 0,
-      "monitoring_type": 0,
-      "private_settings": {},
-      "filters": []
-    },
-    {
-      "name": "[src] Screen Capture",
-      "uuid": "d4e682d7-32d2-5173-86cf-f6708bb010af",
-      "id": "scene",
-      "versioned_id": "scene",
-      "settings": {
-        "id_counter": 1,
-        "custom_size": false,
-        "items": [
-          {
-            "name": "Display Capture",
-            "source_uuid": "b8910f7a-0aeb-5179-874d-a4c337f3ec3a",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 1,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -16154437,
+              "color": -5857761,
               "color-preset": 0
             }
           }
@@ -909,8 +619,8 @@
         "custom_size": false,
         "items": [
           {
-            "name": "Discord Audio",
-            "source_uuid": "8be77e92-0d87-5058-9eaf-0871a4f069c9",
+            "name": "Discord",
+            "source_uuid": "81ef7468-a6a4-5b1a-885a-c8fccf568d1d",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -950,8 +660,8 @@
             }
           },
           {
-            "name": "Music Audio",
-            "source_uuid": "6cf9ff99-2a36-590e-8afe-449cf23ae3d2",
+            "name": "Google Chrome",
+            "source_uuid": "52a8bdd7-8751-5de4-8fb3-137a6035ad7b",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -991,8 +701,8 @@
             }
           },
           {
-            "name": "Chrome Audio",
-            "source_uuid": "42e27d3b-9510-5632-a8a7-0105e0cb031d",
+            "name": "Apple Music",
+            "source_uuid": "f60df9e6-c743-5f96-9ba8-b37e1a21d795",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -1052,76 +762,6 @@
       "filters": []
     },
     {
-      "name": "[src] Background",
-      "uuid": "a9e66c63-fa1e-56eb-960e-6cfcc40e01ac",
-      "id": "scene",
-      "versioned_id": "scene",
-      "settings": {
-        "id_counter": 1,
-        "custom_size": false,
-        "items": [
-          {
-            "name": "Background",
-            "source_uuid": "b8a202ab-8394-51c2-85b6-9f960c6dc9df",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 1,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -8292754,
-              "color-preset": 0
-            }
-          }
-        ]
-      },
-      "mixers": 0,
-      "sync": 0,
-      "flags": 0,
-      "volume": 1.0,
-      "balance": 0.5,
-      "enabled": true,
-      "muted": false,
-      "push-to-mute": false,
-      "push-to-mute-delay": 0,
-      "push-to-talk": false,
-      "push-to-talk-delay": 0,
-      "hotkeys": {},
-      "deinterlace_mode": 0,
-      "deinterlace_field_order": 0,
-      "monitoring_type": 0,
-      "private_settings": {},
-      "filters": []
-    },
-    {
       "name": "Starting Soon",
       "uuid": "3a73de18-ff8a-5728-9bcc-c7eeec26f6e4",
       "id": "scene",
@@ -1131,8 +771,8 @@
         "custom_size": false,
         "items": [
           {
-            "name": "Txt Starting Soon",
-            "source_uuid": "7ccf4a57-c093-5a28-a9f4-db52cd144e42",
+            "name": "Starting Soon Video",
+            "source_uuid": "2d9a5ca2-70a8-5d8d-9f51-8557c2c785af",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -1254,8 +894,8 @@
             }
           },
           {
-            "name": "[src] Background",
-            "source_uuid": "a9e66c63-fa1e-56eb-960e-6cfcc40e01ac",
+            "name": "Background",
+            "source_uuid": "b8a202ab-8394-51c2-85b6-9f960c6dc9df",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -1324,8 +964,8 @@
         "custom_size": false,
         "items": [
           {
-            "name": "Txt Be Right Back",
-            "source_uuid": "b225079a-80b9-5fa5-9a02-65ba805749bc",
+            "name": "Starting Soon Video",
+            "source_uuid": "2d9a5ca2-70a8-5d8d-9f51-8557c2c785af",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -1447,8 +1087,8 @@
             }
           },
           {
-            "name": "[src] Background",
-            "source_uuid": "a9e66c63-fa1e-56eb-960e-6cfcc40e01ac",
+            "name": "Background",
+            "source_uuid": "b8a202ab-8394-51c2-85b6-9f960c6dc9df",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -1508,587 +1148,8 @@
       "filters": []
     },
     {
-      "name": "Ending",
-      "uuid": "7407b25f-2247-5dd7-830f-d8d62656b27b",
-      "id": "scene",
-      "versioned_id": "scene",
-      "settings": {
-        "id_counter": 4,
-        "custom_size": false,
-        "items": [
-          {
-            "name": "Txt Ending",
-            "source_uuid": "d82c0c83-ef5f-5733-88a9-fe73e6ca6277",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 1,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -13420838,
-              "color-preset": 0
-            }
-          },
-          {
-            "name": "[src] Alerts",
-            "source_uuid": "efe41f71-b245-59b7-9cd7-d1fbfe668039",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 2,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -1747063,
-              "color-preset": 0
-            }
-          },
-          {
-            "name": "[src] Audio",
-            "source_uuid": "804756b4-cd04-59bf-a168-48be5d5710ec",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 3,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -6384501,
-              "color-preset": 0
-            }
-          },
-          {
-            "name": "[src] Background",
-            "source_uuid": "a9e66c63-fa1e-56eb-960e-6cfcc40e01ac",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 4,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -8292754,
-              "color-preset": 0
-            }
-          }
-        ]
-      },
-      "mixers": 0,
-      "sync": 0,
-      "flags": 0,
-      "volume": 1.0,
-      "balance": 0.5,
-      "enabled": true,
-      "muted": false,
-      "push-to-mute": false,
-      "push-to-mute-delay": 0,
-      "push-to-talk": false,
-      "push-to-talk-delay": 0,
-      "hotkeys": {},
-      "deinterlace_mode": 0,
-      "deinterlace_field_order": 0,
-      "monitoring_type": 0,
-      "private_settings": {},
-      "filters": []
-    },
-    {
-      "name": "Chat — VTuber",
-      "uuid": "c966c397-bad9-53e1-bde4-794318f73e5a",
-      "id": "scene",
-      "versioned_id": "scene",
-      "settings": {
-        "id_counter": 4,
-        "custom_size": false,
-        "items": [
-          {
-            "name": "VTuber Avatar",
-            "source_uuid": "a1a045f4-2fab-534e-96a5-8889f52b32f5",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 1,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -12345298,
-              "color-preset": 0
-            }
-          },
-          {
-            "name": "[src] Alerts",
-            "source_uuid": "efe41f71-b245-59b7-9cd7-d1fbfe668039",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 2,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -1747063,
-              "color-preset": 0
-            }
-          },
-          {
-            "name": "[src] Audio",
-            "source_uuid": "804756b4-cd04-59bf-a168-48be5d5710ec",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 3,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -6384501,
-              "color-preset": 0
-            }
-          },
-          {
-            "name": "[src] Background",
-            "source_uuid": "a9e66c63-fa1e-56eb-960e-6cfcc40e01ac",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 4,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -8292754,
-              "color-preset": 0
-            }
-          }
-        ]
-      },
-      "mixers": 0,
-      "sync": 0,
-      "flags": 0,
-      "volume": 1.0,
-      "balance": 0.5,
-      "enabled": true,
-      "muted": false,
-      "push-to-mute": false,
-      "push-to-mute-delay": 0,
-      "push-to-talk": false,
-      "push-to-talk-delay": 0,
-      "hotkeys": {},
-      "deinterlace_mode": 0,
-      "deinterlace_field_order": 0,
-      "monitoring_type": 0,
-      "private_settings": {},
-      "filters": []
-    },
-    {
-      "name": "Chat — Camera",
-      "uuid": "f4241975-72df-5449-a4bd-dedb5d7769d6",
-      "id": "scene",
-      "versioned_id": "scene",
-      "settings": {
-        "id_counter": 4,
-        "custom_size": false,
-        "items": [
-          {
-            "name": "[src] Camera",
-            "source_uuid": "00d3476a-99a3-561a-8fb1-a9001bcaddce",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 1,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -12345298,
-              "color-preset": 0
-            }
-          },
-          {
-            "name": "[src] Alerts",
-            "source_uuid": "efe41f71-b245-59b7-9cd7-d1fbfe668039",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 2,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -1747063,
-              "color-preset": 0
-            }
-          },
-          {
-            "name": "[src] Audio",
-            "source_uuid": "804756b4-cd04-59bf-a168-48be5d5710ec",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 3,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -6384501,
-              "color-preset": 0
-            }
-          },
-          {
-            "name": "[src] Background",
-            "source_uuid": "a9e66c63-fa1e-56eb-960e-6cfcc40e01ac",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 4,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -8292754,
-              "color-preset": 0
-            }
-          }
-        ]
-      },
-      "mixers": 0,
-      "sync": 0,
-      "flags": 0,
-      "volume": 1.0,
-      "balance": 0.5,
-      "enabled": true,
-      "muted": false,
-      "push-to-mute": false,
-      "push-to-mute-delay": 0,
-      "push-to-talk": false,
-      "push-to-talk-delay": 0,
-      "hotkeys": {},
-      "deinterlace_mode": 0,
-      "deinterlace_field_order": 0,
-      "monitoring_type": 0,
-      "private_settings": {},
-      "filters": []
-    },
-    {
-      "name": "Co-working",
-      "uuid": "e67a5420-142d-5929-9c65-3999d9688116",
+      "name": "Stream",
+      "uuid": "6fbf67c2-4f35-558b-8ece-465aebbb204e",
       "id": "scene",
       "versioned_id": "scene",
       "settings": {
@@ -2096,8 +1157,8 @@
         "custom_size": false,
         "items": [
           {
-            "name": "[src] Camera",
-            "source_uuid": "00d3476a-99a3-561a-8fb1-a9001bcaddce",
+            "name": "Webcam",
+            "source_uuid": "c42399d7-6f5b-57f2-a7e9-0858915333ec",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -2137,8 +1198,8 @@
             }
           },
           {
-            "name": "[src] Screen Capture",
-            "source_uuid": "d4e682d7-32d2-5173-86cf-f6708bb010af",
+            "name": "WolfWave Widget",
+            "source_uuid": "4a03b9a0-3e21-51d1-8c1a-14251f23e172",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -2173,13 +1234,13 @@
               "duration": 0
             },
             "private_settings": {
-              "color": -16154437,
+              "color": -160968,
               "color-preset": 0
             }
           },
           {
-            "name": "[src] Cowork Widgets",
-            "source_uuid": "f4ed9553-ad17-553e-8262-7399f594f1ac",
+            "name": "[src] Wolfathon",
+            "source_uuid": "0f7c9363-9a46-543a-8284-700b17b1b65f",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -2219,8 +1280,8 @@
             }
           },
           {
-            "name": "[src] Cowork Alerts",
-            "source_uuid": "ccea98b6-5209-50b3-b99b-66da7d1a3b73",
+            "name": "[src] Alerts",
+            "source_uuid": "efe41f71-b245-59b7-9cd7-d1fbfe668039",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -2255,7 +1316,7 @@
               "duration": 0
             },
             "private_settings": {
-              "color": -160968,
+              "color": -1747063,
               "color-preset": 0
             }
           },
@@ -2301,8 +1362,283 @@
             }
           },
           {
-            "name": "[src] Background",
-            "source_uuid": "a9e66c63-fa1e-56eb-960e-6cfcc40e01ac",
+            "name": "Background",
+            "source_uuid": "b8a202ab-8394-51c2-85b6-9f960c6dc9df",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 6,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -8292754,
+              "color-preset": 0
+            }
+          }
+        ]
+      },
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
+      "name": "Co-Working",
+      "uuid": "e4d8921c-2f17-5451-bc42-ce478f796bef",
+      "id": "scene",
+      "versioned_id": "scene",
+      "settings": {
+        "id_counter": 6,
+        "custom_size": false,
+        "items": [
+          {
+            "name": "Webcam",
+            "source_uuid": "c42399d7-6f5b-57f2-a7e9-0858915333ec",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 1,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -12345298,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "WolfWave Widget",
+            "source_uuid": "4a03b9a0-3e21-51d1-8c1a-14251f23e172",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 2,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -160968,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "[src] Wolfathon",
+            "source_uuid": "0f7c9363-9a46-543a-8284-700b17b1b65f",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 3,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -5857761,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "[src] Alerts",
+            "source_uuid": "efe41f71-b245-59b7-9cd7-d1fbfe668039",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 4,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -1747063,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "[src] Audio",
+            "source_uuid": "804756b4-cd04-59bf-a168-48be5d5710ec",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 5,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -6384501,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "Background",
+            "source_uuid": "b8a202ab-8394-51c2-85b6-9f960c6dc9df",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -2364,34 +1700,6 @@
     {
       "name": "──────",
       "uuid": "5dfa27f2-94bd-5ffc-b648-505b1f163cf3",
-      "id": "scene",
-      "versioned_id": "scene",
-      "settings": {
-        "id_counter": 0,
-        "custom_size": false,
-        "items": []
-      },
-      "mixers": 0,
-      "sync": 0,
-      "flags": 0,
-      "volume": 1.0,
-      "balance": 0.5,
-      "enabled": true,
-      "muted": false,
-      "push-to-mute": false,
-      "push-to-mute-delay": 0,
-      "push-to-talk": false,
-      "push-to-talk-delay": 0,
-      "hotkeys": {},
-      "deinterlace_mode": 0,
-      "deinterlace_field_order": 0,
-      "monitoring_type": 0,
-      "private_settings": {},
-      "filters": []
-    },
-    {
-      "name": "────── src ──────",
-      "uuid": "d94ef023-8ace-599b-ab1e-1dcebdf2bbe3",
       "id": "scene",
       "versioned_id": "scene",
       "settings": {
