@@ -30,20 +30,24 @@ NS = uuid.uuid5(uuid.NAMESPACE_URL, "obs-setup/macbook-pro")
 
 # --- Colour palette (source of truth: docs/color-coding.md) ------------------
 # category -> hex. Stored per-item as ABGR int; the previewer reads it back.
-# The 8 OBS built-in preset colors (right-click a source -> Color). 9 categories
-# share them: VTuber reuses Green (both are "you, live"); Audio + Background take
-# the two grays.
+# The 8 OBS built-in preset colors (right-click a source -> Color), one per
+# category. Matches the live rig in OBS.
 PALETTE = {
-    "camera": "#2EA043",   # green        - you, on cam
-    "vtuber": "#2EA043",   # green        - vtuber avatar (same as camera)
-    "alerts": "#8957E5",   # purple       - alert box + sound / Twitch alerts
-    "widgets": "#1F9EA6",  # teal         - cowork widgets (task + timer)
-    "cowork_alerts": "#388BFD",  # blue   - cowork alerts
-    "screen": "#BB8009",   # yellow       - screen / display capture
-    "standby": "#DA3633",  # red          - offline / standby text
-    "audio": "#8B949E",    # gray (light) - audio group (Discord / Music / Chrome)
-    "background": "#6E7681",  # gray (dark) - background layer
+    "camera": "#2EA043",     # green        - webcam (you, live)
+    "alerts": "#8957E5",     # purple       - Alerts Group (sound + Twitch)
+    "widgets": "#1F9EA6",    # teal         - Wolfathon widgets (wheel/rewards/timer)
+    "nowplaying": "#388BFD",  # blue        - WolfWave now-playing widget
+    "screen": "#BB8009",     # yellow       - screen / display capture (when added)
+    "standby": "#DA3633",     # red         - standby video (Starting Soon / BRB)
+    "audio": "#8B949E",      # gray (light) - Audio Group (Discord/Chrome/Apple Music)
+    "background": "#6E7681",  # gray (dark) - background image
 }
+
+# Background / standby images live here (Google Drive, this Mac). Not portable to
+# other machines; the previewer just reads the path, OBS points the source at it.
+SCENES_IMAGES = ("/Users/nathanialhenniges/Library/CloudStorage/"
+                 "GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/"
+                 "MultiMedia Projects/Social Media/Twitch/Scenes Images")
 
 
 def abgr(hex_color):
@@ -61,75 +65,63 @@ def suid(name):
 # --- Layout ------------------------------------------------------------------
 # Leaf sources (the real inputs). browser urls empty -> you paste them in OBS.
 LEAVES = [
-    {"name": "Camera Device", "id": "av_capture_input", "cat": "camera",
+    {"name": "Webcam", "id": "av_capture_input", "cat": "camera",
      "settings": {}},
-    {"name": "Alert Box", "id": "browser_source", "cat": "alerts",
+    {"name": "Sound Alerts Box", "id": "browser_source", "cat": "alerts",
      "settings": {"url": "", "width": 1920, "height": 1080}},
-    {"name": "Sound Alerts", "id": "browser_source", "cat": "alerts",
+    {"name": "Twitch Alerts Box", "id": "browser_source", "cat": "alerts",
      "settings": {"url": "", "width": 1920, "height": 1080}},
-    {"name": "Cowork Task", "id": "browser_source", "cat": "widgets",
+    {"name": "Wheel of Dares", "id": "browser_source", "cat": "widgets",
      "settings": {"url": "", "width": 1920, "height": 1080}},
-    {"name": "Cowork Timer", "id": "browser_source", "cat": "widgets",
+    {"name": "Rewards", "id": "browser_source", "cat": "widgets",
      "settings": {"url": "", "width": 1920, "height": 1080}},
-    {"name": "Cowork Alerts Web", "id": "browser_source", "cat": "cowork_alerts",
+    {"name": "Timer", "id": "browser_source", "cat": "widgets",
      "settings": {"url": "", "width": 1920, "height": 1080}},
-    {"name": "Display Capture", "id": "screen_capture", "cat": "screen",
+    {"name": "WolfWave Widget", "id": "browser_source", "cat": "nowplaying",
+     "settings": {"url": "", "width": 1920, "height": 1080}},
+    {"name": "Discord", "id": "coreaudio_output_capture", "cat": "audio",
      "settings": {}},
-    {"name": "VTuber Avatar", "id": "browser_source", "cat": "vtuber",
-     "settings": {"url": "", "width": 1920, "height": 1080}},
-    {"name": "Discord Audio", "id": "coreaudio_output_capture", "cat": "audio",
+    {"name": "Google Chrome", "id": "coreaudio_output_capture", "cat": "audio",
      "settings": {}},
-    {"name": "Music Audio", "id": "coreaudio_output_capture", "cat": "audio",
+    {"name": "Apple Music", "id": "coreaudio_output_capture", "cat": "audio",
      "settings": {}},
-    {"name": "Chrome Audio", "id": "coreaudio_output_capture", "cat": "audio",
-     "settings": {}},
+    {"name": "Starting Soon Video", "id": "ffmpeg_source", "cat": "standby",
+     "settings": {"local_file": SCENES_IMAGES + "/", "looping": True}},
     {"name": "Background", "id": "image_source", "cat": "background",
-     "settings": {}},
+     "settings": {"file": SCENES_IMAGES + "/"}},
 ]
-TEXT_LEAVES = [
-    {"name": "Txt Starting Soon", "text": "Starting Soon", "cat": "standby"},
-    {"name": "Txt Be Right Back", "text": "Be Right Back", "cat": "standby"},
-    {"name": "Txt Ending", "text": "Thanks for watching!", "cat": "standby"},
-]
+# No text sources: standby uses video / background images from SCENES_IMAGES.
+TEXT_LEAVES = []
 
-# [src] wrapper scenes: reusable building blocks holding one leaf each.
+# [src] wrapper scenes: reusable building blocks. These mirror the OBS Groups on
+# the live rig (Alerts Group, Wolfathon, Audio).
 SRC_SCENES = [
-    {"name": "[src] Camera", "items": [("Camera Device", "camera")]},
-    {"name": "[src] Alerts", "items": [("Alert Box", "alerts"), ("Sound Alerts", "alerts")]},
-    {"name": "[src] Cowork Widgets", "items": [("Cowork Task", "widgets"), ("Cowork Timer", "widgets")]},
-    {"name": "[src] Cowork Alerts", "items": [("Cowork Alerts Web", "cowork_alerts")]},
-    {"name": "[src] Screen Capture", "items": [("Display Capture", "screen")]},
-    {"name": "[src] Audio", "items": [("Discord Audio", "audio"), ("Music Audio", "audio"), ("Chrome Audio", "audio")]},
-    {"name": "[src] Background", "items": [("Background", "background")]},
+    {"name": "[src] Alerts", "items": [("Sound Alerts Box", "alerts"), ("Twitch Alerts Box", "alerts")]},
+    {"name": "[src] Wolfathon", "items": [("Wheel of Dares", "widgets"), ("Rewards", "widgets"), ("Timer", "widgets")]},
+    {"name": "[src] Audio", "items": [("Discord", "audio"), ("Google Chrome", "audio"), ("Apple Music", "audio")]},
 ]
 
-# Main scenes reference [src] scenes and text leaves.
-# Item order = top to bottom in OBS; [src] Background sits last so it's the
-# bottom layer, [src] Audio just above it (audio has no visible pixels anyway).
+# Main scenes. Item order = top to bottom in OBS; Background sits last so it's the
+# bottom layer, Audio just above it (audio has no visible pixels anyway).
 MAIN_SCENES = [
-    {"name": "Starting Soon", "items": [("Txt Starting Soon", "standby"), ("[src] Alerts", "alerts"),
-                                        ("[src] Audio", "audio"), ("[src] Background", "background")]},
-    {"name": "Be Right Back", "items": [("Txt Be Right Back", "standby"), ("[src] Alerts", "alerts"),
-                                        ("[src] Audio", "audio"), ("[src] Background", "background")]},
-    {"name": "Ending", "items": [("Txt Ending", "standby"), ("[src] Alerts", "alerts"),
-                                 ("[src] Audio", "audio"), ("[src] Background", "background")]},
-    {"name": "Chat — VTuber", "items": [("VTuber Avatar", "vtuber"), ("[src] Alerts", "alerts"),
-                                        ("[src] Audio", "audio"), ("[src] Background", "background")]},
-    {"name": "Chat — Camera", "items": [("[src] Camera", "camera"), ("[src] Alerts", "alerts"),
-                                        ("[src] Audio", "audio"), ("[src] Background", "background")]},
-    {"name": "Co-working", "items": [("[src] Camera", "camera"), ("[src] Screen Capture", "screen"),
-                                     ("[src] Cowork Widgets", "widgets"), ("[src] Cowork Alerts", "cowork_alerts"),
-                                     ("[src] Audio", "audio"), ("[src] Background", "background")]},
+    {"name": "Starting Soon", "items": [("Starting Soon Video", "standby"), ("[src] Alerts", "alerts"),
+                                        ("[src] Audio", "audio"), ("Background", "background")]},
+    {"name": "Be Right Back", "items": [("Starting Soon Video", "standby"), ("[src] Alerts", "alerts"),
+                                        ("[src] Audio", "audio"), ("Background", "background")]},
+    {"name": "Stream", "items": [("Webcam", "camera"), ("WolfWave Widget", "nowplaying"),
+                                 ("[src] Wolfathon", "widgets"), ("[src] Alerts", "alerts"),
+                                 ("[src] Audio", "audio"), ("Background", "background")]},
+    {"name": "Co-Working", "items": [("Webcam", "camera"), ("WolfWave Widget", "nowplaying"),
+                                     ("[src] Wolfathon", "widgets"), ("[src] Alerts", "alerts"),
+                                     ("[src] Audio", "audio"), ("Background", "background")]},
 ]
 
-# Empty scenes used as visual dividers in the scene list (community trick).
-DIVIDERS = ["──────",
-            "────── src ──────"]
+# Empty scene used as a visual divider in the scene list (community trick).
+DIVIDERS = ["──────"]
 
 # Left-dock order, top to bottom.
 SCENE_ORDER = (
-    ["Starting Soon", "Be Right Back", "Ending", DIVIDERS[0],
-     "Chat — VTuber", "Chat — Camera", "Co-working", DIVIDERS[1]]
+    ["Starting Soon", "Be Right Back", "Stream", "Co-Working", DIVIDERS[0]]
     + [s["name"] for s in SRC_SCENES]
 )
 
