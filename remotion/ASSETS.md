@@ -67,3 +67,29 @@ npx remotion render Socials out/socials.gif --codec=gif
 In OBS: add each file as a **Media Source**, check **Loop**. Put backgrounds at
 the bottom of the scene and stack your screen / webcam / widgets above them.
 Motion is sine-based over the full clip so the loop point is invisible.
+
+### Lowest CPU / GPU / RAM on Apple Silicon
+
+- **Use the MP4s.** H.264 is decoded by the M1's dedicated video block, so a
+  looping MP4 Media Source is the lightest option. A **GIF is heavier** — OBS
+  decodes it on the CPU and holds frames in RAM. GIFs are included only for
+  convenience; prefer the MP4 (or ProRes `.mov` for the transparent Socials).
+- Tick **"Close file when inactive"** on Media Sources you're not currently
+  showing, so hidden scenes cost nothing.
+- These loops are 1080p30, 8s — small files, trivial decode load.
+
+### Fitting your webcam to the Just Chatting frame (OBS crop)
+
+The webcam frame is **1160×1000** px; position your webcam source at **x=40,
+y=40**. Its aspect (~1.16:1) is narrower than a 16:9 webcam, so crop the sides
+so nothing stretches:
+
+| Webcam | Crop Left | Crop Right | Crop Top | Crop Bottom |
+| ------ | --------- | ---------- | -------- | ----------- |
+| 1080p (1920×1080) | 334 | 334 | 0 | 0 |
+| 720p (1280×720)   | 222 | 222 | 0 | 0 |
+
+In OBS: select the webcam source, hold **Alt** and drag the left/right edges to
+crop (or right-click → **Transform → Edit Transform** and type the values),
+then size it to fill the 1160×1000 frame. Want zero crop instead? The frame can
+be reshaped to 16:9.
