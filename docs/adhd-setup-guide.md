@@ -32,6 +32,9 @@ For each Audio source: Add Source, pick **macOS Audio Capture**, set Method to
 ScreenCaptureKit) and needs no BlackHole or Loopback.
 Docs: https://obsproject.com/kb/macos-desktop-audio-capture-guide
 
+For per-source volume levels (Compressor settings per source, target dBFS
+lanes), see [audio-levels.md](audio-levels.md).
+
 ## Standalone sources
 
 | Source              | OBS source type      | Color       |
