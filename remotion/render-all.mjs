@@ -23,5 +23,9 @@ console.log("\n▶ Rendering Socials (mov + gif)…");
 execSync("npx remotion render Socials out/socials.mov --codec=prores --prores-profile=4444 --log=error", { stdio: "inherit" });
 execSync("npx remotion render Socials out/socials.gif --codec=gif --log=error", { stdio: "inherit" });
 
-execSync("zip -j out/overlays.zip out/*.mp4 out/socials.mov out/socials.gif", { stdio: "inherit" });
+// Also a GIF of the plain Background (MP4 is lighter in OBS, but handy to have).
+console.log("\n▶ Rendering Background (gif)…");
+execSync("npx remotion render Background out/Background.gif --codec=gif --every-nth-frame=2 --log=error", { stdio: "inherit" });
+
+execSync("zip -j out/overlays.zip out/*.mp4 out/socials.mov out/*.gif", { stdio: "inherit" });
 console.log("\n✓ Rendered + zipped → remotion/out/overlays.zip");
