@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "obs-preview",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["--prefix", "remotion", "run", "obs"],
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["vite", "--config", "preview/vite.config.ts"],
       "port": 5178
     }
   ]
