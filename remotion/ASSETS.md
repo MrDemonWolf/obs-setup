@@ -1,0 +1,69 @@
+# Overlay assets
+
+Drop these into `public/` (placeholders render without them):
+
+- `logo-main.svg` — mascot. `logo.svg` is the small mark in the frame-scene
+  title bars / background handle. `logo-mouth-closed.svg` is available too.
+
+macOS blocks reading the Google Drive folder directly (privacy/TCC), so drag
+the SVGs into `public/` in Finder.
+
+## Scenes
+
+Defined in `src/scenes.ts` (single source of truth). All are opaque animated
+backgrounds — 1920×1080, 8s, seamless loop, rendered to MP4.
+
+- **Cards** — `StartingSoon`, `BRB`, `EndingStream`: wolf night background +
+  glass title panel + mascot. `mood` drives the vibe: `hero` (howl rings +
+  open mouth), `calm`, `ember` (warm embers, wind-down).
+- **Just Chatting** — clean embed layout: webcam frame + an empty CHAT panel.
+  Drop your real cam + chat sources over the two boxes.
+- **Socials** — standalone badge (760×180, transparent) that fades through your
+  platforms one at a time (Twitch / X / YouTube / Instagram / GitHub / Discord).
+  Render it as its own transparent file and add it as any OBS source. Real brand
+  logos in `public/brands/`; edit the list/handles in `src/Socials.tsx`.
+- **Streaming** — just the animated background + a slim title bar (name only).
+  Stack your game capture / cam / widgets on top however you want.
+- **Co-Working** — simple outline layout on a light background with labelled
+  zones (WEBCAM / FOCUS TIMER / TASKS / CHAT). Labels only show in the
+  previewer (`guides`), not the render.
+- **Background** — plain wolf night background + a small corner handle. The
+  most flexible: add whatever you want on top.
+
+**Mascot mouth:** lively scenes use `logo-main.svg` (open); calm scenes use
+`logo-mouth-closed.svg` (closed). The wolf night ambience (full moon, stars,
+drifting embers) lives in `src/wolf/` + `src/Background.tsx`; a walking paw
+trail runs along the bottom of the card scenes (`src/wolf/PawTrail.tsx`).
+
+**Fonts:** Montserrat (free Proxima Nova stand-in) in `src/fonts.ts` — to use
+real Proxima Nova, drop the files in `public/fonts/` and load them there.
+**Socials:** brand SVGs in `public/brands/`, edit handles in `src/Socials.tsx`.
+
+Edit titles / status text / the handle in `src/scenes.ts`.
+
+## Commands
+
+```bash
+npm run obs                     # previewer — a button per scene
+npm run dev                     # Remotion Studio
+npm run render:all              # render every scene + zip → out/overlays.zip
+
+# or one at a time
+npx remotion render StartingSoon out/StartingSoon.mp4
+
+# standalone social badge → transparent
+npx remotion render Socials out/socials.mov --codec=prores --prores-profile=4444
+npx remotion render Socials out/socials.gif --codec=gif
+```
+
+## Formats for OBS on Apple Silicon (M1)
+
+- **Opaque scenes → H.264 MP4** (`.mp4`). Hardware-decoded on every Apple
+  Silicon chip, small files, smooth. This is what `render:all` produces.
+- **Transparent (Socials) → ProRes 4444 `.mov`** — hardware-decoded on M1,
+  clean alpha; the best-quality choice for OBS on macOS. The **GIF** is a
+  smaller, lower-quality convenience alternative (1-bit alpha edges).
+
+In OBS: add each file as a **Media Source**, check **Loop**. Put backgrounds at
+the bottom of the scene and stack your screen / webcam / widgets above them.
+Motion is sine-based over the full clip so the loop point is invisible.

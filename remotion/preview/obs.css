@@ -1,0 +1,114 @@
+:root {
+  --navy: #081536;
+  --navy-2: #0e2350;
+  --panel: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 255, 255, 0.12);
+  --text: #eaf2fb;
+  --dim: #9fb2cc;
+  --accent: #2e97d6;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root { margin: 0; min-height: 100%; }
+body {
+  background: radial-gradient(1200px 700px at 50% -10%, var(--navy-2), var(--navy));
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+
+/* macOS window */
+.window {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(8, 21, 54, 0.6);
+  border: 1px solid var(--border);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+}
+.titlebar {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--border);
+}
+.dots { display: flex; gap: 8px; }
+.dots i { width: 13px; height: 13px; border-radius: 50%; display: block; }
+.wintitle { font-size: 13px; color: var(--dim); font-weight: 600; }
+
+.stage {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+.stage > * { width: 100% !important; height: 100% !important; }
+/* checkerboard behind transparent (alpha) overlays */
+.stage.checker {
+  background-color: #1a1f27;
+  background-image:
+    linear-gradient(45deg, #12161c 25%, transparent 25%),
+    linear-gradient(-45deg, #12161c 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #12161c 75%),
+    linear-gradient(-45deg, transparent 75%, #12161c 75%);
+  background-size: 32px 32px;
+  background-position: 0 0, 0 16px, 16px -16px, -16px 0;
+}
+.tag {
+  margin-left: auto;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--dim);
+  border: 1px solid var(--border);
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+/* scene buttons */
+.switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+.scene-btn {
+  font: inherit;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 12px 22px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.08s ease, background 0.15s ease, border-color 0.15s ease;
+}
+.scene-btn:hover { background: rgba(255, 255, 255, 0.12); transform: translateY(-1px); }
+.scene-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 8px 22px rgba(46, 151, 214, 0.4);
+}
+
+.hint code {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  color: var(--dim);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: 8px;
+}

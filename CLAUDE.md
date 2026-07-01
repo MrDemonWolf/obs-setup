@@ -77,3 +77,60 @@ from its `private_settings.color`; empty dash-named scenes render as dividers.
 - **OBS source ids** in the generator (`av_capture_input`, `screen_capture`,
   `browser_source`, `text_ft2_source`) are macOS/OBS-version specific; OBS
   flags a source to reconfigure rather than failing import if one is off.
+
+## Animated overlays (`remotion/`)
+
+A **separate Node project** (Remotion 4, React 19) — the only part of the repo
+with a package manager and build step. Renders looping animated stream scenes
+(Starting Soon / BRB / Just Chatting / Co-Working / Ending Stream) to MP4 for
+OBS media sources. Run everything from inside `remotion/`:
+
+```bash
+npm install
+npm run obs      # OBS-style previewer at http://localhost:5178 (Vite + @remotion/player)
+npm run dev      # Remotion Studio
+npm run lint     # eslint src + tsc (src only; preview/ has its own tsconfig)
+npx remotion render <CompId> out/<name>.mp4   # StartingSoon | BRB | JustChatting | Coworking | EndingStream
+```
+
+Architecture:
+
+- **`src/scenes.ts` is the single source of truth** for the 5 scenes (id +
+  props). Both `src/Root.tsx` (registers a `<Composition>` per scene) and
+  `preview/ObsPreview.tsx` (the OBS mockup) import it — add a scene there once.
+- **`src/Scene.tsx`** composes three toggleable layers: `Background`
+  (`showBackground`), `TitleChip` (`showTitle`, a frosted macOS-glass panel —
+  title + one mono status line), `Mascot` (`showMascot`). `preview/` is a
+  simple macOS-window scene switcher (button per scene) built on
+  `@remotion/player`.
+- **Seamless loop is the invariant.** All motion is `theme.ts`'s `loopSin()`
+  (a `sin()` over the full `durationInFrames`), so frame 0 flows into the last
+  frame with no jump. Do NOT add entrance-once animations or `Math.random()` /
+  `Date` per frame — both break the loop / determinism. The starfield uses a
+  seeded LCG computed once at module load.
+- **Assets are drop-in via `public/`** and referenced with `staticFile()`.
+  `Mascot`/`Background` use `<Img onError>` fallbacks, so a missing
+  `logo-main.svg` or optional `bg.png` renders a placeholder instead of
+  crashing. The Vite previewer sets `publicDir` to `../public` so `staticFile`
+  assets resolve inside `<Player>`.
+- CSS transitions/animations and Tailwind animation classes do **not** render
+  in Remotion — animate with `useCurrentFrame()` + `interpolate()` only.
+- **Layout overlays** (`Streaming`, `Coworking`) are simple outline scenes:
+  `SimpleBg` (light gradient + glow + static grid, **no filter blur**) +
+  `FrameBar` + `Frame` outlines (labelled zones with corner brackets). The
+  operator stacks OBS sources on top; region labels only show when `guides` is
+  set (previewer sets it; renders don't). `Background` = `<Background/>` (aurora
+  + grid + drifting paw prints) + a corner handle.
+- **Perf:** all scenes render to opaque MP4 (H.264 → hardware-decoded in OBS on
+  Apple Silicon). Glass elements use plain translucent fills, not
+  `backdrop-filter` (which is very expensive to render). `fonts.ts` loads only
+  the weights/subset used (avoids ~96 font requests per render). `npm run
+  render:all` renders every id + zips to `out/overlays.zip` — keep the id list
+  in `render-all.mjs` in sync with `src/scenes.ts`.
+- **Wolf ambience** lives in `src/wolf/` (`Moon`, `Starfield`, `HowlRings`,
+  `Embers`, `PawTrail`; barrel `wolf/index.ts`) + `Background.tsx` (`variant`:
+  night/ember/minimal). `JustChatting` is its own layout
+  (`JustChattingScene.tsx`: cam/chat/events/social/now-playing + talking
+  mascot). Mascot mouth: `logo-main.svg` open (lively), `logo-mouth-closed.svg`
+  closed (calm), `Mascot talking` swaps them. Everything is `loopSin`/`loopTri`
+  periodic → seamless.

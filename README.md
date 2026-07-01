@@ -25,6 +25,16 @@ One command to back up. One click to preview. No lost scenes.
   on GitHub Pages, no build step.
 - **OBS JSON reference** - what the files contain, how source colors are
   stored, and exactly which fields are secrets.
+- **Animated overlays** - Remotion-built "Starting Soon", "Be Right Back",
+  "Just Chatting", "Co-Working", and "Ending Stream" scenes with seamless
+  looping motion, rendered to MP4 for OBS media sources.
+- **Live previewer** - a small macOS-style window that plays every overlay
+  live, with a button per scene, so you can flip through them before
+  rendering.
+- **Layout overlays** - the Streaming and Co-Working scenes are simple outline
+  layouts on a light background, with labelled zones for your screen, webcam,
+  and widgets; stack your OBS sources on top wherever you want. A plain
+  animated `Background` scene is included for fully free-form use.
 
 ## Getting Started
 
@@ -70,6 +80,26 @@ Force the device when auto-detect is wrong:
 DEVICE=mac-mini make backup
 ```
 
+### Animated overlays
+
+The animated stream scenes live in [`remotion/`](remotion/) as a separate
+Node project. See [`remotion/ASSETS.md`](remotion/ASSETS.md) for the asset
+drop-in and render details.
+
+```bash
+cd remotion
+npm install
+npm run obs                                   # previewer — a button per scene
+npm run dev                                   # Remotion Studio
+npm run render:all                            # render every scene + zip → out/overlays.zip
+npx remotion render StartingSoon out/StartingSoon.mp4   # or one at a time
+```
+
+Composition ids: `StartingSoon`, `BRB`, `JustChatting`, `Streaming`,
+`Coworking`, `EndingStream`, `Background` — all animated MP4s. Add each in OBS
+as a Media Source with Loop enabled; put it at the bottom of the scene and stack
+your screen/webcam/widgets on top.
+
 ## Tech Stack
 
 | Layer        | Technology                          |
@@ -77,6 +107,7 @@ DEVICE=mac-mini make backup
 | Scripts      | Python 3 (standard library) + Bash  |
 | Task runner  | GNU Make                            |
 | Previewer    | Plain HTML, CSS, and JavaScript     |
+| Overlays     | Remotion 4 (React 19), Vite previewer with @remotion/player |
 | Hosting      | GitHub Pages (serves the repo root) |
 | Target       | OBS Studio 30+ on macOS             |
 
@@ -129,10 +160,18 @@ obs-setup/
 │   ├── gen_scene_collection.py
 │   ├── sanitize.py
 │   └── backup.sh
-└── docs/
-    ├── backup-guide.md
-    ├── color-coding.md
-    └── obs-json-reference.md
+├── docs/
+│   ├── backup-guide.md
+│   ├── color-coding.md
+│   └── obs-json-reference.md
+└── remotion/                 # animated overlays (separate Node project)
+    ├── src/                  # scenes + layers (Scene / StreamFrame / CoworkFrame)
+    │   ├── scenes.ts         # every scene (single source of truth)
+    │   ├── Root.tsx          # registers each scene as a composition
+    │   └── theme.ts          # palette + seamless-loop helper
+    ├── preview/              # macOS-style previewer (Vite + @remotion/player)
+    ├── public/               # mascot SVGs (logo-main.svg etc.)
+    └── ASSETS.md             # asset drop-in + render/OBS instructions
 ```
 
 ## License

@@ -1,0 +1,64 @@
+import { useState } from "react";
+import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
+import { VIDEO, theme, radius } from "./theme";
+import { display } from "./fonts";
+
+const items = [
+  { b: "twitch", h: "/MrDemonWolf" },
+  { b: "x", h: "@MrDemonWolf" },
+  { b: "youtube", h: "@MrDemonWolf" },
+  { b: "instagram", h: "@MrDemonWolf" },
+  { b: "github", h: "nathanialhenniges" },
+  { b: "discord", h: "mrdwolf.net/discord" },
+];
+
+const BrandLogo: React.FC<{ b: string; size?: number }> = ({ b, size = 40 }) => {
+  const [ok, setOk] = useState(true);
+  if (!ok) return <span style={{ fontFamily: display, fontSize: size * 0.7, color: theme.blueBright, textTransform: "uppercase" }}>{b}</span>;
+  return (
+    <Img
+      src={staticFile(`brands/${b}.svg`)}
+      onError={() => setOk(false)}
+      style={{ height: size, width: "auto", filter: "brightness(0) invert(1)", opacity: 0.95 }}
+    />
+  );
+};
+
+// One platform at a time, fading in and out. Seamless: opacity is 0 at both the
+// start and end of each item's slot, so the loop point is invisible.
+export const SocialFade: React.FC<{ size?: number }> = ({ size = 44 }) => {
+  const f = useCurrentFrame();
+  const n = items.length;
+  const slot = VIDEO.durationInFrames / n;
+  const idx = Math.floor(f / slot) % n;
+  const local = (f % slot) / slot;
+  const op = interpolate(local, [0, 0.18, 0.82, 1], [0, 1, 1, 0]);
+  const it = items[idx];
+  return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 18, width: "100%", height: "100%", opacity: op }}>
+      <BrandLogo b={it.b} size={size} />
+      <span style={{ fontFamily: display, fontWeight: 700, fontSize: size * 0.82, color: theme.white, whiteSpace: "nowrap" }}>{it.h}</span>
+    </div>
+  );
+};
+
+// Standalone composition for GIF export — transparent background + a rounded
+// glass pill. Render: npx remotion render Socials out/socials.gif --codec=gif
+export const SocialsScene: React.FC = () => (
+  <AbsoluteFill style={{ alignItems: "center", justifyContent: "center" }}>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "88%",
+        height: "62%",
+        borderRadius: radius.pill,
+        background: theme.glassFill,
+        border: `1px solid ${theme.glassBorder}`,
+      }}
+    >
+      <SocialFade />
+    </div>
+  </AbsoluteFill>
+);
