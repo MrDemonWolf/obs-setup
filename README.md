@@ -93,8 +93,8 @@ cd remotion
 npm install
 npm run obs                                   # previewer — a button per scene
 npm run dev                                   # Remotion Studio
-npm run render:all                            # render everything into out/
-npx remotion render StartingSoon out/StartingSoon.mp4   # or one at a time
+npm run render:all                            # render everything into out/ (numbered files)
+npx remotion render StartingSoon out/01-starting-soon.mp4   # or one at a time
 ```
 
 Composition ids: `StartingSoon`, `BRB`, `JustChatting`, `Streaming`,
