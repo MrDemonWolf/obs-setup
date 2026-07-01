@@ -16,18 +16,20 @@ that's the whole workflow.
 
 ### What you get
 
-| File | Scene | Use in OBS |
-| ---- | ----- | ---------- |
-| `StartingSoon.mp4` | Starting Soon | "starting soon" loop |
-| `BRB.mp4` | Be Right Back | away / break loop |
-| `JustChatting.mp4` | Just Chatting | webcam + chat frame layout |
-| `Streaming.mp4` | Streaming | gameplay background |
-| `Coworking.mp4` | Co-Working | co-working background |
-| `EndingStream.mp4` | Ending Stream | end-of-stream loop |
-| `Background.mp4` | Background | universal background |
-| `socials.mov` | Socials | transparent handles badge (best quality) |
-| `socials.gif` | Socials | lighter transparent badge |
-| `Background.gif` | Background | GIF copy (heavier — prefer the MP4) |
+Numbered by stream flow so they sort in order:
+
+| File | Use in OBS |
+| ---- | ---------- |
+| `01-starting-soon.mp4` | "starting soon" loop (before you go live) |
+| `02-just-chatting.mp4` | webcam + chat frame layout |
+| `03-streaming.mp4` | gameplay / main background |
+| `04-co-working.mp4` | co-working background |
+| `05-be-right-back.mp4` | away / break loop |
+| `06-ending-stream.mp4` | end-of-stream loop |
+| `background.mp4` | universal background (any scene) |
+| `socials-badge.mov` | transparent socials badge (best quality) |
+| `socials-badge.gif` | lighter transparent socials badge |
+| `background.gif` | GIF copy of the background (heavier — prefer the MP4) |
 
 ## Preview before rendering
 
@@ -66,10 +68,14 @@ fill the frame.
 ## Render one at a time
 
 ```bash
-npx remotion render StartingSoon out/StartingSoon.mp4
-npx remotion render Socials out/socials.mov --codec=prores --prores-profile=4444
-npx remotion render Socials out/socials.gif --codec=gif
+npx remotion render StartingSoon out/01-starting-soon.mp4
+npx remotion render Socials out/socials-badge.mov --codec=prores --prores-profile=4444
+npx remotion render Socials out/socials-badge.gif --codec=gif
 ```
+
+Composition ids (left arg): `StartingSoon`, `BRB`, `JustChatting`, `Streaming`,
+`Coworking`, `EndingStream`, `Background`, `Socials`. The output filename (right
+arg) is up to you — `render:all` uses the numbered names above.
 
 ## Customize
 

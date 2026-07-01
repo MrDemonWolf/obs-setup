@@ -48,13 +48,18 @@ npm run obs                     # previewer — a button per scene
 npm run dev                     # Remotion Studio
 npm run render:all              # render everything into out/
 
-# or one at a time
-npx remotion render StartingSoon out/StartingSoon.mp4
+# or one at a time (comp id, then any output name)
+npx remotion render StartingSoon out/01-starting-soon.mp4
 
 # standalone social badge → transparent
-npx remotion render Socials out/socials.mov --codec=prores --prores-profile=4444
-npx remotion render Socials out/socials.gif --codec=gif
+npx remotion render Socials out/socials-badge.mov --codec=prores --prores-profile=4444
+npx remotion render Socials out/socials-badge.gif --codec=gif
 ```
+
+`render:all` writes numbered, kebab-case files: `01-starting-soon.mp4`,
+`02-just-chatting.mp4`, `03-streaming.mp4`, `04-co-working.mp4`,
+`05-be-right-back.mp4`, `06-ending-stream.mp4`, `background.mp4`,
+`socials-badge.mov` / `.gif`, `background.gif`.
 
 ## Formats for OBS on Apple Silicon (M1)
 
