@@ -81,56 +81,71 @@ from its `private_settings.color`; empty dash-named scenes render as dividers.
 ## Animated overlays (`remotion/`)
 
 A **separate Node project** (Remotion 4, React 19) — the only part of the repo
-with a package manager and build step. Renders looping animated stream scenes
-(Starting Soon / BRB / Just Chatting / Co-Working / Ending Stream) to MP4 for
-OBS media sources. Run everything from inside `remotion/`:
+with a package manager and build step. Renders seamless-looping stream scenes
+to video for OBS media sources. Run everything from inside `remotion/`:
 
 ```bash
 npm install
-npm run obs      # OBS-style previewer at http://localhost:5178 (Vite + @remotion/player)
-npm run dev      # Remotion Studio
-npm run lint     # eslint src + tsc (src only; preview/ has its own tsconfig)
-npx remotion render <CompId> out/<name>.mp4   # StartingSoon | BRB | JustChatting | Coworking | EndingStream
+npm run obs         # macOS-style previewer at http://localhost:5178 (Vite + @remotion/player)
+npm run dev         # Remotion Studio
+npm run lint        # eslint src + tsc
+npm run render:all  # render every scene into out/ (see render-all.mjs)
+# one at a time (comp ids):
+npx remotion render <CompId> out/<name>.mp4
+#   StartingSoon | BRB | JustChatting | Streaming | Coworking | EndingStream | Background | Socials
 ```
 
 Architecture:
 
-- **`src/scenes.ts` is the single source of truth** for the 5 scenes (id +
-  props). Both `src/Root.tsx` (registers a `<Composition>` per scene) and
-  `preview/ObsPreview.tsx` (the OBS mockup) import it — add a scene there once.
-- **`src/Scene.tsx`** composes three toggleable layers: `Background`
-  (`showBackground`), `TitleChip` (`showTitle`, a frosted macOS-glass panel —
-  title + one mono status line), `Mascot` (`showMascot`). `preview/` is a
-  simple macOS-window scene switcher (button per scene) built on
-  `@remotion/player`.
-- **Seamless loop is the invariant.** All motion is `theme.ts`'s `loopSin()`
-  (a `sin()` over the full `durationInFrames`), so frame 0 flows into the last
+- **`src/scenes.ts` is the single source of truth** for the **8** scenes, each
+  with `id`, `label`, `component`, `props`, and optional `width`/`height`.
+  `src/Root.tsx` registers a `<Composition>` per scene (applying per-scene
+  `width ?? VIDEO.width` / `height ?? VIDEO.height` — so `Socials` is 760×180,
+  the rest 1920×1080). `preview/ObsPreview.tsx` (button-per-scene switcher)
+  imports the same list. Add a scene there once.
+- **Card scenes** (`StartingSoon`, `BRB`, `EndingStream`) use `src/Scene.tsx`,
+  which layers `Background` → `PawTrail` (walking footsteps) → `TitleChip`
+  (glass panel: title + mono status line) → `Mascot`. `mood` picks the vibe:
+  `hero` (open-mouth mascot) / `calm` / `ember` (warm wind-down embers). Only
+  `ember` changes the background; the mascot mouth is a static `mascotSrc` in
+  `scenes.ts` (`logo-main.svg` open / `logo-mouth-closed.svg` closed). The
+  `Mascot talking` mouth-swap prop exists but no registered scene uses it, and
+  the mascot has **no** glow/spotlight.
+- **`JustChatting`** = `JustChattingScene.tsx`: a `night` `Background` + a
+  webcam frame outline + an empty CHAT panel. No mascot, no widgets — you embed
+  your real cam + chat over the boxes.
+- **`Streaming`** = `SimpleBg` + `FrameBar` (logo + title only) — no zones.
+  **`Coworking`** = `SimpleBg` + `FrameBar` + four labelled `Frame` outline
+  zones (WEBCAM / FOCUS TIMER / TASKS / CHAT). Zone labels only show when
+  `guides` is set (previewer sets it; renders don't). `SimpleBg` = dark navy
+  gradient + drifting dot grid + vignette (no blur, no glow).
+- **`Background`** = `BackdropScene.tsx` → just `<Background/>` (aurora +
+  starfield + full moon + drifting embers + dot grid + light sweep); no handle,
+  no paw prints. The most flexible overlay.
+- **`Socials`** = `Socials.tsx` `SocialsScene` (760×180, transparent) that fades
+  through brand logos one at a time. Logos in `public/brands/`; edit the
+  platform list/handles in `Socials.tsx`. Rendered as `socials.mov` (ProRes
+  4444, alpha) + `socials.gif`.
+- **Wolf ambience** lives in `src/wolf/` (`Moon`, `Starfield`, `Embers`,
+  `PawTrail`; barrel `wolf/index.ts`) + `Background.tsx` (`variant`:
+  night/ember/minimal). `PawTrail` runs only on card scenes (via `Scene.tsx`),
+  not in the shared `Background`.
+- **Seamless loop is the invariant.** All motion is `loopSin`/`loopTri` (from
+  `theme.ts`) over the full `durationInFrames`, so frame 0 flows into the last
   frame with no jump. Do NOT add entrance-once animations or `Math.random()` /
-  `Date` per frame — both break the loop / determinism. The starfield uses a
-  seeded LCG computed once at module load.
-- **Assets are drop-in via `public/`** and referenced with `staticFile()`.
-  `Mascot`/`Background` use `<Img onError>` fallbacks, so a missing
-  `logo-main.svg` or optional `bg.png` renders a placeholder instead of
-  crashing. The Vite previewer sets `publicDir` to `../public` so `staticFile`
-  assets resolve inside `<Player>`.
+  `Date` per frame — both break the loop / determinism. The starfield/embers use
+  a seeded LCG computed once at module load.
+- **Assets** are drop-in via `public/` and referenced with `staticFile()`;
+  `Mascot`/brand logos use `<Img onError>` fallbacks. The Vite previewer sets
+  `publicDir` to `../public` so `staticFile` assets resolve inside `<Player>`.
 - CSS transitions/animations and Tailwind animation classes do **not** render
   in Remotion — animate with `useCurrentFrame()` + `interpolate()` only.
-- **Layout overlays** (`Streaming`, `Coworking`) are simple outline scenes:
-  `SimpleBg` (light gradient + glow + static grid, **no filter blur**) +
-  `FrameBar` + `Frame` outlines (labelled zones with corner brackets). The
-  operator stacks OBS sources on top; region labels only show when `guides` is
-  set (previewer sets it; renders don't). `Background` = `<Background/>` (aurora
-  + grid + drifting paw prints) + a corner handle.
-- **Perf:** all scenes render to opaque MP4 (H.264 → hardware-decoded in OBS on
-  Apple Silicon). Glass elements use plain translucent fills, not
-  `backdrop-filter` (which is very expensive to render). `fonts.ts` loads only
-  the weights/subset used (avoids ~96 font requests per render). `npm run
-  render:all` renders every id + zips to `out/overlays.zip` — keep the id list
-  in `render-all.mjs` in sync with `src/scenes.ts`.
-- **Wolf ambience** lives in `src/wolf/` (`Moon`, `Starfield`, `HowlRings`,
-  `Embers`, `PawTrail`; barrel `wolf/index.ts`) + `Background.tsx` (`variant`:
-  night/ember/minimal). `JustChatting` is its own layout
-  (`JustChattingScene.tsx`: cam/chat/events/social/now-playing + talking
-  mascot). Mascot mouth: `logo-main.svg` open (lively), `logo-mouth-closed.svg`
-  closed (calm), `Mascot talking` swaps them. Everything is `loopSin`/`loopTri`
-  periodic → seamless.
+- **Perf / formats:** opaque scenes render to H.264 MP4 (hardware-decoded in
+  OBS on Apple Silicon — the lightest option; a GIF is heavier). Transparent
+  `Socials` → ProRes 4444 `.mov` (hardware-decoded alpha) + GIF. Glass elements
+  use plain translucent fills, not `backdrop-filter` (expensive to render).
+  Fonts (`fonts.ts`) = **Montserrat** (free Proxima Nova stand-in; `display` and
+  `mono` are the same family), loading only the weights/subset used.
+  `render-all.mjs` renders the 7 full-frame ids to MP4, then `Socials` to
+  `.mov` + `.gif` and a bonus `Background.gif`, into `out/` (which is
+  gitignored). `Socials` is intentionally omitted from the 7-id array.

@@ -27,5 +27,4 @@ execSync("npx remotion render Socials out/socials.gif --codec=gif --log=error", 
 console.log("\n▶ Rendering Background (gif)…");
 execSync("npx remotion render Background out/Background.gif --codec=gif --every-nth-frame=2 --log=error", { stdio: "inherit" });
 
-execSync("zip -j out/overlays.zip out/*.mp4 out/socials.mov out/*.gif", { stdio: "inherit" });
-console.log("\n✓ Rendered + zipped → remotion/out/overlays.zip");
+console.log("\n✓ Done → remotion/out/");

@@ -2,8 +2,8 @@
 
 Drop these into `public/` (placeholders render without them):
 
-- `logo-main.svg` — mascot. `logo.svg` is the small mark in the frame-scene
-  title bars / background handle. `logo-mouth-closed.svg` is available too.
+- `logo-main.svg` (open mouth) + `logo-mouth-closed.svg` = mascot; `logo.svg` =
+  the small mark shown in the Streaming / Co-Working title bars.
 
 macOS blocks reading the Google Drive folder directly (privacy/TCC), so drag
 the SVGs into `public/` in Finder.
@@ -14,8 +14,8 @@ Defined in `src/scenes.ts` (single source of truth). All are opaque animated
 backgrounds — 1920×1080, 8s, seamless loop, rendered to MP4.
 
 - **Cards** — `StartingSoon`, `BRB`, `EndingStream`: wolf night background +
-  glass title panel + mascot. `mood` drives the vibe: `hero` (howl rings +
-  open mouth), `calm`, `ember` (warm embers, wind-down).
+  glass title panel + mascot + a walking paw trail. `mood` drives the vibe:
+  `hero` (open-mouth mascot), `calm`, `ember` (warm embers, wind-down).
 - **Just Chatting** — clean embed layout: webcam frame + an empty CHAT panel.
   Drop your real cam + chat sources over the two boxes.
 - **Socials** — standalone badge (760×180, transparent) that fades through your
@@ -24,11 +24,11 @@ backgrounds — 1920×1080, 8s, seamless loop, rendered to MP4.
   logos in `public/brands/`; edit the list/handles in `src/Socials.tsx`.
 - **Streaming** — just the animated background + a slim title bar (name only).
   Stack your game capture / cam / widgets on top however you want.
-- **Co-Working** — simple outline layout on a light background with labelled
+- **Co-Working** — simple outline layout on the navy background with labelled
   zones (WEBCAM / FOCUS TIMER / TASKS / CHAT). Labels only show in the
   previewer (`guides`), not the render.
-- **Background** — plain wolf night background + a small corner handle. The
-  most flexible: add whatever you want on top.
+- **Background** — plain wolf night background, nothing on top. The most
+  flexible: add whatever you want over it.
 
 **Mascot mouth:** lively scenes use `logo-main.svg` (open); calm scenes use
 `logo-mouth-closed.svg` (closed). The wolf night ambience (full moon, stars,
@@ -39,14 +39,14 @@ trail runs along the bottom of the card scenes (`src/wolf/PawTrail.tsx`).
 real Proxima Nova, drop the files in `public/fonts/` and load them there.
 **Socials:** brand SVGs in `public/brands/`, edit handles in `src/Socials.tsx`.
 
-Edit titles / status text / the handle in `src/scenes.ts`.
+Edit titles / status text in `src/scenes.ts`.
 
 ## Commands
 
 ```bash
 npm run obs                     # previewer — a button per scene
 npm run dev                     # Remotion Studio
-npm run render:all              # render every scene + zip → out/overlays.zip
+npm run render:all              # render everything into out/
 
 # or one at a time
 npx remotion render StartingSoon out/StartingSoon.mp4
