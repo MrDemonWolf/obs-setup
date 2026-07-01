@@ -13,9 +13,9 @@ then Color). One color per category, matching the live rig.
 | Color        | Meaning              | Source hex | OBS stored value (ABGR) |
 | ------------ | -------------------- | ---------- | ----------------------- |
 | Green        | Webcam (you, live)   | `#2EA043`  | `0xFF43A02E`            |
-| Purple       | Alerts Group (Sound + Twitch Alerts Box) | `#8957E5` | `0xFFE55789` |
+| Purple       | Alerts (Sound Alerts + Twitch Alerts) | `#8957E5` | `0xFFE55789` |
 | Teal         | Wolfathon widgets (Wheel of Dares / Rewards / Timer) | `#1F9EA6` | `0xFFA69E1F` |
-| Blue         | WolfWave now-playing widget | `#388BFD` | `0xFFFD8B38`     |
+| Blue         | Now Playing (WolfWave) | `#388BFD` | `0xFFFD8B38`            |
 | Yellow       | Screen / display capture (when added) | `#BB8009` | `0xFF0980BB` |
 | Red          | Standby video (Starting Soon / Be Right Back) | `#DA3633` | `0xFF3336DA` |
 | Gray (light) | Audio Group (Discord / Google Chrome / Apple Music) | `#8B949E` | `0xFF9E948B` |
@@ -39,12 +39,12 @@ scene collection is rewritten with the new colors. The previewer legend
 - **Standby red** marks the offline screens (Starting Soon, Be Right Back,
   Ending) so they stand out from live scenes.
 - **Alerts purple** is on almost every scene, so it gets a distinct,
-  high-contrast color. The Alerts Group (Sound Alerts Box + Twitch Alerts Box)
-  is one purple group.
+  high-contrast color. The Alerts group (Sound Alerts + Twitch Alerts) is one
+  purple group.
 - **Wolfathon teal** covers the interactive widgets (Wheel of Dares, Rewards,
   Timer) inside the Wolfathon group.
-- **WolfWave blue** is the now-playing widget: its own info overlay, its own
-  color.
+- **Now Playing blue** is the WolfWave now-playing overlay: its own info
+  element, its own color.
 - **Audio light-gray** vs **Background dark-gray**: both are behind-the-scenes
   infrastructure, so both are neutral grays; the darker one recedes furthest
   (background). Audio is continuous app sound (Discord / Chrome / Apple Music).
