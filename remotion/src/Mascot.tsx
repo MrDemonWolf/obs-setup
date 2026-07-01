@@ -5,7 +5,7 @@ import { mono } from "./fonts";
 
 // Brand mascot with a seamless idle bob/breathe/sway. `talking` swaps
 // open/closed mouth on a slow cadence (deterministic → loop-safe). `anchor`
-// pins it bottom-left or bottom-right.
+// pins it to the left or right, vertically centred (right-middle).
 export const Mascot: React.FC<{
   src?: string;
   heightPct?: number;
@@ -22,16 +22,16 @@ export const Mascot: React.FC<{
   const sway = 0.6 * loopSin(frame, 0.4);
 
   const activeSrc = talking ? (Math.floor(frame / 9) % 2 === 0 ? openSrc : closedSrc) : src;
-  const side = anchor === "left" ? { left: 120 } : { right: 120 };
+  const side = anchor === "left" ? { left: 40 } : { right: 40 };
 
   return (
-    <div style={{ position: "absolute", ...side, bottom: 0, height: `${heightPct}%` }}>
+    <div style={{ position: "absolute", ...side, top: "50%", height: `${heightPct}%`, transform: "translateY(-50%)" }}>
       <div
         style={{
           position: "relative",
           height: "100%",
           transform: `translateY(${bob}px) rotate(${sway}deg) scale(${breathe})`,
-          transformOrigin: "bottom center",
+          transformOrigin: "center center",
         }}
       >
         {ok ? (
