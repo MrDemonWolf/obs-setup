@@ -121,9 +121,8 @@ Architecture:
   webcam frame outline + an empty CHAT panel. No mascot, no widgets — you embed
   your real cam + chat over the boxes.
 - **`Streaming`** = `SimpleBg` + `FrameBar` (logo + title only) — no zones.
-  **`Coworking`** = `SimpleBg` + `FrameBar` + four labelled `Frame` outline
-  zones (WEBCAM / FOCUS TIMER / TASKS / CHAT). Zone labels only show when
-  `guides` is set (previewer sets it; renders don't). `SimpleBg` = dark navy
+  **`Coworking`** = same as `Streaming` (`SimpleBg` + `FrameBar`, logo + title
+  only) — no zones; stack your own OBS sources on top. `SimpleBg` = dark navy
   gradient + drifting dot grid + vignette (no blur, no glow).
 - **`Background`** = `BackdropScene.tsx` → just `<Background/>` (aurora +
   starfield + full moon + drifting embers + dot grid + light sweep); no handle,
