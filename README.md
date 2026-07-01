@@ -25,16 +25,18 @@ One command to back up. One click to preview. No lost scenes.
   on GitHub Pages, no build step.
 - **OBS JSON reference** - what the files contain, how source colors are
   stored, and exactly which fields are secrets.
-- **Animated overlays** - Remotion-built "Starting Soon", "Be Right Back",
-  "Just Chatting", "Co-Working", and "Ending Stream" scenes with seamless
-  looping motion, rendered to MP4 for OBS media sources.
+- **Animated overlays** - Remotion-built scenes with seamless looping motion
+  (Starting Soon, Be Right Back, Just Chatting, Streaming, Co-Working, Ending
+  Stream, Background), rendered to MP4 for OBS media sources.
 - **Live previewer** - a small macOS-style window that plays every overlay
   live, with a button per scene, so you can flip through them before
   rendering.
-- **Layout overlays** - the Streaming and Co-Working scenes are simple outline
-  layouts on a light background, with labelled zones for your screen, webcam,
-  and widgets; stack your OBS sources on top wherever you want. A plain
-  animated `Background` scene is included for fully free-form use.
+- **Layout scenes** - **Co-Working** has labelled outline zones (webcam / focus
+  timer / tasks / chat); **Streaming** and **Background** are just the animated
+  background (stack your sources on top). **Just Chatting** is a webcam frame +
+  an empty chat panel to embed a real chat over.
+- **Socials badge** - a standalone transparent overlay that fades through your
+  platforms one at a time with real brand logos.
 
 ## Getting Started
 
@@ -91,14 +93,16 @@ cd remotion
 npm install
 npm run obs                                   # previewer — a button per scene
 npm run dev                                   # Remotion Studio
-npm run render:all                            # render every scene + zip → out/overlays.zip
+npm run render:all                            # render everything into out/
 npx remotion render StartingSoon out/StartingSoon.mp4   # or one at a time
 ```
 
 Composition ids: `StartingSoon`, `BRB`, `JustChatting`, `Streaming`,
-`Coworking`, `EndingStream`, `Background` — all animated MP4s. Add each in OBS
-as a Media Source with Loop enabled; put it at the bottom of the scene and stack
-your screen/webcam/widgets on top.
+`Coworking`, `EndingStream`, `Background` (full-frame MP4s), plus `Socials` —
+a 760×180 transparent badge rendered to `socials.mov` (ProRes 4444) +
+`socials.gif`. Add each in OBS as a Media Source with Loop enabled; put the
+backgrounds at the bottom of the scene and stack your screen / webcam / widgets
+on top.
 
 ## Tech Stack
 
@@ -165,12 +169,15 @@ obs-setup/
 │   ├── color-coding.md
 │   └── obs-json-reference.md
 └── remotion/                 # animated overlays (separate Node project)
-    ├── src/                  # scenes + layers (Scene / StreamFrame / CoworkFrame)
+    ├── src/                  # scenes + layers
     │   ├── scenes.ts         # every scene (single source of truth)
     │   ├── Root.tsx          # registers each scene as a composition
-    │   └── theme.ts          # palette + seamless-loop helper
+    │   ├── Scene.tsx         # card layout; JustChattingScene / StreamFrame / CoworkFrame / BackdropScene / Socials
+    │   ├── wolf/             # night ambience (Moon, Starfield, Embers, PawTrail)
+    │   └── theme.ts          # palette + seamless-loop helpers
     ├── preview/              # macOS-style previewer (Vite + @remotion/player)
-    ├── public/               # mascot SVGs (logo-main.svg etc.)
+    ├── public/               # mascot SVGs (logo-*.svg) + brands/ (social logos)
+    ├── render-all.mjs        # render every scene into out/
     └── ASSETS.md             # asset drop-in + render/OBS instructions
 ```
 

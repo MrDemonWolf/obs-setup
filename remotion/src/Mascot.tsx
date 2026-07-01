@@ -3,7 +3,7 @@ import { Img, staticFile, useCurrentFrame } from "remotion";
 import { theme, radius, loopSin } from "./theme";
 import { mono } from "./fonts";
 
-// Brand mascot with a soft glow ring + seamless idle bob. `talking` swaps
+// Brand mascot with a seamless idle bob/breathe/sway. `talking` swaps
 // open/closed mouth on a slow cadence (deterministic → loop-safe). `anchor`
 // pins it bottom-left or bottom-right.
 export const Mascot: React.FC<{
