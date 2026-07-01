@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# Claude Code session state (keep .claude/launch.json though)
+.claude/scheduled_tasks.lock
+
+# Full backup archives are for Google Drive, never git (they contain
+# un-wiped browser URLs and stream keys).
+*.zip
+
+# Anything you explicitly stash outside the sanitized copy.
+*.local.json
