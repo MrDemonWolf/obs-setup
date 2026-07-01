@@ -1,72 +1,69 @@
-# OBS setup — scenes, sources, colors
+# OBS setup: scenes, sources, colors
 
-One rule: **color = category.** In OBS, right-click a source (or a group) →
-**Color** → click the swatch. Only the 8 built-in OBS colors are used.
+One rule: color = category. In OBS, right-click a source or a group, pick
+Color, click the swatch. Only the 8 built-in OBS colors are used.
 
-## Colors → category
+## Colors to category
 
 | OBS color    | Category                          |
 | ------------ | --------------------------------- |
-| Green        | Camera / VTuber (you, live)       |
-| Purple       | Alerts (alert box + sound alerts) |
-| Teal         | Cowork widgets (task + timer)     |
-| Blue         | Cowork alerts                     |
-| Yellow       | Screen / display capture          |
-| Red          | Standby text                      |
-| Gray (light) | Audio (Discord / Music / Chrome)  |
-| Gray (dark)  | Background                        |
+| Green        | Webcam (you, live)                |
+| Purple       | Alerts (Sound + Twitch Alerts Box)|
+| Teal         | Wolfathon widgets (wheel/rewards/timer) |
+| Blue         | WolfWave now-playing widget       |
+| Yellow       | Screen / display (when you add it)|
+| Red          | Standby video (Starting Soon / BRB)|
+| Gray (light) | Audio (Discord / Chrome / Apple Music) |
+| Gray (dark)  | Background image                  |
 
-## Groups (build once)
+## Groups (build once, color the group)
 
-Select the sources → right-click → **Group Selected Items** → name it →
-right-click the group → **Color**.
+Select the sources, right-click, Group Selected Items, name it, then right-click
+the group and pick Color.
 
-| Group  | Color        | Sources inside                            |
-| ------ | ------------ | ----------------------------------------- |
-| Alerts | Purple       | Alert Box, Sound Alerts                   |
-| Cowork | Teal         | Cowork Task, Cowork Timer                 |
-| Audio  | Gray (light) | Discord Audio, Music Audio, Chrome Audio  |
+| Group       | Color        | Sources inside                        |
+| ----------- | ------------ | ------------------------------------- |
+| Alerts Group| Purple       | Sound Alerts Box, Twitch Alerts Box   |
+| Wolfathon   | Teal         | Wheel of Dares, Rewards, Timer        |
+| Audio       | Gray (light) | Discord, Google Chrome, Apple Music   |
 
 ## Standalone sources
 
-| Source                           | OBS source type      | Color       |
-| -------------------------------- | -------------------- | ----------- |
-| Camera Device                    | Video Capture Device | Green       |
-| VTuber Avatar                    | Browser              | Green       |
-| Display Capture                  | Screen Capture       | Yellow      |
-| Cowork Alerts Web                | Browser              | Blue        |
-| Background                       | Image or Media (MP4) | Gray (dark) |
-| Txt Starting Soon / BRB / Ending | Text                 | Red         |
+| Source              | OBS source type      | Color       |
+| ------------------- | -------------------- | ----------- |
+| Webcam              | Video Capture Device | Green       |
+| WolfWave Widget     | Browser              | Blue        |
+| Starting Soon Video | Media Source         | Red         |
+| Background          | Image                | Gray (dark) |
 
-## Scenes → what's in each
+## Scenes to sources
 
-Top of the list = front. Bottom = behind. **Background always last.**
+Top of the list = front. Bottom = behind. Background always last.
 
-| Scene          | Sources (top → bottom)                                                              |
-| -------------- | ---------------------------------------------------------------------------------- |
-| Starting Soon  | Txt Starting Soon · Alerts group · Audio group · Background                         |
-| Be Right Back  | Txt Be Right Back · Alerts group · Audio group · Background                         |
-| Ending         | Txt Ending · Alerts group · Audio group · Background                                |
-| Chat — VTuber  | VTuber Avatar · Alerts group · Audio group · Background                             |
-| Chat — Camera  | Camera Device · Alerts group · Audio group · Background                             |
-| Co-working     | Camera Device · Display Capture · Cowork group · Cowork Alerts Web · Audio · Background |
+| Scene         | Sources (top to bottom)                                                     |
+| ------------- | -------------------------------------------------------------------------- |
+| Starting Soon | Starting Soon Video, Alerts Group, Audio, Background                        |
+| Be Right Back | Starting Soon Video, Alerts Group, Audio, Background                        |
+| Stream        | Webcam, WolfWave Widget, Wolfathon, Alerts Group, Audio, Background         |
+| Co-Working    | Webcam, WolfWave Widget, Wolfathon, Alerts Group, Audio, Background         |
 
-## What you're adding right now
+## Background and standby images
 
-- **Sound Alerts** — Browser source, Purple → drop into the **Alerts** group.
-- **Cowork Task** + **Cowork Timer** — Browser sources, Teal → make a **Cowork** group.
-- **Audio group** — Discord + Music + Chrome, Gray (light). macOS per-app audio
-  needs **OBS 30+ "macOS Audio Capture"**, or a virtual device
-  (BlackHole / Loopback) if OBS is older.
-- **Background** — Image or a looping MP4 from `remotion/out/`, Gray (dark) →
-  bottom of every scene.
+Both the Background image and the Starting Soon / BRB video live in this folder:
+
+```
+/Users/nathanialhenniges/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/MultiMedia Projects/Social Media/Twitch/Scenes Images
+```
+
+Point the Image / Media source at the file you want from that folder. This path
+is this Mac only (Google Drive mount); the Mac Mini has its own path.
 
 ## Notes
 
-- Browser widget URLs ship **empty** (they hold secret tokens). Paste yours after
+- Browser widget URLs ship empty (they hold secret tokens). Paste yours after
   adding. `make backup` scrubs them before git; the full copy stays in the
   `~/Downloads` zip only.
-- Re-import instead of building by hand: `make gen` → OBS → Scene Collection →
-  Import. Colors apply automatically. Import **replaces** the collection (re-paste
-  URLs). The generated file bundles sources as `[src]` scenes; by hand you use
-  Groups — same look.
+- Sync the repo to your real OBS: export from OBS, then `make backup`. That
+  captures the live setup (scrubbed), so the previewer and `devices/` match what
+  you actually run. The generator (`make gen`) is just the starting seed.
+- Yellow (Screen) is reserved for when you add a Display Capture source.

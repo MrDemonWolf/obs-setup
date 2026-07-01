@@ -70,18 +70,19 @@ from its `private_settings.color`; empty dash-named scenes render as dividers.
 ## Keep these in sync when editing
 
 - **Palette:** `PALETTE` (generator) ↔ `LEGEND` (`index.html`) ↔
-  `docs/color-coding.md`. Three copies of OBS's 8 preset colors, by design (no
-  build to share them); VTuber reuses Green (9 categories, 8 colors). Full
-  scene / group / source table with the color per item lives in
-  `docs/adhd-setup-guide.md`.
+  `docs/color-coding.md`. Three copies of OBS's 8 preset colors, one per
+  category, by design (no build to share them). Full scene / group / source
+  table with the color per item lives in `docs/adhd-setup-guide.md`. Background
+  and standby images come from `SCENES_IMAGES` (a Google Drive path set in the
+  generator; this-Mac only).
 - **Devices:** adding a Mac means a new `case` in `scripts/backup.sh`, a new
   slug in `DEVICES` in `index.html`, and a `devices/<slug>/` folder.
-- **OBS source ids** in the generator (`av_capture_input`, `screen_capture`,
-  `browser_source`, `text_ft2_source`, `coreaudio_output_capture`,
-  `image_source`) are macOS/OBS-version specific; OBS flags a source to
-  reconfigure rather than failing import if one is off. Per-app audio
-  (Discord/Music/Chrome) really needs OBS 30+ "macOS Audio Capture" or a
-  virtual device — the generator seeds `coreaudio_output_capture` placeholders.
+- **OBS source ids** in the generator (`av_capture_input`, `browser_source`,
+  `coreaudio_output_capture`, `image_source`, `ffmpeg_source`) are macOS/OBS-
+  version specific; OBS flags a source to reconfigure rather than failing import
+  if one is off. Per-app audio (Discord/Chrome/Apple Music) really needs OBS 30+
+  "macOS Audio Capture" or a virtual device; the generator seeds
+  `coreaudio_output_capture` placeholders.
 
 ## Animated overlays (`remotion/`)
 

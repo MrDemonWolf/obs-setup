@@ -7,20 +7,19 @@ which is why the color lives on each source *where it appears inside a scene*.
 
 ## The palette
 
-These are OBS's **8 built-in preset colors** (right-click a source → Color).
-Nine categories share them: **VTuber reuses Green** (both are "you, live"),
-**Audio** takes the light gray, **Background** the dark gray.
+These are OBS's **8 built-in preset colors** (right-click a source or group,
+then Color). One color per category, matching the live rig.
 
 | Color        | Meaning              | Source hex | OBS stored value (ABGR) |
 | ------------ | -------------------- | ---------- | ----------------------- |
-| Green        | Camera + VTuber (you, live) | `#2EA043` | `0xFF43A02E`     |
-| Purple       | Alerts (alert box + sound/Twitch alerts) | `#8957E5` | `0xFFE55789` |
-| Teal         | Cowork widgets (task + timer) | `#1F9EA6` | `0xFFA69E1F`       |
-| Blue         | Cowork alerts        | `#388BFD`  | `0xFFFD8B38`            |
-| Yellow       | Screen / display     | `#BB8009`  | `0xFF0980BB`            |
-| Red          | Standby text (Starting Soon / BRB / Ending) | `#DA3633` | `0xFF3336DA` |
-| Gray (light) | Audio group (Discord / Music / Chrome) | `#8B949E` | `0xFF9E948B` |
-| Gray (dark)  | Background layer     | `#6E7681`  | `0xFF81766E`            |
+| Green        | Webcam (you, live)   | `#2EA043`  | `0xFF43A02E`            |
+| Purple       | Alerts Group (Sound + Twitch Alerts Box) | `#8957E5` | `0xFFE55789` |
+| Teal         | Wolfathon widgets (Wheel of Dares / Rewards / Timer) | `#1F9EA6` | `0xFFA69E1F` |
+| Blue         | WolfWave now-playing widget | `#388BFD` | `0xFFFD8B38`     |
+| Yellow       | Screen / display capture (when added) | `#BB8009` | `0xFF0980BB` |
+| Red          | Standby video (Starting Soon / Be Right Back) | `#DA3633` | `0xFF3336DA` |
+| Gray (light) | Audio Group (Discord / Google Chrome / Apple Music) | `#8B949E` | `0xFF9E948B` |
+| Gray (dark)  | Background image     | `#6E7681`  | `0xFF81766E`            |
 
 The "stored value" column is how OBS writes the color in the scene JSON: a
 32-bit **ABGR** integer (`0xAABBGGRR`), so the red channel is the low byte.
@@ -39,20 +38,18 @@ scene collection is rewritten with the new colors. The previewer legend
 - **Camera green** reads as "live / you are on."
 - **Standby red** marks the offline screens (Starting Soon, Be Right Back,
   Ending) so they stand out from live scenes.
-- **Alerts purple** is the one thing on almost every scene, so it gets a
-  distinct, high-contrast color. **Sound / Twitch alerts** are also purple —
-  event-triggered alerts, just the audio kind.
-- Cowork **teal/blue** sit next to each other visually because they belong to
-  the same co-working group. **Task** and **Timer** are both teal (cowork
-  widgets).
-- **VTuber reuses green** — there is no pink in OBS's 8 presets, and the VTuber
-  avatar plays the same role as the camera (you, live).
-- **Audio light-gray** vs **Background dark-gray** — both are "behind the
-  scenes" infrastructure, so both are neutral grays; the darker one recedes
-  furthest (background). Audio = continuous app sound (Discord / music /
-  browser), different job from purple alert sounds.
+- **Alerts purple** is on almost every scene, so it gets a distinct,
+  high-contrast color. The Alerts Group (Sound Alerts Box + Twitch Alerts Box)
+  is one purple group.
+- **Wolfathon teal** covers the interactive widgets (Wheel of Dares, Rewards,
+  Timer) inside the Wolfathon group.
+- **WolfWave blue** is the now-playing widget: its own info overlay, its own
+  color.
+- **Audio light-gray** vs **Background dark-gray**: both are behind-the-scenes
+  infrastructure, so both are neutral grays; the darker one recedes furthest
+  (background). Audio is continuous app sound (Discord / Chrome / Apple Music).
 
-Group related sources with OBS **Groups** (right-click → Group Selected Items),
+Group related sources with OBS **Groups** (right-click, Group Selected Items),
 then color the group. See [adhd-setup-guide.md](adhd-setup-guide.md) for the
 full scene / group / source table with the color per item.
 
