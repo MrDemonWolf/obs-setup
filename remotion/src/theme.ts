@@ -1,19 +1,20 @@
-// Brand palette + macOS-glass tokens. "techwolf" = brand navy/cyan, rounded,
-// frosted vibrancy, subtle tech grid.
+// Brand palette + macOS-glass tokens. Wolf brand: Midnight #091533 (main) +
+// Cerulean #00ACED (secondary accent) + Cornflower #6B8BF5 (tertiary tint).
 export const theme = {
-  navyTop: "#0E2350",
-  navyDeep: "#081536",
-  blue: "#2E97D6",
-  blueBright: "#3AA9E8",
+  navyTop: "#14265C", // lifted Midnight for the gradient top
+  navyDeep: "#091533", // Midnight — main / base
+  blue: "#00ACED", // Cerulean — secondary accent
+  blueBright: "#38C6F5", // bright Cerulean for glows/paws
+  cornflower: "#6B8BF5", // Cornflower — tertiary tint
   white: "#FFFFFF",
   red: "#E0533D", // mascot jacket / traffic light
   amber: "#E6B34B",
   green: "#3ED598",
   // glass (macOS vibrancy)
-  glassFill: "rgba(14, 35, 80, 0.66)",
+  glassFill: "rgba(9, 21, 51, 0.66)",
   glassBorder: "rgba(255, 255, 255, 0.16)",
   glassHi: "rgba(255, 255, 255, 0.10)",
-  grid: "rgba(58, 169, 232, 0.10)",
+  grid: "rgba(0, 172, 237, 0.10)",
   textDim: "rgba(255, 255, 255, 0.62)",
 } as const;
 
@@ -38,4 +39,4 @@ export const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 export const loopTri = (frame: number, phase = 0) =>
   1 - Math.abs(2 * (((frame / VIDEO.durationInFrames) + phase) % 1) - 1);
 
-export type BgVariant = "night" | "ember" | "minimal";
+export type BgVariant = "night" | "ember" | "minimal" | "glow";

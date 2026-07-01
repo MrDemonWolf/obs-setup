@@ -7,7 +7,7 @@ import { VIDEO, loopSin } from "../theme";
 // per-particle filter). `color` is an "r,g,b" string.
 export const Embers: React.FC<{ count?: number; color?: string; seed?: number }> = ({
   count = 18,
-  color = "58,169,232",
+  color = "0,172,237",
   seed = 7,
 }) => {
   const f = useCurrentFrame();
