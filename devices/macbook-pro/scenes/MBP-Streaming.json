@@ -9,7 +9,7 @@
       "name": "Be Right Back"
     },
     {
-      "name": "Stream"
+      "name": "Live"
     },
     {
       "name": "Co-Working"
@@ -54,8 +54,8 @@
       "filters": []
     },
     {
-      "name": "Sound Alerts Box",
-      "uuid": "d10b0093-9d0d-53e0-9201-1f3651ff3b75",
+      "name": "Sound Alerts",
+      "uuid": "4c5cdd54-5617-5408-8969-ede7429992fe",
       "id": "browser_source",
       "versioned_id": "browser_source",
       "settings": {
@@ -82,8 +82,8 @@
       "filters": []
     },
     {
-      "name": "Twitch Alerts Box",
-      "uuid": "53e53c96-02e3-5d6f-afdc-d27d6eefd092",
+      "name": "Twitch Alerts",
+      "uuid": "65784b9f-b26b-52ca-a269-79f08572f72b",
       "id": "browser_source",
       "versioned_id": "browser_source",
       "settings": {
@@ -194,8 +194,8 @@
       "filters": []
     },
     {
-      "name": "WolfWave Widget",
-      "uuid": "4a03b9a0-3e21-51d1-8c1a-14251f23e172",
+      "name": "Now Playing",
+      "uuid": "ff0914b7-1b4a-5ccf-9e39-fdaee81c201f",
       "id": "browser_source",
       "versioned_id": "browser_source",
       "settings": {
@@ -327,6 +327,33 @@
       "filters": []
     },
     {
+      "name": "Be Right Back Video",
+      "uuid": "dd587f79-62ec-552f-aaec-866d7c5705ab",
+      "id": "ffmpeg_source",
+      "versioned_id": "ffmpeg_source",
+      "settings": {
+        "local_file": "/Users/nathanialhenniges/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/MultiMedia Projects/Social Media/Twitch/Scenes Images/",
+        "looping": true
+      },
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
       "name": "Background",
       "uuid": "b8a202ab-8394-51c2-85b6-9f960c6dc9df",
       "id": "image_source",
@@ -362,8 +389,8 @@
         "custom_size": false,
         "items": [
           {
-            "name": "Sound Alerts Box",
-            "source_uuid": "d10b0093-9d0d-53e0-9201-1f3651ff3b75",
+            "name": "Sound Alerts",
+            "source_uuid": "4c5cdd54-5617-5408-8969-ede7429992fe",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -403,8 +430,8 @@
             }
           },
           {
-            "name": "Twitch Alerts Box",
-            "source_uuid": "53e53c96-02e3-5d6f-afdc-d27d6eefd092",
+            "name": "Twitch Alerts",
+            "source_uuid": "65784b9f-b26b-52ca-a269-79f08572f72b",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -970,8 +997,8 @@
         "custom_size": false,
         "items": [
           {
-            "name": "Starting Soon Video",
-            "source_uuid": "2d9a5ca2-70a8-5d8d-9f51-8557c2c785af",
+            "name": "Be Right Back Video",
+            "source_uuid": "dd587f79-62ec-552f-aaec-866d7c5705ab",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -1154,8 +1181,8 @@
       "filters": []
     },
     {
-      "name": "Stream",
-      "uuid": "6fbf67c2-4f35-558b-8ece-465aebbb204e",
+      "name": "Live",
+      "uuid": "f8e7b45e-d0a3-572c-82af-2466b4e40e43",
       "id": "scene",
       "versioned_id": "scene",
       "settings": {
@@ -1204,8 +1231,8 @@
             }
           },
           {
-            "name": "WolfWave Widget",
-            "source_uuid": "4a03b9a0-3e21-51d1-8c1a-14251f23e172",
+            "name": "Now Playing",
+            "source_uuid": "ff0914b7-1b4a-5ccf-9e39-fdaee81c201f",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -1479,8 +1506,8 @@
             }
           },
           {
-            "name": "WolfWave Widget",
-            "source_uuid": "4a03b9a0-3e21-51d1-8c1a-14251f23e172",
+            "name": "Now Playing",
+            "source_uuid": "ff0914b7-1b4a-5ccf-9e39-fdaee81c201f",
             "visible": true,
             "locked": false,
             "rot": 0.0,

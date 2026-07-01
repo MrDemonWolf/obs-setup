@@ -34,12 +34,12 @@ NS = uuid.uuid5(uuid.NAMESPACE_URL, "obs-setup/macbook-pro")
 # category. Matches the live rig in OBS.
 PALETTE = {
     "camera": "#2EA043",     # green        - webcam (you, live)
-    "alerts": "#8957E5",     # purple       - Alerts Group (sound + Twitch)
+    "alerts": "#8957E5",     # purple       - Alerts (sound + Twitch)
     "widgets": "#1F9EA6",    # teal         - Wolfathon widgets (wheel/rewards/timer)
-    "nowplaying": "#388BFD",  # blue        - WolfWave now-playing widget
+    "nowplaying": "#388BFD",  # blue        - Now Playing (WolfWave)
     "screen": "#BB8009",     # yellow       - screen / display capture (when added)
-    "standby": "#DA3633",     # red         - standby video (Starting Soon / BRB)
-    "audio": "#8B949E",      # gray (light) - Audio Group (Discord/Chrome/Apple Music)
+    "standby": "#DA3633",     # red         - standby videos (Starting Soon / Be Right Back)
+    "audio": "#8B949E",      # gray (light) - Audio (Discord / Chrome / Apple Music)
     "background": "#6E7681",  # gray (dark) - background image
 }
 
@@ -67,9 +67,9 @@ def suid(name):
 LEAVES = [
     {"name": "Webcam", "id": "av_capture_input", "cat": "camera",
      "settings": {}},
-    {"name": "Sound Alerts Box", "id": "browser_source", "cat": "alerts",
+    {"name": "Sound Alerts", "id": "browser_source", "cat": "alerts",
      "settings": {"url": "", "width": 1920, "height": 1080}},
-    {"name": "Twitch Alerts Box", "id": "browser_source", "cat": "alerts",
+    {"name": "Twitch Alerts", "id": "browser_source", "cat": "alerts",
      "settings": {"url": "", "width": 1920, "height": 1080}},
     {"name": "Wheel of Dares", "id": "browser_source", "cat": "widgets",
      "settings": {"url": "", "width": 1920, "height": 1080}},
@@ -77,7 +77,7 @@ LEAVES = [
      "settings": {"url": "", "width": 1920, "height": 1080}},
     {"name": "Timer", "id": "browser_source", "cat": "widgets",
      "settings": {"url": "", "width": 1920, "height": 1080}},
-    {"name": "WolfWave Widget", "id": "browser_source", "cat": "nowplaying",
+    {"name": "Now Playing", "id": "browser_source", "cat": "nowplaying",
      "settings": {"url": "", "width": 1920, "height": 1080}},
     # Per-app audio on newest OBS (30+) = "macOS Audio Capture" (SCK, macOS 13+),
     # id "sck_audio_capture". Set mode to Application + pick the app in OBS;
@@ -90,6 +90,8 @@ LEAVES = [
      "settings": {"application": "com.apple.Music"}},
     {"name": "Starting Soon Video", "id": "ffmpeg_source", "cat": "standby",
      "settings": {"local_file": SCENES_IMAGES + "/", "looping": True}},
+    {"name": "Be Right Back Video", "id": "ffmpeg_source", "cat": "standby",
+     "settings": {"local_file": SCENES_IMAGES + "/", "looping": True}},
     {"name": "Background", "id": "image_source", "cat": "background",
      "settings": {"file": SCENES_IMAGES + "/"}},
 ]
@@ -99,7 +101,7 @@ TEXT_LEAVES = []
 # [src] wrapper scenes: reusable building blocks. These mirror the OBS Groups on
 # the live rig (Alerts Group, Wolfathon, Audio).
 SRC_SCENES = [
-    {"name": "[src] Alerts", "items": [("Sound Alerts Box", "alerts"), ("Twitch Alerts Box", "alerts")]},
+    {"name": "[src] Alerts", "items": [("Sound Alerts", "alerts"), ("Twitch Alerts", "alerts")]},
     {"name": "[src] Wolfathon", "items": [("Wheel of Dares", "widgets"), ("Rewards", "widgets"), ("Timer", "widgets")]},
     {"name": "[src] Audio", "items": [("Discord", "audio"), ("Google Chrome", "audio"), ("Apple Music", "audio")]},
 ]
@@ -109,12 +111,12 @@ SRC_SCENES = [
 MAIN_SCENES = [
     {"name": "Starting Soon", "items": [("Starting Soon Video", "standby"), ("[src] Alerts", "alerts"),
                                         ("[src] Audio", "audio"), ("Background", "background")]},
-    {"name": "Be Right Back", "items": [("Starting Soon Video", "standby"), ("[src] Alerts", "alerts"),
+    {"name": "Be Right Back", "items": [("Be Right Back Video", "standby"), ("[src] Alerts", "alerts"),
                                         ("[src] Audio", "audio"), ("Background", "background")]},
-    {"name": "Stream", "items": [("Webcam", "camera"), ("WolfWave Widget", "nowplaying"),
-                                 ("[src] Wolfathon", "widgets"), ("[src] Alerts", "alerts"),
-                                 ("[src] Audio", "audio"), ("Background", "background")]},
-    {"name": "Co-Working", "items": [("Webcam", "camera"), ("WolfWave Widget", "nowplaying"),
+    {"name": "Live", "items": [("Webcam", "camera"), ("Now Playing", "nowplaying"),
+                               ("[src] Wolfathon", "widgets"), ("[src] Alerts", "alerts"),
+                               ("[src] Audio", "audio"), ("Background", "background")]},
+    {"name": "Co-Working", "items": [("Webcam", "camera"), ("Now Playing", "nowplaying"),
                                      ("[src] Wolfathon", "widgets"), ("[src] Alerts", "alerts"),
                                      ("[src] Audio", "audio"), ("Background", "background")]},
 ]
@@ -124,7 +126,7 @@ DIVIDERS = ["──────"]
 
 # Left-dock order, top to bottom.
 SCENE_ORDER = (
-    ["Starting Soon", "Be Right Back", "Stream", "Co-Working", DIVIDERS[0]]
+    ["Starting Soon", "Be Right Back", "Live", "Co-Working", DIVIDERS[0]]
     + [s["name"] for s in SRC_SCENES]
 )
 
