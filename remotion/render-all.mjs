@@ -21,7 +21,9 @@ for (const s of scenes) {
 // Socials badge → transparent. ProRes 4444 .mov (best for OBS on Apple Silicon:
 // hardware-decoded, clean alpha) + a GIF for convenience.
 console.log("\n▶ Rendering socials-badge (mov + gif)…");
-execSync("npx remotion render Socials out/socials-badge.mov --codec=prores --prores-profile=4444 --log=error", { stdio: "inherit" });
+// --image-format=png + --pixel-format=yuva444p10le: global config pipes jpeg
+// frames (no alpha channel), which silently flattens the transparency.
+execSync("npx remotion render Socials out/socials-badge.mov --codec=prores --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le --log=error", { stdio: "inherit" });
 execSync("npx remotion render Socials out/socials-badge.gif --codec=gif --log=error", { stdio: "inherit" });
 
 // GIF copy of the plain Background (MP4 is lighter in OBS, but handy to have).
