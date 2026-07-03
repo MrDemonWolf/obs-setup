@@ -2,25 +2,37 @@ import { AbsoluteFill } from "remotion";
 import { Background } from "./Background";
 import { CamFrame } from "./CamFrame";
 
-// Co-Working overlays: animated `glow` background + baked cam frame(s) only.
-// No top bar, no widget boxes — stack your own timer / tasks / chat / now-playing
-// OBS sources anywhere in the open space.
+// Co-Working overlays: animated `glow` background + baked 16:9 cam frame(s).
+// No bar, no widget boxes — the open space in each layout is where your OBS
+// widget sources (timer / tasks / chat / now-playing) go.
+type Cam = { x: number; y: number; w: number; h: number };
 
-// V1 — Solo: one webcam (true 16:9), bottom-left. Rest of the canvas is yours
-// for widgets.
-export const CoworkSolo: React.FC = () => (
+export const Cowork: React.FC<{ cams: Cam[] }> = ({ cams }) => (
   <AbsoluteFill>
     <Background variant="glow" />
-    <CamFrame x={96} y={669} w={560} h={315} />
+    {cams.map((c, i) => (
+      <CamFrame key={i} {...c} />
+    ))}
   </AbsoluteFill>
 );
 
-// V2 — Dual: big hero cam (true 16:9, left) + small circular facecam
-// (top-right PiP).
-export const CoworkDual: React.FC = () => (
-  <AbsoluteFill>
-    <Background variant="glow" />
-    <CamFrame x={88} y={225} w={1120} h={630} />
-    <CamFrame x={1400} y={180} w={380} h={380} shape="circle" />
-  </AbsoluteFill>
-);
+// All boxes true 16:9. Layout name = where the open widget space is.
+export const COWORK_LAYOUTS: Record<string, Cam[]> = {
+  // Solo: one big cam
+  soloSpaceBottom: [{ x: 320, y: 72, w: 1280, h: 720 }],
+  soloSpaceLeft: [{ x: 576, y: 180, w: 1280, h: 720 }],
+  soloSpaceRight: [{ x: 64, y: 180, w: 1280, h: 720 }],
+  // Dual: big hero cam + small second cam
+  dualSpaceBottom: [
+    { x: 96, y: 72, w: 1120, h: 630 },
+    { x: 1264, y: 72, w: 560, h: 315 },
+  ],
+  dualSpaceLeft: [
+    { x: 736, y: 64, w: 1120, h: 630 },
+    { x: 1296, y: 734, w: 560, h: 315 },
+  ],
+  dualSpaceRight: [
+    { x: 64, y: 64, w: 1120, h: 630 },
+    { x: 64, y: 734, w: 560, h: 315 },
+  ],
+};
