@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
-import { VIDEO, theme, radius } from "./theme";
+import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { theme, radius } from "./theme";
 import { display } from "./fonts";
 
 const items = [
@@ -25,14 +25,18 @@ const BrandLogo: React.FC<{ b: string; size?: number }> = ({ b, size = 40 }) => 
 };
 
 // One platform at a time, fading in and out. Seamless: opacity is 0 at both the
-// start and end of each item's slot, so the loop point is invisible.
+// start and end of each item's slot, so the loop point is invisible. Slot size
+// comes from the actual comp duration (Socials runs longer so handles are
+// readable — ~5s each).
 export const SocialFade: React.FC<{ size?: number }> = ({ size = 44 }) => {
   const f = useCurrentFrame();
+  const { durationInFrames } = useVideoConfig();
   const n = items.length;
-  const slot = VIDEO.durationInFrames / n;
+  const slot = durationInFrames / n;
   const idx = Math.floor(f / slot) % n;
   const local = (f % slot) / slot;
-  const op = interpolate(local, [0, 0.18, 0.82, 1], [0, 1, 1, 0]);
+  // reach 0 by 0.96 — the last frame of a slot is truly invisible, no swap pop
+  const op = interpolate(local, [0, 0.14, 0.84, 0.96], [0, 1, 1, 0], { extrapolateRight: "clamp" });
   const it = items[idx];
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 18, width: "100%", height: "100%", opacity: op }}>
@@ -54,7 +58,7 @@ export const SocialsScene: React.FC = () => (
         width: "88%",
         height: "62%",
         borderRadius: radius.pill,
-        background: theme.glassFill,
+        background: "rgba(9,21,51,0.84)", // denser than glassFill: contrast over gameplay + clean GIF alpha edge
         border: `1px solid ${theme.glassBorder}`,
       }}
     >

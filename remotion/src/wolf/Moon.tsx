@@ -2,7 +2,8 @@ import { useCurrentFrame } from "remotion";
 import { VIDEO, loopSin } from "../theme";
 
 // Full moon with a soft breathing halo, top-left. Pre-baked glow
-// (radialGradient fill), animate opacity only — no live blur.
+// (radialGradient fill), animate opacity only — no live blur. Body + surface
+// detail live in one scaled group so the mare/limb shading breathes with it.
 export const Moon: React.FC<{ x?: number; y?: number; r?: number }> = ({ x = 300, y = 200, r = 92 }) => {
   const f = useCurrentFrame();
   const glow = 0.5 + 0.35 * (0.5 + 0.5 * loopSin(f, 0.5));
@@ -19,9 +20,32 @@ export const Moon: React.FC<{ x?: number; y?: number; r?: number }> = ({ x = 300
           <stop offset="0%" stopColor="#F4F8FF" />
           <stop offset="100%" stopColor="#C9D6EA" />
         </radialGradient>
+        <radialGradient id="moonMare">
+          <stop offset="0%" stopColor="#AEBEDA" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#AEBEDA" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="moonLimb">
+          <stop offset="0%" stopColor="rgba(9,21,51,0)" />
+          <stop offset="62%" stopColor="rgba(9,21,51,0)" />
+          <stop offset="100%" stopColor="rgba(9,21,51,0.26)" />
+        </radialGradient>
+        <clipPath id="moonClip">
+          <circle cx={0} cy={0} r={r} />
+        </clipPath>
       </defs>
       <circle cx={x} cy={y} r={r * 2.6 * grow} fill="url(#moonHalo)" opacity={glow} />
-      <circle cx={x} cy={y} r={r * grow} fill="url(#moonBody)" />
+      <g transform={`translate(${x} ${y}) scale(${grow})`}>
+        <circle cx={0} cy={0} r={r} fill="url(#moonBody)" />
+        <g clipPath="url(#moonClip)">
+          {/* static mare/crater detail — texture, not motion */}
+          <ellipse cx={-r * 0.28} cy={-r * 0.12} rx={r * 0.34} ry={r * 0.26} fill="url(#moonMare)" />
+          <ellipse cx={r * 0.3} cy={r * 0.08} rx={r * 0.22} ry={r * 0.17} fill="url(#moonMare)" />
+          <circle cx={r * 0.02} cy={r * 0.48} r={r * 0.13} fill="url(#moonMare)" />
+          <circle cx={r * 0.42} cy={-r * 0.38} r={r * 0.1} fill="url(#moonMare)" />
+          {/* soft limb shading toward lower-right — still reads as a full moon */}
+          <circle cx={r * 0.14} cy={r * 0.14} r={r * 1.05} fill="url(#moonLimb)" />
+        </g>
+      </g>
     </svg>
   );
 };
