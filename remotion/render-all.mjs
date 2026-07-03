@@ -7,15 +7,24 @@ const scenes = [
   { id: "StartingSoon", file: "01-starting-soon" },
   { id: "JustChatting", file: "02-just-chatting" },
   { id: "Streaming", file: "03-streaming" },
-  { id: "Coworking", file: "04-co-working" },
-  { id: "BRB", file: "05-be-right-back" },
-  { id: "EndingStream", file: "06-ending-stream" },
+  { id: "CoworkingSolo", file: "04-co-working-solo" },
+  { id: "CoworkingDual", file: "05-co-working-dual" },
+  { id: "BRB", file: "06-be-right-back" },
+  { id: "EndingStream", file: "07-ending-stream" },
   { id: "Background", file: "background" },
 ];
 
+// HQ + OBS-optimized H.264:
+//  --image-format=png      lossless intermediates (default JPEG crushes dark gradients before encode)
+//  --crf=15                near-transparent quality; dark navy gradients band at higher CRF
+//  --x264-preset=veryslow  best compression at that quality (still fast for 240 frames)
+//  --color-space=bt709     tag correctly so OBS doesn't shift colors (default mistags as bt470bg full-range)
+//  --muted                 no silent audio track — smaller file, no ghost audio source in OBS
+const MP4_FLAGS = "--image-format=png --crf=15 --x264-preset=veryslow --color-space=bt709 --muted --log=error";
+
 for (const s of scenes) {
   console.log(`\n▶ Rendering ${s.file}…`);
-  execSync(`npx remotion render ${s.id} out/${s.file}.mp4 --log=error`, { stdio: "inherit" });
+  execSync(`npx remotion render ${s.id} out/${s.file}.mp4 ${MP4_FLAGS}`, { stdio: "inherit" });
 }
 
 // Socials badge → transparent. ProRes 4444 .mov (best for OBS on Apple Silicon:
