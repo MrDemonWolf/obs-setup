@@ -98,12 +98,12 @@ npm run lint        # eslint src + tsc
 npm run render:all  # render every scene into out/ (see render-all.mjs)
 # one at a time (comp ids):
 npx remotion render <CompId> out/<name>.mp4
-#   StartingSoon | BRB | JustChatting | Streaming | Coworking | EndingStream | Background | Socials
+#   StartingSoon | BRB | JustChatting | Streaming | CoworkingSolo | CoworkingDual | EndingStream | Background | Socials
 ```
 
 Architecture:
 
-- **`src/scenes.ts` is the single source of truth** for the **8** scenes, each
+- **`src/scenes.ts` is the single source of truth** for the **9** scenes, each
   with `id`, `label`, `component`, `props`, and optional `width`/`height`.
   `src/Root.tsx` registers a `<Composition>` per scene (applying per-scene
   `width ?? VIDEO.width` / `height ?? VIDEO.height` — so `Socials` is 760×180,
@@ -120,20 +120,26 @@ Architecture:
 - **`JustChatting`** = `JustChattingScene.tsx`: a `night` `Background` + a
   webcam frame outline + an empty CHAT panel. No mascot, no widgets — you embed
   your real cam + chat over the boxes.
-- **`Streaming`** = `SimpleBg` + `FrameBar` (logo + title only) — no zones.
-  **`Coworking`** = same as `Streaming` (`SimpleBg` + `FrameBar`, logo + title
-  only) — no zones; stack your own OBS sources on top. `SimpleBg` = dark navy
-  gradient + drifting dot grid + vignette (no blur, no glow).
+- **`Streaming`** (`StreamFrame.tsx`) = just `<Background variant="glow" />` —
+  clean animated bg, no bar, no zones. Stack game capture / cam / widgets on top.
+- **Co-Working** = two comps in `CoworkFrame.tsx`, both `Background variant="glow"`
+  + baked `CamFrame` cam zone(s) only (no bar, no widget boxes — place timer /
+  tasks / chat / now-playing OBS sources in the open space):
+  **`CoworkingSolo`** = one cam frame bottom-left; **`CoworkingDual`** = big hero
+  cam (left) + small circular facecam (top-right PiP). `CamFrame.tsx` = soft
+  rounded (or `shape="circle"`) cerulean border + gentle glow, transparent
+  centre. Tweak cam positions by editing the `CamFrame` coords.
 - **`Background`** = `BackdropScene.tsx` → just `<Background/>` (aurora +
-  starfield + full moon + drifting embers + dot grid + light sweep); no handle,
-  no paw prints. The most flexible overlay.
+  starfield + full moon + drifting embers + dot grid); no handle, no paw prints.
+  The most flexible overlay.
 - **`Socials`** = `Socials.tsx` `SocialsScene` (760×180, transparent) that fades
   through brand logos one at a time. Logos in `public/brands/`; edit the
   platform list/handles in `Socials.tsx`. Rendered as `socials.mov` (ProRes
   4444, alpha) + `socials.gif`.
 - **Wolf ambience** lives in `src/wolf/` (`Moon`, `Starfield`, `Embers`,
   `PawTrail`; barrel `wolf/index.ts`) + `Background.tsx` (`variant`:
-  night/ember/minimal). `PawTrail` runs only on card scenes (via `Scene.tsx`),
+  night/ember/glow/minimal — `glow` = aurora + moon, no starfield/embers).
+  `PawTrail` runs only on card scenes (via `Scene.tsx`),
   not in the shared `Background`.
 - **Seamless loop is the invariant.** All motion is `loopSin`/`loopTri` (from
   `theme.ts`) over the full `durationInFrames`, so frame 0 flows into the last
@@ -151,6 +157,6 @@ Architecture:
   use plain translucent fills, not `backdrop-filter` (expensive to render).
   Fonts (`fonts.ts`) = **Montserrat** (free Proxima Nova stand-in; `display` and
   `mono` are the same family), loading only the weights/subset used.
-  `render-all.mjs` renders the 7 full-frame ids to MP4, then `Socials` to
+  `render-all.mjs` renders the 8 full-frame ids to MP4, then `Socials` to
   `.mov` + `.gif` and a bonus `Background.gif`, into `out/` (which is
-  gitignored). `Socials` is intentionally omitted from the 7-id array.
+  gitignored). `Socials` is intentionally omitted from the 8-id array.
