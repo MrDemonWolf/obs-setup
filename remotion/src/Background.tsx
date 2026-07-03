@@ -3,15 +3,18 @@ import { noise2D } from "@remotion/noise";
 import { theme, loopAngle, loopSin, BgVariant } from "./theme";
 import { Starfield, Moon, Embers } from "./wolf";
 
-// Aurora blob whose centre drifts on a loop-circle sampled through noise →
-// organic but perfectly seamless.
-const Aurora: React.FC<{ seed: string; cx: number; cy: number; r: number; color: string; amp: number }> = ({
+// Aurora ribbon whose centre drifts on a loop-circle sampled through noise →
+// organic but perfectly seamless. Elongated + tilted like a curtain band, with
+// softness baked into the gradient stops (no live blur — cheap to render).
+const Aurora: React.FC<{ seed: string; cx: number; cy: number; r: number; rgb: string; alpha: number; amp: number; tilt: number }> = ({
   seed,
   cx,
   cy,
   r,
-  color,
+  rgb,
+  alpha,
   amp,
+  tilt,
 }) => {
   const a = loopAngle(useCurrentFrame());
   const nx = noise2D(seed + "x", Math.cos(a), Math.sin(a));
@@ -20,13 +23,13 @@ const Aurora: React.FC<{ seed: string; cx: number; cy: number; r: number; color:
     <div
       style={{
         position: "absolute",
-        left: cx + nx * amp - r,
-        top: cy + ny * amp - r,
-        width: r * 2,
-        height: r * 2,
+        left: cx + nx * amp - r * 1.35,
+        top: cy + ny * amp - r * 0.7,
+        width: r * 2.7,
+        height: r * 1.4,
         borderRadius: "50%",
-        background: `radial-gradient(circle, ${color} 0%, transparent 68%)`,
-        filter: "blur(22px)",
+        transform: `rotate(${tilt}deg)`,
+        background: `radial-gradient(ellipse at center, rgba(${rgb},${alpha}) 0%, rgba(${rgb},${alpha * 0.45}) 38%, rgba(${rgb},0) 72%)`,
       }}
     />
   );
@@ -43,17 +46,27 @@ export const Background: React.FC<{ variant?: BgVariant }> = ({ variant = "night
 
   return (
     <AbsoluteFill style={{ backgroundColor: theme.navyDeep }}>
-      <AbsoluteFill style={{ background: `linear-gradient(160deg, ${theme.navyTop} 0%, ${theme.navyDeep} 70%)` }} />
+      <AbsoluteFill
+        style={{ background: `linear-gradient(160deg, ${theme.navyTop} 0%, ${theme.navyDeep} 70%, ${theme.navyFloor} 100%)` }}
+      />
+      {/* static moonlight spill keyed to the moon's corner — light has a source */}
+      {showMoon && (
+        <AbsoluteFill style={{ background: "radial-gradient(circle at 16% 18%, rgba(190,215,255,0.07), transparent 55%)" }} />
+      )}
       {showParticles && <Starfield />}
       {showMoon && <Moon />}
-      <Aurora seed="a" cx={430} cy={300} r={520} color="rgba(0,172,237,0.26)" amp={90} />
-      <Aurora seed="b" cx={1520} cy={840} r={540} color="rgba(107,139,245,0.18)" amp={120} />
+      <Aurora seed="a" cx={430} cy={300} r={520} rgb="0,172,237" alpha={0.26} amp={90} tilt={-8} />
+      <Aurora seed="b" cx={1520} cy={840} r={540} rgb="107,139,245" alpha={0.18} amp={120} tilt={6} />
       {showParticles && (
         <Embers
           count={variant === "ember" ? 22 : 16}
           color={variant === "ember" ? "224,140,61" : "0,172,237"}
           seed={variant === "ember" ? 13 : 7}
         />
+      )}
+      {/* warm ember floor wash — the wind-down mood lives in the grade too */}
+      {variant === "ember" && (
+        <AbsoluteFill style={{ background: "linear-gradient(to top, rgba(224,140,61,0.06), transparent 30%)" }} />
       )}
       <AbsoluteFill
         style={{
@@ -64,7 +77,7 @@ export const Background: React.FC<{ variant?: BgVariant }> = ({ variant = "night
           WebkitMaskImage: "radial-gradient(ellipse at 50% 45%, black 55%, transparent 100%)",
         }}
       />
-      <AbsoluteFill style={{ boxShadow: "inset 0 0 320px rgba(0,0,0,0.55)", pointerEvents: "none" }} />
+      <AbsoluteFill style={{ boxShadow: "inset 0 0 320px rgba(2,6,15,0.6)", pointerEvents: "none" }} />
     </AbsoluteFill>
   );
 };

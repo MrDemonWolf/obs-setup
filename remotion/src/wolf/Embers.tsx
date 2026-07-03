@@ -27,9 +27,12 @@ export const Embers: React.FC<{ count?: number; color?: string; seed?: number }>
   return (
     <>
       {parts.map((p, i) => {
-        const y = p.y - (((f / VIDEO.durationInFrames) + p.phase) % 1) * p.range;
+        const w = ((f / VIDEO.durationInFrames) + p.phase) % 1; // wrap progress
+        const y = p.y - w * p.range;
         const x = p.x + p.amp * loopSin(f, p.phase);
-        const o = 0.12 + 0.35 * (0.5 + 0.5 * loopSin(f, p.phase));
+        // fade to zero near the wrap point so the vertical teleport is invisible
+        const edge = Math.min(1, Math.min(w, 1 - w) * 10);
+        const o = (0.12 + 0.35 * (0.5 + 0.5 * loopSin(f, p.phase))) * edge;
         return (
           <div
             key={i}

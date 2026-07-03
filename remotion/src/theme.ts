@@ -3,6 +3,7 @@
 export const theme = {
   navyTop: "#14265C", // lifted Midnight for the gradient top
   navyDeep: "#091533", // Midnight — main / base
+  navyFloor: "#050B1F", // near-black floor for the 100% gradient stop
   blue: "#00ACED", // Cerulean — secondary accent
   blueBright: "#38C6F5", // bright Cerulean for glows/paws
   cornflower: "#6B8BF5", // Cornflower — tertiary tint

@@ -36,7 +36,7 @@ export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, 
         <Dot color={theme.red} />
         <Dot color={theme.amber} />
         <Dot color={theme.green} />
-        <span style={{ marginLeft: 14, fontFamily: mono, fontSize: 18, color: theme.textDim, letterSpacing: 1 }}>
+        <span style={{ marginLeft: 14, fontFamily: mono, fontSize: 24, color: theme.textDim, letterSpacing: 1.5 }}>
           mrdemonwolf.com
         </span>
       </div>
@@ -62,7 +62,7 @@ export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, 
           alignItems: "center",
           gap: 12,
           fontFamily: mono,
-          fontSize: 30,
+          fontSize: 36,
           color: theme.blueBright,
         }}
       >

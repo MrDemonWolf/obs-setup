@@ -21,17 +21,35 @@ export const Mascot: React.FC<{
   const breathe = 1 + 0.008 * loopSin(frame, 0.15);
   const sway = 0.6 * loopSin(frame, 0.4);
 
-  const activeSrc = talking ? (Math.floor(frame / 9) % 2 === 0 ? openSrc : closedSrc) : src;
+  // /8 divides 240 evenly → the mouth cadence lands exactly on the loop seam
+  const activeSrc = talking ? (Math.floor(frame / 8) % 2 === 0 ? openSrc : closedSrc) : src;
   const side = anchor === "left" ? { left: 40 } : { right: 40 };
+  // soft hover shadow: lower bob → closer → bigger/darker (loop-safe, same sin)
+  const shadowScale = 1 + bob / 90;
+  const shadowOp = 0.34 + bob / 110;
 
   return (
     <div style={{ position: "absolute", ...side, top: "50%", height: `${heightPct}%`, transform: "translateY(-50%)" }}>
+      <div
+        style={{
+          position: "absolute",
+          bottom: -34,
+          left: "12%",
+          width: "76%",
+          height: 44,
+          borderRadius: "50%",
+          background: "radial-gradient(ellipse at center, rgba(2,6,15,0.5) 0%, transparent 70%)",
+          transform: `scale(${shadowScale}, 1)`,
+          opacity: shadowOp,
+        }}
+      />
       <div
         style={{
           position: "relative",
           height: "100%",
           transform: `translateY(${bob}px) rotate(${sway}deg) scale(${breathe})`,
           transformOrigin: "center center",
+          willChange: "transform",
         }}
       >
         {ok ? (
