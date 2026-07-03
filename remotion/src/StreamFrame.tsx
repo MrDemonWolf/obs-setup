@@ -1,14 +1,10 @@
 import { AbsoluteFill } from "remotion";
-import { SimpleBg } from "./SimpleBg";
-import { FrameBar } from "./FrameBar";
+import { Background } from "./Background";
 
-// Streaming: just the animated background + a slim title bar. No zones — stack
-// your game capture / cam / widgets on top however you want.
-export type FrameSceneProps = { title: string; status: string; guides?: boolean };
-
-export const StreamFrame: React.FC<FrameSceneProps> = ({ title }) => (
+// Streaming: just the animated `glow` background — no bar, no zones. Stack your
+// game capture / cam / widgets on top however you want.
+export const StreamFrame: React.FC = () => (
   <AbsoluteFill>
-    <SimpleBg />
-    <FrameBar x={56} y={36} w={1808} title={title} />
+    <Background variant="glow" />
   </AbsoluteFill>
 );
