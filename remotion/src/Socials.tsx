@@ -15,11 +15,13 @@ const items = [
 const BrandLogo: React.FC<{ b: string; size?: number }> = ({ b, size = 40 }) => {
   const [ok, setOk] = useState(true);
   if (!ok) return <span style={{ fontFamily: display, fontSize: size * 0.7, color: theme.blueBright, textTransform: "uppercase" }}>{b}</span>;
+  // No recolor filter — logos render in their real brand colors (the old
+  // brightness(0) invert(1) flattened multi-color marks like Twitch to a blob).
   return (
     <Img
       src={staticFile(`brands/${b}.svg`)}
       onError={() => setOk(false)}
-      style={{ height: size, width: "auto", filter: "brightness(0) invert(1)", opacity: 0.95 }}
+      style={{ height: size, width: "auto", opacity: 0.97 }}
     />
   );
 };
