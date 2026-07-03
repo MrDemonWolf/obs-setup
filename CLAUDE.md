@@ -98,12 +98,13 @@ npm run lint        # eslint src + tsc
 npm run render:all  # render every scene into out/ (see render-all.mjs)
 # one at a time (comp ids):
 npx remotion render <CompId> out/<name>.mp4
-#   StartingSoon | BRB | JustChatting | Streaming | CoworkingSolo | CoworkingDual | EndingStream | Background | Socials
+#   StartingSoon | BRB | JustChatting | JustChattingVtuber | Streaming
+#   CoworkingSolo[Left|Right] | CoworkingDual[Left|Right] | EndingStream | Background | Socials
 ```
 
 Architecture:
 
-- **`src/scenes.ts` is the single source of truth** for the **9** scenes, each
+- **`src/scenes.ts` is the single source of truth** for the **14** scenes, each
   with `id`, `label`, `component`, `props`, and optional `width`/`height`.
   `src/Root.tsx` registers a `<Composition>` per scene (applying per-scene
   `width ?? VIDEO.width` / `height ?? VIDEO.height` — so `Socials` is 760×180,
@@ -117,25 +118,29 @@ Architecture:
   `scenes.ts` (`logo-main.svg` open / `logo-mouth-closed.svg` closed). The
   `Mascot talking` mouth-swap prop exists but no registered scene uses it, and
   the mascot has **no** glow/spotlight.
-- **`JustChatting`** = `JustChattingScene.tsx`: a `night` `Background` + a
-  webcam frame outline + an empty CHAT panel. No mascot, no widgets — you embed
-  your real cam + chat over the boxes.
+- **`JustChatting`** = `JustChattingScene.tsx`: `glow` `Background` + a 16:9
+  `CamFrame` + a tall chat `CamFrame`. No mascot, no widgets — you embed your
+  real cam + chat over the frames. **`JustChattingVtuber`** = `BackdropScene`
+  (plain night bg, zero boxes) — the VTuber model goes full-screen over it.
 - **`Streaming`** (`StreamFrame.tsx`) = just `<Background variant="glow" />` —
   clean animated bg, no bar, no zones. Stack game capture / cam / widgets on top.
-- **Co-Working** = two comps in `CoworkFrame.tsx`, both `Background variant="glow"`
-  + baked `CamFrame` cam zone(s) only (no bar, no widget boxes — place timer /
-  tasks / chat / now-playing OBS sources in the open space):
-  **`CoworkingSolo`** = one cam frame bottom-left; **`CoworkingDual`** = big hero
-  cam (left) + small circular facecam (top-right PiP). `CamFrame.tsx` = soft
-  rounded (or `shape="circle"`) cerulean border + gentle glow, transparent
-  centre. Tweak cam positions by editing the `CamFrame` coords.
+- **Co-Working** = one data-driven `Cowork` comp (`CoworkFrame.tsx`):
+  `Background variant="glow"` + baked **16:9** `CamFrame`(s) from
+  `COWORK_LAYOUTS` (no bar, no widget boxes — the open space is for timer /
+  tasks / chat / now-playing OBS sources). 6 registered variants: Solo (one
+  1280×720 cam) and Dual (1120×630 hero + 560×315 second) × open space at
+  bottom / left / right. `CamFrame.tsx` = soft rounded (or `shape="circle"`)
+  cerulean border + gentle glow, transparent centre. Add/tweak layouts in
+  `COWORK_LAYOUTS`.
 - **`Background`** = `BackdropScene.tsx` → just `<Background/>` (aurora +
   starfield + full moon + drifting embers + dot grid); no handle, no paw prints.
   The most flexible overlay.
-- **`Socials`** = `Socials.tsx` `SocialsScene` (760×180, transparent) that fades
-  through brand logos one at a time. Logos in `public/brands/`; edit the
-  platform list/handles in `Socials.tsx`. Rendered as `socials.mov` (ProRes
-  4444, alpha) + `socials.gif`.
+- **`Socials`** = `Socials.tsx` `SocialsScene` (760×180, transparent, 900
+  frames — ~5s per handle) that fades through brand logos one at a time, in
+  their **real brand colors** (no recolor filter; dark marks like x/instagram/
+  tiktok's note are whitened in the SVG files themselves). Logos in
+  `public/brands/`; edit the platform list/handles in `Socials.tsx`. Rendered
+  as `socials.mov` (ProRes 4444, alpha) + `socials.gif`.
 - **Wolf ambience** lives in `src/wolf/` (`Moon`, `Starfield`, `Embers`,
   `PawTrail`; barrel `wolf/index.ts`) + `Background.tsx` (`variant`:
   night/ember/glow/minimal — `glow` = aurora + moon, no starfield/embers).
@@ -157,6 +162,6 @@ Architecture:
   use plain translucent fills, not `backdrop-filter` (expensive to render).
   Fonts (`fonts.ts`) = **Montserrat** (free Proxima Nova stand-in; `display` and
   `mono` are the same family), loading only the weights/subset used.
-  `render-all.mjs` renders the 8 full-frame ids to MP4, then `Socials` to
+  `render-all.mjs` renders the 13 full-frame ids to MP4, then `Socials` to
   `.mov` + `.gif` and a bonus `Background.gif`, into `out/` (which is
-  gitignored). `Socials` is intentionally omitted from the 8-id array.
+  gitignored). `Socials` is intentionally omitted from the 13-id array.
