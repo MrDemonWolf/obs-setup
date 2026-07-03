@@ -49,10 +49,6 @@ export const Background: React.FC<{ variant?: BgVariant }> = ({ variant = "night
       <AbsoluteFill
         style={{ background: `linear-gradient(160deg, ${theme.navyTop} 0%, ${theme.navyDeep} 70%, ${theme.navyFloor} 100%)` }}
       />
-      {/* static moonlight spill keyed to the moon's corner — light has a source */}
-      {showMoon && (
-        <AbsoluteFill style={{ background: "radial-gradient(circle at 16% 18%, rgba(190,215,255,0.07), transparent 55%)" }} />
-      )}
       {showParticles && <Starfield />}
       {showMoon && <Moon />}
       <Aurora seed="a" cx={430} cy={300} r={520} rgb="0,172,237" alpha={0.26} amp={90} tilt={-8} />

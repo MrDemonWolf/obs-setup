@@ -23,7 +23,7 @@ export const Mascot: React.FC<{
 
   // /8 divides 240 evenly → the mouth cadence lands exactly on the loop seam
   const activeSrc = talking ? (Math.floor(frame / 8) % 2 === 0 ? openSrc : closedSrc) : src;
-  const side = anchor === "left" ? { left: 40 } : { right: 40 };
+  const side = anchor === "left" ? { left: 40 } : { right: 0 };
   // soft hover shadow: lower bob → closer → bigger/darker (loop-safe, same sin)
   const shadowScale = 1 + bob / 90;
   const shadowOp = 0.34 + bob / 110;
