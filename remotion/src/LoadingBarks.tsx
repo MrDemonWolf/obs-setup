@@ -1,5 +1,5 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { theme, radius, clamp01, loopSin, VIDEO } from "./theme";
+import { theme, radius, clamp01, loopSin } from "./theme";
 import { mono } from "./fonts";
 import { Paw } from "./Paw";
 
@@ -18,7 +18,8 @@ const BARKS = [
 // per-frame randomness / Date). Each phrase holds a random 20–40s; the bar
 // advances a random chunk per phrase (so the fill SPEED looks random), tops out
 // at ~95% on the last phrase ("almost ready…"), then the loop resets to 0.
-const FPS = VIDEO.fps;
+export const LOADING_BARKS_FPS = 60; // this comp renders at 60fps; schedule below is built at this rate
+const FPS = LOADING_BARKS_FPS;
 const lcg = (seed: number) => () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
 const rand = lcg(20260704);
 

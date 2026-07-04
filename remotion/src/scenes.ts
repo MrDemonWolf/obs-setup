@@ -6,7 +6,7 @@ import { BackdropScene } from "./BackdropScene";
 import { JustChattingScene } from "./JustChattingScene";
 import { SocialsScene, SOCIALS_DURATION } from "./Socials";
 import { Countdown } from "./Countdown";
-import { LoadingBarks, LOADING_BARKS_DURATION } from "./LoadingBarks";
+import { LoadingBarks, LOADING_BARKS_DURATION, LOADING_BARKS_FPS } from "./LoadingBarks";
 
 // Single source of truth for every scene. `component` picks the layout.
 // Card scenes take `mood` (hero / calm / ember). `width`/`height` override the
@@ -20,6 +20,7 @@ export type SceneDef = {
   component: FC<any>;
   width?: number;
   height?: number;
+  fps?: number; // overrides VIDEO.fps for this comp (Countdown/LoadingBarks run 60)
   durationInFrames?: number;
   props: Record<string, unknown>;
 };
@@ -37,9 +38,10 @@ export const SCENES: SceneDef[] = [
   { id: "Socials", label: "Socials (GIF)", component: SocialsScene, width: 760, height: 180, durationInFrames: SOCIALS_DURATION, props: {} },
   // Transparent standalone timer — full-frame (chip centered) so it's a drop-in
   // OBS overlay with no repositioning + the previewer stage never reshapes.
-  // durationInFrames = from × fps (300s × 30). NOT in render:all (heavy).
-  { id: "Countdown", label: "Countdown (5:00)", component: Countdown, durationInFrames: 9000, props: { from: 300 } },
+  // 60fps for smooth motion. durationInFrames = from × fps (300s × 60). NOT in render:all (heavy).
+  { id: "Countdown", label: "Countdown (5:00)", component: Countdown, fps: 60, durationInFrames: 300 * 60, props: { from: 300 } },
   // Transparent full-frame overlay — fake wolf-pun loading bar. Seeded schedule
   // (each phrase 20–40s, bar creeps to ~95%); duration = sum of holds (~4 min).
-  { id: "LoadingBarks", label: "Loading Barks", component: LoadingBarks, durationInFrames: LOADING_BARKS_DURATION, props: {} },
+  // 60fps; LOADING_BARKS_DURATION is computed at LOADING_BARKS_FPS so they match.
+  { id: "LoadingBarks", label: "Loading Barks", component: LoadingBarks, fps: LOADING_BARKS_FPS, durationInFrames: LOADING_BARKS_DURATION, props: {} },
 ];
