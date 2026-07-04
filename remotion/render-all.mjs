@@ -9,11 +9,7 @@ const scenes = [
   { id: "JustChattingVtuber", file: "02-just-chatting-vtuber" },
   { id: "Streaming", file: "03-streaming" },
   { id: "CoworkingSolo", file: "04-co-working-solo" },
-  { id: "CoworkingSoloLeft", file: "04-co-working-solo-space-left" },
-  { id: "CoworkingSoloRight", file: "04-co-working-solo-space-right" },
   { id: "CoworkingDual", file: "05-co-working-dual" },
-  { id: "CoworkingDualLeft", file: "05-co-working-dual-space-left" },
-  { id: "CoworkingDualRight", file: "05-co-working-dual-space-right" },
   { id: "BRB", file: "06-be-right-back" },
   { id: "EndingStream", file: "07-ending-stream" },
   { id: "Background", file: "background" },
@@ -39,6 +35,11 @@ console.log("\n▶ Rendering socials-badge (mov + gif)…");
 // frames (no alpha channel), which silently flattens the transparency.
 execSync("npx remotion render Socials out/socials-badge.mov --codec=prores --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le --log=error", { stdio: "inherit" });
 execSync("npx remotion render Socials out/socials-badge.gif --codec=gif --log=error", { stdio: "inherit" });
+
+// NOTE: Countdown (5 min) + LoadingBarks (~4 min) are transparent full-frame
+// ProRes 4444 → each multi-GB and slow. Kept OUT of this batch; render on demand:
+//   npx remotion render LoadingBarks out/loading-barks.mov --codec=prores --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le --log=error
+//   npx remotion render Countdown    out/countdown.mov     --codec=prores --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le --log=error
 
 // GIF copy of the plain Background (MP4 is lighter in OBS, but handy to have).
 console.log("\n▶ Rendering background gif…");
