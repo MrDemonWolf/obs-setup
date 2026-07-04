@@ -165,9 +165,10 @@ Architecture:
 - **Co-Working** = one data-driven `Cowork` comp (`CoworkFrame.tsx`):
   `Background variant="glow"` + baked **16:9** `CamFrame`(s) from
   `COWORK_LAYOUTS` (no bar, no widget boxes — the open space is for timer /
-  tasks / chat / now-playing OBS sources). 2 registered variants: `solo` (one
-  1440×810 cam on the left, open space right) and `dual` (1120×630 hero +
-  560×315 second, open space bottom). `CamFrame.tsx` = soft rounded (or `shape="circle"`)
+  tasks / chat / now-playing OBS sources). Cams anchored up top (y=72), open
+  widget band below. 2 registered variants: `solo` (one 1280×720 cam centered up
+  top) and `dual` (big **1152×648 hero** left + smaller **576×324** second,
+  both true 16:9; second vertically centered against the hero). `CamFrame.tsx` = soft rounded (or `shape="circle"`)
   cerulean border + gentle glow, transparent centre. Add/tweak layouts in
   `COWORK_LAYOUTS`.
 - **`Background`** = `BackdropScene.tsx` → just `<Background/>` (aurora +
