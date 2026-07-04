@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Img, staticFile, useCurrentFrame } from "remotion";
 import { theme, radius, loopSin } from "./theme";
-import { mono } from "./fonts";
+import { body } from "./fonts";
 
 // Brand mascot with a seamless idle bob/breathe/sway. `talking` swaps
 // open/closed mouth on a slow cadence (deterministic → loop-safe). `anchor`
@@ -67,7 +67,7 @@ export const Mascot: React.FC<{
               alignItems: "center",
               justifyContent: "center",
               color: theme.blue,
-              fontFamily: mono,
+              fontFamily: body,
               fontSize: 22,
               textAlign: "center",
               opacity: 0.7,

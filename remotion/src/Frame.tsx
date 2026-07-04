@@ -1,6 +1,6 @@
 import { useCurrentFrame } from "remotion";
 import { theme, radius, loopSin } from "./theme";
-import { mono } from "./fonts";
+import { body } from "./fonts";
 
 // A transparent placeholder region for an OBS source (screen / webcam), drawn
 // as a rounded targeting frame with tech corner brackets. Center stays
@@ -56,7 +56,7 @@ export const Frame: React.FC<{
             position: "absolute",
             top: 14,
             left: 16,
-            fontFamily: mono,
+            fontFamily: body,
             fontSize: 20,
             letterSpacing: 2,
             color: theme.white,
@@ -79,7 +79,7 @@ export const Frame: React.FC<{
             display: "flex",
             alignItems: "center",
             gap: 8,
-            fontFamily: mono,
+            fontFamily: body,
             fontSize: 18,
             color: theme.white,
             background: "rgba(224,83,61,0.22)",
