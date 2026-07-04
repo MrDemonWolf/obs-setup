@@ -73,7 +73,7 @@ body {
   color: var(--dim);
   border: 1px solid var(--border);
   padding: 3px 10px;
-  border-radius: 999px;
+  border-radius: 8px;
 }
 
 /* scene buttons */
@@ -91,7 +91,7 @@ body {
   background: var(--panel);
   border: 1px solid var(--border);
   padding: 12px 22px;
-  border-radius: 999px;
+  border-radius: 10px;
   cursor: pointer;
   transition: transform 0.08s ease, background 0.15s ease, border-color 0.15s ease;
 }

@@ -104,12 +104,35 @@ npx remotion render <CompId> out/<name>.mp4
 
 Architecture:
 
-- **`src/scenes.ts` is the single source of truth** for the **14** scenes, each
+- **`src/scenes.ts` is the single source of truth** for the **12** scenes, each
   with `id`, `label`, `component`, `props`, and optional `width`/`height`.
   `src/Root.tsx` registers a `<Composition>` per scene (applying per-scene
   `width ?? VIDEO.width` / `height ?? VIDEO.height` — so `Socials` is 760×180,
-  the rest 1920×1080). `preview/ObsPreview.tsx` (button-per-scene switcher)
-  imports the same list. Add a scene there once.
+  the rest 1920×1080). `preview/ObsPreview.tsx`
+  (button-per-scene switcher) imports the same list. Add a scene there once.
+- **`PawLoader`** (`PawLoader.tsx`) = reusable row of paws pulsing in a
+  traveling wave (seamless via integer `harmonic`). Shown in `TitleChip` when
+  `loader` is set (Starting Soon + BRB); also used inside `Countdown` +
+  `LoadingBarks`. Reuses `Paw` (realistic wolf print: 3-lobe pad + splayed toes,
+  shared with `PawTrail`).
+- **`Countdown`** (`Countdown.tsx`) = transparent standalone timer chip
+  (`LIVE IN` + mono `M:SS` + `PawLoader`). Counts `from`s → 0 over the comp
+  duration then holds. **The one intentional non-loop** — render it out and set
+  the OBS media source to play ONCE (loop OFF), start on going live. Full-frame
+  1920×1080 (chip centered) so it drops in without repositioning. Registered at
+  5:00 (`from:300`, 9000f); **kept out of `render:all`** (too heavy). Render
+  manually: `npx remotion render Countdown out/countdown.mov --codec=prores
+  --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le --log=error`.
+- **`LoadingBarks`** (`LoadingBarks.tsx`) = transparent full-frame fake
+  loading-bar overlay cycling wolf puns (`Loading barks…`, `Fur real, almost
+  there…`, …). A **seeded module-load schedule** (LCG, loop-safe — no per-frame
+  random) gives each phrase a random 20–40s hold; within EACH phrase the bar
+  fills 0→100% (per-phrase `CURVES`, random uneven spurts) and maxes at 100 right
+  before the next phrase starts fresh. A `Paw` rides the fill edge; bar corners
+  are macOS-rounded (`8`, not a pill); fixed-width `%` never reflows.
+  `durationInFrames = LOADING_BARKS_DURATION`
+  (sum of holds, ~4 min). **Heavy → NOT in `render:all`**, render manually. Edit
+  `BARKS`/seed to taste.
 - **Card scenes** (`StartingSoon`, `BRB`, `EndingStream`) use `src/Scene.tsx`,
   which layers `Background` → `PawTrail` (walking footsteps) → `TitleChip`
   (glass panel: title + mono status line) → `Mascot`. `mood` picks the vibe:
@@ -118,6 +141,19 @@ Architecture:
   `scenes.ts` (`logo-main.svg` open / `logo-mouth-closed.svg` closed). The
   `Mascot talking` mouth-swap prop exists but no registered scene uses it, and
   the mascot has **no** glow/spotlight.
+- **Card-chip sizing: box HUGS its content (shrink-to-fit), left-aligned.**
+  `TitleChip` has NO fixed width — it wraps its widest row (usually the title,
+  `whiteSpace: nowrap`, 108px) so the left-aligned text gets **equal padding
+  both sides** (`44px 64px 48px`), no dead space on the right. Box width varies
+  per title by design (Pack Gathers wide, Off Hunting narrow) — that's the
+  agreed tradeoff for balanced padding + a left-aligned macOS look. Chip is
+  pinned at `left: 64` (the standard margin). The `Mascot` is pinned to ONE
+  constant spot on every card scene — right-anchored (`right: 0`), vertically
+  centred (`top: 50%`), `heightPct: 76`. The 76% (down from 82) is deliberate:
+  right-anchored, a smaller wolf sits its LEFT edge clear of the chip so the
+  title is never hidden behind it. **A longer title widens the box toward the
+  wolf, and enlarging the mascot creeps it left over the text — if you change
+  either, re-check the chip/wolf overlap.**
 - **`JustChatting`** = `JustChattingScene.tsx`: `glow` `Background` + a 16:9
   `CamFrame` + a tall chat `CamFrame`. No mascot, no widgets — you embed your
   real cam + chat over the frames. **`JustChattingVtuber`** = `BackdropScene`
@@ -127,20 +163,23 @@ Architecture:
 - **Co-Working** = one data-driven `Cowork` comp (`CoworkFrame.tsx`):
   `Background variant="glow"` + baked **16:9** `CamFrame`(s) from
   `COWORK_LAYOUTS` (no bar, no widget boxes — the open space is for timer /
-  tasks / chat / now-playing OBS sources). 6 registered variants: Solo (one
-  1280×720 cam) and Dual (1120×630 hero + 560×315 second) × open space at
-  bottom / left / right. `CamFrame.tsx` = soft rounded (or `shape="circle"`)
+  tasks / chat / now-playing OBS sources). 2 registered variants: `solo` (one
+  1440×810 cam on the left, open space right) and `dual` (1120×630 hero +
+  560×315 second, open space bottom). `CamFrame.tsx` = soft rounded (or `shape="circle"`)
   cerulean border + gentle glow, transparent centre. Add/tweak layouts in
   `COWORK_LAYOUTS`.
 - **`Background`** = `BackdropScene.tsx` → just `<Background/>` (aurora +
   starfield + full moon + drifting embers + dot grid); no handle, no paw prints.
   The most flexible overlay.
-- **`Socials`** = `Socials.tsx` `SocialsScene` (760×180, transparent, 900
-  frames — ~5s per handle) that fades through brand logos one at a time, in
-  their **real brand colors** (no recolor filter; dark marks like x/instagram/
-  tiktok's note are whitened in the SVG files themselves). Logos in
-  `public/brands/`; edit the platform list/handles in `Socials.tsx`. Rendered
-  as `socials.mov` (ProRes 4444, alpha) + `socials.gif`.
+- **`Socials`** = `Socials.tsx` `SocialsScene` (760×180, transparent) that fades
+  through brand logos one at a time, in their **real brand colors** (no recolor
+  filter; dark marks like x/instagram/tiktok's note are whitened in the SVG files
+  themselves). Each handle holds a random **15–30s** (seeded schedule →
+  `SOCIALS_DURATION`, the comp's registered duration). Badge has macOS
+  window-style **16px** corners (not a pill; `radius.card` 30 read too round on
+  the short badge). Logos in `public/brands/`; edit the platform
+  list/handles in `Socials.tsx`. Rendered as `socials.mov` (ProRes 4444, alpha)
+  + `socials.gif`.
 - **Wolf ambience** lives in `src/wolf/` (`Moon`, `Starfield`, `Embers`,
   `PawTrail`; barrel `wolf/index.ts`) + `Background.tsx` (`variant`:
   night/ember/glow/minimal — `glow` = aurora + moon, no starfield/embers).
@@ -162,6 +201,8 @@ Architecture:
   use plain translucent fills, not `backdrop-filter` (expensive to render).
   Fonts (`fonts.ts`) = **Montserrat** (free Proxima Nova stand-in; `display` and
   `mono` are the same family), loading only the weights/subset used.
-  `render-all.mjs` renders the 13 full-frame ids to MP4, then `Socials` to
+  `render-all.mjs` renders the 9 full-frame ids to MP4, then `Socials` to
   `.mov` + `.gif` and a bonus `Background.gif`, into `out/` (which is
-  gitignored). `Socials` is intentionally omitted from the 13-id array.
+  gitignored). `Socials` is omitted from the 9-id MP4 array; `Countdown`
+  (5 min) + `LoadingBarks` (~4 min) are transparent full-frame ProRes 4444
+  (multi-GB, slow) → omitted from `render:all` entirely, rendered manually.

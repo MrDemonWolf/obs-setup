@@ -13,7 +13,9 @@ export const Mascot: React.FC<{
   talking?: boolean;
   openSrc?: string;
   closedSrc?: string;
-}> = ({ src = "logo-main.svg", heightPct = 82, anchor = "right", talking = false, openSrc = "logo-main.svg", closedSrc = "logo-mouth-closed.svg" }) => {
+  // heightPct 76: right-anchored, so this size also fixes the wolf's LEFT edge
+  // clear of the fixed-width TitleChip (bigger = wolf creeps left over the text).
+}> = ({ src = "logo-main.svg", heightPct = 76, anchor = "right", talking = false, openSrc = "logo-main.svg", closedSrc = "logo-mouth-closed.svg" }) => {
   const frame = useCurrentFrame();
   const [ok, setOk] = useState(true);
 
