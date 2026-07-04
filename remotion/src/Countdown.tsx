@@ -17,7 +17,7 @@ export const Countdown: React.FC<{ from?: number; label?: string }> = ({ from = 
   const rem = Math.max(0, from - Math.floor(frame / fps));
   const mm = String(Math.floor(rem / 60)).padStart(2, "0");
   const ss = String(rem % 60).padStart(2, "0");
-  const glow = 26 + 16 * (0.5 + 0.5 * loopSin(frame, 0.5));
+  const glow = 14 + 8 * (0.5 + 0.5 * loopSin(frame, 0.5));
 
   return (
     <AbsoluteFill style={{ alignItems: "center", justifyContent: "center" }}>
@@ -31,7 +31,7 @@ export const Countdown: React.FC<{ from?: number; label?: string }> = ({ from = 
           borderRadius: radius.card,
           background: theme.glassFill,
           border: `1px solid ${theme.glassBorder}`,
-          boxShadow: `0 30px 80px rgba(0,0,0,0.45), inset 0 1px 0 ${theme.glassHi}, 0 0 ${glow}px rgba(0,172,237,0.35)`,
+          boxShadow: `0 30px 80px rgba(0,0,0,0.45), inset 0 1px 0 ${theme.glassHi}, 0 0 ${glow}px rgba(0,172,237,0.28)`,
         }}
       >
         <span style={{ fontFamily: mono, fontSize: 34, letterSpacing: 10, color: theme.textDim }}>{label}</span>
