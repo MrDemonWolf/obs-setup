@@ -15,7 +15,6 @@ export type SceneProps = {
   showBackground?: boolean;
   mascotSrc?: string;
   mood?: SceneMood;
-  loader?: boolean; // paw-pulse loading indicator in the status line
 };
 
 const variantFor = (mood: SceneMood): BgVariant => (mood === "ember" ? "ember" : "night");
@@ -28,12 +27,11 @@ export const Scene: React.FC<SceneProps> = ({
   showBackground = true,
   mascotSrc,
   mood = "calm",
-  loader = false,
 }) => (
   <AbsoluteFill style={{ backgroundColor: theme.navyDeep }}>
     {showBackground && <Background variant={variantFor(mood)} />}
     <PawTrail />
-    {showTitle && <TitleChip title={title} status={subtitle} loader={loader} />}
+    {showTitle && <TitleChip title={title} status={subtitle} />}
     {showMascot && <Mascot src={mascotSrc} />}
   </AbsoluteFill>
 );
