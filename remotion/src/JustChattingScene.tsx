@@ -11,6 +11,6 @@ export const JustChattingScene: React.FC = () => (
   <AbsoluteFill style={{ backgroundColor: theme.navyDeep }}>
     <Background variant="glow" />
     <CamFrame x={64} y={198} w={1216} h={684} />
-    <CamFrame x={1344} y={140} w={512} h={800} />
+    <CamFrame x={1344} y={198} w={512} h={684} />
   </AbsoluteFill>
 );
