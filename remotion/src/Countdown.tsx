@@ -1,5 +1,5 @@
-import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { theme, radius, VIDEO, loopSin } from "./theme";
+import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
+import { theme, radius, loopSin } from "./theme";
 import { mono } from "./fonts";
 import { PawLoader } from "./PawLoader";
 
@@ -13,7 +13,8 @@ import { PawLoader } from "./PawLoader";
 // --props='{"from":600}' AND a matching longer comp for other lengths.
 export const Countdown: React.FC<{ from?: number; label?: string }> = ({ from = 300, label = "HOWLING IN" }) => {
   const frame = useCurrentFrame();
-  const rem = Math.max(0, from - Math.floor(frame / VIDEO.fps));
+  const { fps } = useVideoConfig();
+  const rem = Math.max(0, from - Math.floor(frame / fps));
   const mm = String(Math.floor(rem / 60)).padStart(2, "0");
   const ss = String(rem % 60).padStart(2, "0");
   const glow = 26 + 16 * (0.5 + 0.5 * loopSin(frame, 0.5));

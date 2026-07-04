@@ -120,7 +120,8 @@ Architecture:
   duration then holds. **The one intentional non-loop** — render it out and set
   the OBS media source to play ONCE (loop OFF), start on going live. Full-frame
   1920×1080 (chip centered) so it drops in without repositioning. Registered at
-  5:00 (`from:300`, 9000f); **kept out of `render:all`** (too heavy). Render
+  5:00 (`from:300`, 18000f **@60fps** — per-comp `fps:60` in `scenes.ts`, motion
+  reads `useVideoConfig().fps`); **kept out of `render:all`** (too heavy). Render
   manually: `npx remotion render Countdown out/countdown.mov --codec=prores
   --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le --log=error`.
 - **`LoadingBarks`** (`LoadingBarks.tsx`) = transparent full-frame fake
@@ -131,7 +132,8 @@ Architecture:
   before the next phrase starts fresh. A `Paw` rides the fill edge; bar corners
   are macOS-rounded (`8`, not a pill); fixed-width `%` never reflows.
   `durationInFrames = LOADING_BARKS_DURATION`
-  (sum of holds, ~4 min). **Heavy → NOT in `render:all`**, render manually. Edit
+  (sum of holds, ~4 min) built at `LOADING_BARKS_FPS` (**60**; per-comp `fps` in
+  `scenes.ts`). **Heavy → NOT in `render:all`**, render manually. Edit
   `BARKS`/seed to taste.
 - **Card scenes** (`StartingSoon`, `BRB`, `EndingStream`) use `src/Scene.tsx`,
   which layers `Background` → `PawTrail` (walking footsteps) → `TitleChip`
@@ -197,7 +199,12 @@ Architecture:
   in Remotion — animate with `useCurrentFrame()` + `interpolate()` only.
 - **Perf / formats:** opaque scenes render to H.264 MP4 (hardware-decoded in
   OBS on Apple Silicon — the lightest option; a GIF is heavier). Transparent
-  `Socials` → ProRes 4444 `.mov` (hardware-decoded alpha) + GIF. Glass elements
+  scenes (`Socials`, `Countdown`, `LoadingBarks`) render to **ProRes 4444 `.mov`
+  as the alpha master**, but ProRes only hardware-decodes on M1/M2 **Pro/Max/Ultra**
+  — a base M1/M2 Mac Mini software-decodes it and can stutter in OBS. **For the
+  actual OBS media source, transcode the master to HEVC-with-alpha (`hvc1`) via
+  `./to-hevc.sh out/<name>.mov`** — HEVC hardware-decodes on EVERY Apple Silicon
+  chip and is a fraction of the size. (`Socials` also ships a GIF.) Glass elements
   use plain translucent fills, not `backdrop-filter` (expensive to render).
   Fonts (`fonts.ts`) = **Montserrat** (free Proxima Nova stand-in; `display` and
   `mono` are the same family), loading only the weights/subset used.
