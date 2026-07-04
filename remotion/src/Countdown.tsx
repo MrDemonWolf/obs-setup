@@ -1,6 +1,6 @@
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
 import { theme, radius, loopSin } from "./theme";
-import { mono } from "./fonts";
+import { body } from "./fonts";
 import { PawLoader } from "./PawLoader";
 
 // Standalone countdown card — render it out (transparent .mov) and drop it into
@@ -34,11 +34,11 @@ export const Countdown: React.FC<{ from?: number; label?: string }> = ({ from = 
           boxShadow: `0 30px 80px rgba(0,0,0,0.45), inset 0 1px 0 ${theme.glassHi}, 0 0 ${glow}px rgba(0,172,237,0.28)`,
         }}
       >
-        <span style={{ fontFamily: mono, fontSize: 34, letterSpacing: 10, color: theme.textDim }}>{label}</span>
+        <span style={{ fontFamily: body, fontSize: 34, letterSpacing: 10, color: theme.textDim }}>{label}</span>
         {/* fixed width + tabular figures: MM:SS never reflows as digits change */}
         <span
           style={{
-            fontFamily: mono,
+            fontFamily: body,
             fontWeight: 700,
             fontSize: 168,
             lineHeight: 1,

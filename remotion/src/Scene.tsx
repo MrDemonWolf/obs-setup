@@ -9,7 +9,7 @@ export type SceneMood = "hero" | "calm" | "ember";
 
 export type SceneProps = {
   title: string;
-  subtitle: string; // rendered as the mono status line
+  subtitle: string; // rendered as the status line (body font)
   showMascot: boolean;
   showTitle?: boolean;
   showBackground?: boolean;

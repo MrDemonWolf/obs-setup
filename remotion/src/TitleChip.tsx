@@ -1,6 +1,6 @@
 import { useCurrentFrame } from "remotion";
-import { theme, radius, loopSin } from "./theme";
-import { display, mono } from "./fonts";
+import { theme, radius, loopSin, loopBreathe } from "./theme";
+import { display, body } from "./fonts";
 
 // Fixed chip width so StartingSoon / BRB / EndingStream are all the SAME size
 // (text left-aligned inside). Sized to fit the widest title ("The Pack Gathers")
@@ -12,12 +12,15 @@ const Dot: React.FC<{ color: string }> = ({ color }) => (
   <span style={{ width: 15, height: 15, borderRadius: radius.dot, background: color, display: "inline-block" }} />
 );
 
-// Frosted macOS-glass panel: window dots + rounded title + one techy mono
-// status line, ending in a blinking terminal cursor.
+// Frosted macOS-glass panel: window dots + rounded title + one status line,
+// ending in a blinking terminal cursor.
 export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, status }) => {
   const frame = useCurrentFrame();
-  const float = 6 * loopSin(frame);
-  const scale = 1 + 0.006 * loopSin(frame, 0.2);
+  // The chip does NOT translate — it stays put. It just breathes: rests at its
+  // base size, then grows ~1.4% and eases back, over the whole loop. Eased in
+  // and out (loopBreathe). transformOrigin left-center keeps the pinned left
+  // edge fixed so only the box grows, it never slides.
+  const scale = 1 + 0.014 * loopBreathe(frame);
   const glow = 14 + 8 * (0.5 + 0.5 * loopSin(frame, 0.5));
   const liveDot = 0.45 + 0.55 * (0.5 + 0.5 * loopSin(frame, 0.3));
   const cursor = Math.floor(frame / 15) % 2 === 0; // blink ~every 0.5s @30fps
@@ -30,7 +33,7 @@ export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, 
         top: "34%",
         width: CHIP_WIDTH, // fixed → all three card scenes are the same size
         boxSizing: "border-box",
-        transform: `translateY(${float}px) scale(${scale})`,
+        transform: `scale(${scale})`,
         transformOrigin: "left center",
         // roomy, even inner padding; text is left-aligned (block default)
         padding: "44px 64px 48px",
@@ -48,7 +51,7 @@ export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, 
         <Dot color={theme.red} />
         <Dot color={theme.amber} />
         <Dot color={theme.green} />
-        <span style={{ marginLeft: 14, fontFamily: mono, fontSize: 24, color: theme.textDim, letterSpacing: 1.5 }}>
+        <span style={{ marginLeft: 14, fontFamily: body, fontSize: 24, color: theme.textDim, letterSpacing: 1.5 }}>
           mrdemonwolf.com
         </span>
       </div>
@@ -74,7 +77,7 @@ export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, 
           display: "flex",
           alignItems: "center",
           gap: 12,
-          fontFamily: mono,
+          fontFamily: body,
           fontSize: 36,
           color: theme.blueBright,
         }}

@@ -1,6 +1,6 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { theme, radius, clamp01, loopSin } from "./theme";
-import { mono } from "./fonts";
+import { body } from "./fonts";
 import { Paw } from "./Paw";
 
 const BARKS = [
@@ -87,7 +87,7 @@ export const LoadingBarks: React.FC = () => {
       >
         <span
           style={{
-            fontFamily: mono,
+            fontFamily: body,
             fontSize: 60,
             color: theme.white,
             letterSpacing: 1,
@@ -132,7 +132,7 @@ export const LoadingBarks: React.FC = () => {
           {/* fixed-width % so it never reflows */}
           <span
             style={{
-              fontFamily: mono,
+              fontFamily: body,
               fontSize: 34,
               fontVariantNumeric: "tabular-nums",
               width: 92,

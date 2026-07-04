@@ -34,6 +34,14 @@ export const loopSin = (frame: number, phase = 0, harmonic = 1) =>
 // circle with this to get organic-yet-seamless motion.
 export const loopAngle = (frame: number) => (2 * Math.PI * frame) / VIDEO.durationInFrames;
 
+// Smooth 0→1→0 "breathe" over the whole clip — eased in AND out at both ends
+// (cosine: velocity is 0 at the rest point and at the peak, so it accelerates
+// and decelerates instead of moving at constant speed). Rests at 0 on frame 0
+// and the last frame → seamless loop. Use for a gentle grow-in-place pulse
+// (scale only, no translation): `scale = 1 + amp * loopBreathe(frame)`.
+export const loopBreathe = (frame: number, harmonic = 1) =>
+  0.5 - 0.5 * Math.cos((2 * Math.PI * harmonic * frame) / VIDEO.durationInFrames);
+
 export const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 
 // Seamless 0→1→0 triangle over the clip — for particle/paw brightness peaks.
