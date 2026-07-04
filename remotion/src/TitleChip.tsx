@@ -1,6 +1,7 @@
 import { useCurrentFrame } from "remotion";
 import { theme, radius, loopSin } from "./theme";
 import { display, mono } from "./fonts";
+import { PawLoader } from "./PawLoader";
 
 const Dot: React.FC<{ color: string }> = ({ color }) => (
   <span style={{ width: 15, height: 15, borderRadius: radius.dot, background: color, display: "inline-block" }} />
@@ -8,7 +9,7 @@ const Dot: React.FC<{ color: string }> = ({ color }) => (
 
 // Frosted macOS-glass panel: window dots + rounded title + one techy mono
 // status line (replaces the old subtitle sentence).
-export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, status }) => {
+export const TitleChip: React.FC<{ title: string; status: string; loader?: boolean }> = ({ title, status, loader = false }) => {
   const frame = useCurrentFrame();
   const float = 6 * loopSin(frame);
   const scale = 1 + 0.006 * loopSin(frame, 0.2);
@@ -20,11 +21,15 @@ export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, 
     <div
       style={{
         position: "absolute",
-        left: 110,
+        left: 64,
         top: "34%",
+        // No fixed width — the box hugs its content (the title is the widest
+        // row), so the left-aligned text gets equal padding on both sides. Box
+        // width naturally varies per title; that's intended.
         transform: `translateY(${float}px) scale(${scale})`,
         transformOrigin: "left center",
-        padding: "34px 52px 38px",
+        // roomy, even inner padding so nothing hugs the edges
+        padding: "44px 64px 48px",
         borderRadius: radius.card,
         background: theme.glassFill,
         border: `1px solid ${theme.glassBorder}`,
@@ -47,6 +52,7 @@ export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, 
           fontWeight: 800,
           fontSize: 108,
           lineHeight: 1,
+          whiteSpace: "nowrap",
           color: theme.white,
           letterSpacing: 1,
           textShadow: "0 3px 18px rgba(0,0,0,0.35)",
@@ -68,7 +74,11 @@ export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, 
       >
         <span style={{ width: 13, height: 13, borderRadius: radius.dot, background: theme.green, opacity: liveDot }} />
         <span>{status}</span>
-        <span style={{ opacity: cursor ? 1 : 0, color: theme.white }}>▊</span>
+        {loader ? (
+          <PawLoader size={26} count={4} gap={7} />
+        ) : (
+          <span style={{ opacity: cursor ? 1 : 0, color: theme.white }}>▊</span>
+        )}
       </div>
     </div>
   );
