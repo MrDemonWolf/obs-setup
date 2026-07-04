@@ -7,10 +7,12 @@ import { theme } from "./theme";
 // both the transparent CamFrame look (matches Co-Working). Glow background so
 // starfield/embers don't churn behind your cam + chat. Drop your real cam and
 // chat sources inside the two frames.
-export const JustChattingScene: React.FC = () => (
+// VTuber mode (`hideCam`) drops the cam frame — the model goes full-screen —
+// but keeps the tall chat frame on the right.
+export const JustChattingScene: React.FC<{ hideCam?: boolean }> = ({ hideCam }) => (
   <AbsoluteFill style={{ backgroundColor: theme.navyDeep }}>
     <Background variant="glow" />
-    <CamFrame x={64} y={198} w={1216} h={684} />
+    {!hideCam && <CamFrame x={64} y={198} w={1216} h={684} />}
     <CamFrame x={1344} y={198} w={512} h={684} />
   </AbsoluteFill>
 );
