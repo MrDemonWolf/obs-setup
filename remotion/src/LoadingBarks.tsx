@@ -1,5 +1,5 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { theme, radius, clamp01, loopSin, VIDEO } from "./theme";
+import { theme, radius, clamp01, loopSin } from "./theme";
 import { mono } from "./fonts";
 import { Paw } from "./Paw";
 
@@ -18,7 +18,8 @@ const BARKS = [
 // per-frame randomness / Date). Each phrase holds a random 20–40s; the bar
 // advances a random chunk per phrase (so the fill SPEED looks random), tops out
 // at ~95% on the last phrase ("almost ready…"), then the loop resets to 0.
-const FPS = VIDEO.fps;
+export const LOADING_BARKS_FPS = 60; // this comp renders at 60fps; schedule below is built at this rate
+const FPS = LOADING_BARKS_FPS;
 const lcg = (seed: number) => () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
 const rand = lcg(20260704);
 
@@ -64,7 +65,7 @@ export const LoadingBarks: React.FC = () => {
   // bar fills 0 → 100% within THIS phrase (uneven spurts), maxing out right
   // before the next phrase takes over.
   const level = curveLevel(i, clamp01(local / hold));
-  const glow = 26 + 16 * (0.5 + 0.5 * loopSin(useCurrentFrame(), 0.5)); // match Countdown
+  const glow = 14 + 8 * (0.5 + 0.5 * loopSin(useCurrentFrame(), 0.5)); // match Countdown
 
   const barW = 700;
   const fillW = Math.round(barW * level);
@@ -81,7 +82,7 @@ export const LoadingBarks: React.FC = () => {
           borderRadius: radius.card,
           background: theme.glassFill,
           border: `1px solid ${theme.glassBorder}`,
-          boxShadow: `0 30px 80px rgba(0,0,0,0.45), inset 0 1px 0 ${theme.glassHi}, 0 0 ${glow}px rgba(0,172,237,0.35)`,
+          boxShadow: `0 30px 80px rgba(0,0,0,0.45), inset 0 1px 0 ${theme.glassHi}, 0 0 ${glow}px rgba(0,172,237,0.28)`,
         }}
       >
         <span
@@ -120,7 +121,7 @@ export const LoadingBarks: React.FC = () => {
                 width: fillW,
                 borderRadius: 6,
                 background: `linear-gradient(90deg, ${theme.blue}, ${theme.blueBright})`,
-                boxShadow: `0 0 18px rgba(0,172,237,0.5)`,
+                boxShadow: `0 0 10px rgba(0,172,237,0.35)`,
               }}
             />
             {/* paw riding the fill edge */}
