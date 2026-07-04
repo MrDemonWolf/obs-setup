@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
-import { theme, radius } from "./theme";
+import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
+import { theme, VIDEO } from "./theme";
 import { display } from "./fonts";
 
 const items = [
@@ -11,6 +11,16 @@ const items = [
   { b: "github", h: "nathanialhenniges" },
   { b: "discord", h: "mrdwolf.net/discord" },
 ];
+
+// Seeded schedule (computed once, loop-safe): each handle is on screen a random
+// 15–30s. Duration = sum of holds → exported for the composition registration.
+const FPS = VIDEO.fps;
+const lcg = (seed: number) => () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
+const rand = lcg(20260630);
+const HOLDS = items.map(() => Math.round((15 + rand() * 15) * FPS)); // frames per handle (15–30s)
+const STARTS: number[] = [];
+HOLDS.reduce((acc, h) => (STARTS.push(acc), acc + h), 0);
+export const SOCIALS_DURATION = HOLDS.reduce((a, h) => a + h, 0);
 
 const BrandLogo: React.FC<{ b: string; size?: number }> = ({ b, size = 40 }) => {
   const [ok, setOk] = useState(true);
@@ -27,18 +37,15 @@ const BrandLogo: React.FC<{ b: string; size?: number }> = ({ b, size = 40 }) => 
 };
 
 // One platform at a time, fading in and out. Seamless: opacity is 0 at both the
-// start and end of each item's slot, so the loop point is invisible. Slot size
-// comes from the actual comp duration (Socials runs longer so handles are
-// readable — ~5s each).
+// start and end of each handle's slot, so the loop point is invisible. Each
+// handle holds a random 15–30s (seeded schedule above).
 export const SocialFade: React.FC<{ size?: number }> = ({ size = 44 }) => {
-  const f = useCurrentFrame();
-  const { durationInFrames } = useVideoConfig();
-  const n = items.length;
-  const slot = durationInFrames / n;
-  const idx = Math.floor(f / slot) % n;
-  const local = (f % slot) / slot;
-  // reach 0 by 0.96 — the last frame of a slot is truly invisible, no swap pop
-  const op = interpolate(local, [0, 0.14, 0.84, 0.96], [0, 1, 1, 0], { extrapolateRight: "clamp" });
+  const f = useCurrentFrame() % SOCIALS_DURATION;
+  let idx = 0;
+  for (let k = 0; k < items.length; k++) if (f >= STARTS[k]) idx = k;
+  const local = (f - STARTS[idx]) / HOLDS[idx]; // 0..1 through this handle's slot
+  // reach 0 by 0.96 — the last frames of a slot are truly invisible, no swap pop
+  const op = interpolate(local, [0, 0.08, 0.9, 0.96], [0, 1, 1, 0], { extrapolateRight: "clamp" });
   const it = items[idx];
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 18, width: "100%", height: "100%", opacity: op }}>
@@ -49,7 +56,7 @@ export const SocialFade: React.FC<{ size?: number }> = ({ size = 44 }) => {
 };
 
 // Standalone composition for GIF export — transparent background + a rounded
-// glass pill. Render: npx remotion render Socials out/socials.gif --codec=gif
+// glass card (macOS corners, not a pill). Render: npx remotion render Socials …
 export const SocialsScene: React.FC = () => (
   <AbsoluteFill style={{ alignItems: "center", justifyContent: "center" }}>
     <div
@@ -59,7 +66,7 @@ export const SocialsScene: React.FC = () => (
         justifyContent: "center",
         width: "88%",
         height: "62%",
-        borderRadius: radius.pill,
+        borderRadius: 16, // macOS window-style corners (30 read too round on a short badge)
         background: "rgba(9,21,51,0.84)", // denser than glassFill: contrast over gameplay + clean GIF alpha edge
         border: `1px solid ${theme.glassBorder}`,
       }}
