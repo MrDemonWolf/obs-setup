@@ -65,7 +65,7 @@ export const LoadingBarks: React.FC = () => {
   // bar fills 0 → 100% within THIS phrase (uneven spurts), maxing out right
   // before the next phrase takes over.
   const level = curveLevel(i, clamp01(local / hold));
-  const glow = 26 + 16 * (0.5 + 0.5 * loopSin(useCurrentFrame(), 0.5)); // match Countdown
+  const glow = 14 + 8 * (0.5 + 0.5 * loopSin(useCurrentFrame(), 0.5)); // match Countdown
 
   const barW = 700;
   const fillW = Math.round(barW * level);
@@ -82,7 +82,7 @@ export const LoadingBarks: React.FC = () => {
           borderRadius: radius.card,
           background: theme.glassFill,
           border: `1px solid ${theme.glassBorder}`,
-          boxShadow: `0 30px 80px rgba(0,0,0,0.45), inset 0 1px 0 ${theme.glassHi}, 0 0 ${glow}px rgba(0,172,237,0.35)`,
+          boxShadow: `0 30px 80px rgba(0,0,0,0.45), inset 0 1px 0 ${theme.glassHi}, 0 0 ${glow}px rgba(0,172,237,0.28)`,
         }}
       >
         <span
@@ -121,7 +121,7 @@ export const LoadingBarks: React.FC = () => {
                 width: fillW,
                 borderRadius: 6,
                 background: `linear-gradient(90deg, ${theme.blue}, ${theme.blueBright})`,
-                boxShadow: `0 0 18px rgba(0,172,237,0.5)`,
+                boxShadow: `0 0 10px rgba(0,172,237,0.35)`,
               }}
             />
             {/* paw riding the fill edge */}

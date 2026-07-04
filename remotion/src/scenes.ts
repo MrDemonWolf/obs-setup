@@ -26,8 +26,8 @@ export type SceneDef = {
 };
 
 export const SCENES: SceneDef[] = [
-  { id: "StartingSoon", label: "Starting Soon", component: Scene, props: { title: "The Pack Gathers", subtitle: "howling soon…", showMascot: true, mascotSrc: "logo-main.svg", mood: "hero", loader: true } },
-  { id: "BRB", label: "Be Right Back", component: Scene, props: { title: "Off Hunting", subtitle: "brb · back on the trail", showMascot: true, mascotSrc: "logo-mouth-closed.svg", mood: "calm", loader: true } },
+  { id: "StartingSoon", label: "Starting Soon", component: Scene, props: { title: "The Pack Gathers", subtitle: "howling soon…", showMascot: true, mascotSrc: "logo-main.svg", mood: "hero" } },
+  { id: "BRB", label: "Be Right Back", component: Scene, props: { title: "Off Hunting", subtitle: "brb · back on the trail", showMascot: true, mascotSrc: "logo-mouth-closed.svg", mood: "calm" } },
   { id: "JustChatting", label: "Just Chatting", component: JustChattingScene, props: {} },
   { id: "JustChattingVtuber", label: "Just Chatting · VTuber", component: JustChattingScene, props: { hideCam: true } },
   { id: "Streaming", label: "Streaming", component: StreamFrame, props: {} },
