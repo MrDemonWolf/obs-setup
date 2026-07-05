@@ -1,6 +1,12 @@
 import { useCurrentFrame } from "remotion";
 import { theme, radius, loopSin, loopBreathe } from "./theme";
 import { display, body } from "./fonts";
+import { Paw } from "./Paw";
+
+// True macOS traffic-light hexes, chip-local — the brand red/amber/green
+// (#E0533D/#E6B34B/#3ED598) read brick/mint and break the instant-recognition
+// job window chrome exists for. theme.* stays untouched for mascot/other uses.
+const MAC_DOT = { red: "#FF5F57", amber: "#FEBC2E", green: "#28C840" } as const;
 
 // Fixed chip width so StartingSoon / BRB / EndingStream are all the SAME size
 // (text left-aligned inside). Sized to fit the widest title ("The Pack Gathers")
@@ -17,12 +23,12 @@ const Dot: React.FC<{ color: string }> = ({ color }) => (
 export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, status }) => {
   const frame = useCurrentFrame();
   // The chip does NOT translate — it stays put. It just breathes: rests at its
-  // base size, then grows ~1.4% and eases back, over the whole loop. Eased in
-  // and out (loopBreathe). transformOrigin left-center keeps the pinned left
-  // edge fixed so only the box grows, it never slides.
-  const scale = 1 + 0.014 * loopBreathe(frame);
+  // base size, grows ~0.7% and eases back (loopBreathe: eased in AND out).
+  // harmonic 2 → two 4s breaths per loop, matching the mascot's cadence; amp
+  // 0.007 keeps the edge travel ~8px, UNDER the mascot's breathe so the panel
+  // never out-breathes the wolf. transformOrigin left-center pins the left edge.
+  const scale = 1 + 0.007 * loopBreathe(frame, 2);
   const glow = 14 + 8 * (0.5 + 0.5 * loopSin(frame, 0.5));
-  const liveDot = 0.45 + 0.55 * (0.5 + 0.5 * loopSin(frame, 0.3));
   const cursor = Math.floor(frame / 15) % 2 === 0; // blink ~every 0.5s @30fps
 
   return (
@@ -38,21 +44,27 @@ export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, 
         // roomy, even inner padding; text is left-aligned (block default)
         padding: "44px 64px 48px",
         borderRadius: radius.card,
-        // lifted (more opaque, lighter navy) so the FULL rectangle reads against
-        // the dark bg — otherwise the empty right side of a short-title box blends
-        // into the background and the equal-width boxes look different sizes.
-        background: "rgba(20, 38, 88, 0.90)",
+        // Opaque on purpose (equal-width boxes must read against the dark bg),
+        // but GLASS, not flat: a diagonal sheen + vertical light-from-above
+        // gradient fake the vibrancy that backdrop-filter would give (banned —
+        // render cost). Both static → zero loop/perf impact.
+        background: `linear-gradient(115deg, rgba(255,255,255,0.05) 0%, transparent 40%), linear-gradient(180deg, rgba(32,54,116,0.92) 0%, rgba(16,29,70,0.90) 100%)`,
         border: `1px solid rgba(255,255,255,0.22)`,
-        boxShadow: `0 30px 80px rgba(0,0,0,0.45), inset 0 1px 0 ${theme.glassHi}, 0 0 ${glow}px rgba(0,172,237,0.28)`,
+        boxShadow: `0 30px 80px rgba(0,0,0,0.45), inset 0 1.5px 0 rgba(255,255,255,0.22), 0 0 ${glow}px rgba(0,172,237,0.28)`,
       }}
     >
-      {/* window traffic lights + tag */}
+      {/* window traffic lights + tag; a quiet paw closes the rectangle's right
+          edge so short titles ("Off Hunting") don't leave the reserved zone
+          reading as dead space */}
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 22 }}>
-        <Dot color={theme.red} />
-        <Dot color={theme.amber} />
-        <Dot color={theme.green} />
+        <Dot color={MAC_DOT.red} />
+        <Dot color={MAC_DOT.amber} />
+        <Dot color={MAC_DOT.green} />
         <span style={{ marginLeft: 14, fontFamily: body, fontSize: 24, color: theme.textDim, letterSpacing: 1.5 }}>
           mrdemonwolf.com
+        </span>
+        <span style={{ marginLeft: "auto", display: "flex", opacity: 0.25 }}>
+          <Paw size={40} color={theme.blueBright} />
         </span>
       </div>
 
@@ -64,7 +76,7 @@ export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, 
           lineHeight: 1,
           whiteSpace: "nowrap",
           color: theme.white,
-          letterSpacing: 1,
+          letterSpacing: -1.5, // display-size extrabold tracks TIGHT (positive tracking read loose)
           textShadow: "0 3px 18px rgba(0,0,0,0.35)",
         }}
       >
@@ -82,9 +94,12 @@ export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, 
           color: theme.blueBright,
         }}
       >
-        <span style={{ width: 13, height: 13, borderRadius: radius.dot, background: theme.green, opacity: liveDot }} />
+        {/* one metaphor only: terminal prompt + cursor. (The old pulsing green
+            LED stacked a second signifier on the line AND reused the window-dot
+            green for a different meaning.) Cursor in the text's own accent so it
+            reads as part of the prompt, not a third color. */}
         <span>{status}</span>
-        <span style={{ opacity: cursor ? 1 : 0, color: theme.white }}>▊</span>
+        <span style={{ opacity: cursor ? 1 : 0 }}>▊</span>
       </div>
     </div>
   );
