@@ -111,17 +111,20 @@ Architecture:
   the rest 1920×1080). `preview/ObsPreview.tsx`
   (button-per-scene switcher) imports the same list. Add a scene there once.
 - **`PawLoader`** (`PawLoader.tsx`) = reusable row of paws pulsing in a
-  traveling wave (seamless via integer `harmonic`). Shown in `TitleChip` when
-  `loader` is set (Starting Soon + BRB); also used inside `Countdown` +
-  `LoadingBarks`. Reuses `Paw` (realistic wolf print: 3-lobe pad + splayed toes,
-  shared with `PawTrail`).
+  traveling wave (seamless via integer `harmonic`). Used inside `Countdown`
+  (with `harmonic={1}` — at 60fps that matches the 30fps scenes' sweep rate).
+  Reuses `Paw` (realistic wolf print: 3-lobe pad + splayed toes, shared with
+  `PawTrail`, the LoadingBarks fill-edge rider, and the TitleChip corner mark).
 - **`Countdown`** (`Countdown.tsx`) = transparent standalone timer chip
-  (`LIVE IN` + mono `M:SS` + `PawLoader`). Counts `from`s → 0 over the comp
-  duration then holds. **The one intentional non-loop** — render it out and set
-  the OBS media source to play ONCE (loop OFF), start on going live. Full-frame
-  1920×1080 (chip centered) so it drops in without repositioning. Registered at
-  5:00 (`from:300`, 18000f **@60fps** — per-comp `fps:60` in `scenes.ts`, motion
-  reads `useVideoConfig().fps`); **kept out of `render:all`** (too heavy). Render
+  (`HOWLING IN` + `M:SS` + `PawLoader`). Counts `from`s → 0 over the comp
+  duration then holds at 00:00. **The one intentional non-loop** — render it out
+  and set the OBS media source to play ONCE (loop OFF), start on going live.
+  Full-frame 1920×1080 (chip centered) so it drops in without repositioning.
+  Registered at 5:00 (`from:300`, **(300+1)×60 = 18060f @60fps** — the +1s is
+  the held 00:00 frame; at `from`×fps the last frame still reads 00:01. Per-comp
+  `fps:60` in `scenes.ts`, motion reads `useVideoConfig().fps`; the glow runs a
+  local 8s wave, NOT `loopSin`, whose 240f period would double the rate at 60fps);
+  **kept out of `render:all`** (too heavy). Render
   manually: `npx remotion render Countdown out/countdown.mov --codec=prores
   --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le --log=error`.
 - **`LoadingBarks`** (`LoadingBarks.tsx`) = transparent full-frame fake
@@ -130,36 +133,47 @@ Architecture:
   random) gives each phrase a random 20–40s hold; within EACH phrase the bar
   fills 0→100% (per-phrase `CURVES`, random uneven spurts) and maxes at 100 right
   before the next phrase starts fresh. A `Paw` rides the fill edge; bar corners
-  are macOS-rounded (`8`, not a pill); fixed-width `%` never reflows.
-  `durationInFrames = LOADING_BARKS_DURATION`
+  are macOS-rounded (`8`, not a pill); fixed-width `%` never reflows. The 0.45s
+  crossfade wraps the WHOLE content (text + bar + %) so the one-frame bar reset
+  at each swap happens invisibly, and the glow runs an integer number of cycles
+  over the comp (`GLOW_CYCLES`) — plain `loopSin` popped at the loop seam
+  (13572 % 240 ≠ 0). `durationInFrames = LOADING_BARKS_DURATION`
   (sum of holds, ~4 min) built at `LOADING_BARKS_FPS` (**60**; per-comp `fps` in
   `scenes.ts`). **Heavy → NOT in `render:all`**, render manually. Edit
   `BARKS`/seed to taste.
 - **Card scenes** (`StartingSoon`, `BRB`, `EndingStream`) use `src/Scene.tsx`,
   which layers `Background` → `PawTrail` (walking footsteps) → `TitleChip`
-  (glass panel: title + mono status line) → `Mascot`. `mood` picks the vibe:
-  `hero` (open-mouth mascot) / `calm` / `ember` (warm wind-down embers). Only
-  `ember` changes the background; the mascot mouth is a static `mascotSrc` in
+  (glass panel: title + status line ending in a blinking cerulean `▊` cursor —
+  ONE metaphor per row, no LED dot) → `Mascot`. `mood` picks the vibe:
+  `hero` (open-mouth mascot) / `calm` / `ember` (warm wind-down: floor wash
+  0.12/45%, aurora "b" turns firelight `224,140,61`, aurora "a" recedes, 30
+  embers — deliberately reads warm at a glance). Only `ember` changes the
+  background; the mascot mouth is a static `mascotSrc` in
   `scenes.ts` (`logo-main.svg` open / `logo-mouth-closed.svg` closed). The
   `Mascot talking` mouth-swap prop exists but no registered scene uses it, and
   the mascot has **no** glow/spotlight.
-- **Card-chip sizing: box HUGS its content (shrink-to-fit), left-aligned.**
-  `TitleChip` has NO fixed width — it wraps its widest row (usually the title,
-  `whiteSpace: nowrap`, 108px) so the left-aligned text gets **equal padding
-  both sides** (`44px 64px 48px`), no dead space on the right. Box width varies
-  per title by design (Pack Gathers wide, Off Hunting narrow) — that's the
-  agreed tradeoff for balanced padding + a left-aligned macOS look. Chip is
+- **Card chip: FIXED `CHIP_WIDTH` 1160px, left-aligned, glass-not-flat.** All
+  three cards are the same size (sized to "The Pack Gathers" at 108px); a quiet
+  right-aligned paw (40px @ 25%) on the title-bar row closes the rectangle so
+  short titles don't leave dead space. Fill is a static vertical gradient +
+  diagonal sheen + 1.5px top bevel (fakes macOS glass without `backdrop-filter`).
+  Traffic lights use TRUE macOS hexes (`#FF5F57/#FEBC2E/#28C840`, chip-local
+  `MAC_DOT` — theme.red/amber/green stay for the mascot). Title tracks -1.5
+  (display-size extrabold). Chip never translates — it breathes in place
+  (`1 + 0.007 * loopBreathe(frame, 2)`, under the mascot's amplitude). Chip is
   pinned at `left: 64` (the standard margin). The `Mascot` is pinned to ONE
   constant spot on every card scene — right-anchored (`right: 0`), vertically
   centred (`top: 50%`), `heightPct: 76`. The 76% (down from 82) is deliberate:
   right-anchored, a smaller wolf sits its LEFT edge clear of the chip so the
-  title is never hidden behind it. **A longer title widens the box toward the
-  wolf, and enlarging the mascot creeps it left over the text — if you change
-  either, re-check the chip/wolf overlap.**
-- **`JustChatting`** = `JustChattingScene.tsx`: `glow` `Background` + a 16:9
-  `CamFrame` + a tall chat `CamFrame`. No mascot, no widgets — you embed your
-  real cam + chat over the frames. **`JustChattingVtuber`** = `BackdropScene`
-  (plain night bg, zero boxes) — the VTuber model goes full-screen over it.
+  title is never hidden behind it. **If you lengthen a title past "The Pack
+  Gathers" bump `CHIP_WIDTH`, and enlarging the mascot creeps it left over the
+  text — re-check the chip/wolf overlap either way.**
+- **`JustChatting`** = `JustChattingScene.tsx`: `glow` `Background` (moon shrunk
+  into the 198px top band, `{x:300,y:100,r:68}` — the default sat half-inside
+  the cam frame) + a 16:9 `CamFrame` + a tall chat `CamFrame` (staggered glow
+  phases 0.4/0.73). No mascot, no widgets — you embed your real cam + chat over
+  the frames. **`JustChattingVtuber`** = the same scene with `hideCam` — the
+  cam frame drops (VTuber model goes full-screen) but the chat frame stays.
 - **`Streaming`** (`StreamFrame.tsx`) = just `<Background variant="glow" />` —
   clean animated bg, no bar, no zones. Stack game capture / cam / widgets on top.
 - **Co-Working** = one data-driven `Cowork` comp (`CoworkFrame.tsx`):
@@ -167,10 +181,15 @@ Architecture:
   `COWORK_LAYOUTS` (no bar, no widget boxes — the open space is for timer /
   tasks / chat / now-playing OBS sources). Cams anchored up top (y=72), open
   widget band below. 2 registered variants: `solo` (one 1280×720 cam centered up
-  top) and `dual` (big **1152×648 hero** left + smaller **576×324** second,
-  both true 16:9; second vertically centered against the hero). `CamFrame.tsx` = soft rounded (or `shape="circle"`)
-  cerulean border + gentle glow, transparent centre. Add/tweak layouts in
-  `COWORK_LAYOUTS`.
+  top; moon in the left gutter `{x:180,y:200,r:88}`) and `dual` (big **1152×648
+  hero** left + smaller **576×324** second, both true 16:9; second
+  **bottom-aligned** with the hero at y=396 → shared 720 baseline, one clean
+  widget band below; moon in the top-right pocket `{x:1568,y:140,r:60}`).
+  Moon positions are per-scene `moon` props — the `Background` default sits
+  inside the cam frames, where OBS's live feed clips it. `CamFrame.tsx` = soft
+  rounded (or `shape="circle"`) cerulean border + gentle glow (staggered
+  `phase` per frame — lockstep pulses read mechanical), transparent centre.
+  Add/tweak layouts in `COWORK_LAYOUTS`.
 - **`Background`** = `BackdropScene.tsx` → just `<Background/>` (aurora +
   starfield + full moon + drifting embers + dot grid); no handle, no paw prints.
   The most flexible overlay.
@@ -185,14 +204,21 @@ Architecture:
   + `socials.gif`.
 - **Wolf ambience** lives in `src/wolf/` (`Moon`, `Starfield`, `Embers`,
   `PawTrail`; barrel `wolf/index.ts`) + `Background.tsx` (`variant`:
-  night/ember/glow/minimal — `glow` = aurora + moon, no starfield/embers).
+  night/ember/glow/minimal — `glow` = aurora + moon, no starfield/embers;
+  optional `moon={x,y,r}` repositions the moon into clear sky on frame scenes).
+  Only the moon's HALO breathes — the body stays perfectly still (a body throb
+  read wrong on a celestial object). Starfield stars carry seeded integer
+  harmonics 2–4 so they twinkle at varied rates instead of one shared breath.
   `PawTrail` runs only on card scenes (via `Scene.tsx`),
   not in the shared `Background`.
-- **Seamless loop is the invariant.** All motion is `loopSin`/`loopTri` (from
-  `theme.ts`) over the full `durationInFrames`, so frame 0 flows into the last
-  frame with no jump. Do NOT add entrance-once animations or `Math.random()` /
-  `Date` per frame — both break the loop / determinism. The starfield/embers use
-  a seeded LCG computed once at module load.
+- **Seamless loop is the invariant.** All motion is `loopSin`/`loopTri`/
+  `loopBreathe` (from `theme.ts`) over the full `durationInFrames`, so frame 0
+  flows into the last frame with no jump. Do NOT add entrance-once animations or
+  `Math.random()` / `Date` per frame — both break the loop / determinism. The
+  starfield/embers use a seeded LCG computed once at module load. **Gotcha:**
+  the `loop*` helpers divide by `VIDEO.durationInFrames` (240) — in a comp whose
+  duration isn't a multiple of 240 (LoadingBarks) or whose fps isn't 30, use a
+  local wave with an INTEGER number of cycles over the comp instead.
 - **Assets** are drop-in via `public/` and referenced with `staticFile()`;
   `Mascot`/brand logos use `<Img onError>` fallbacks. The Vite previewer sets
   `publicDir` to `../public` so `staticFile` assets resolve inside `<Player>`.
@@ -206,9 +232,14 @@ Architecture:
   actual OBS media source, transcode the master to HEVC-with-alpha (`hvc1`) via
   `./to-hevc.sh out/<name>.mov`** — HEVC hardware-decodes on EVERY Apple Silicon
   chip and is a fraction of the size. (`Socials` also ships a GIF.) Glass elements
-  use plain translucent fills, not `backdrop-filter` (expensive to render).
-  Fonts (`fonts.ts`) = **Montserrat** (free Proxima Nova stand-in; `display` and
-  `mono` are the same family), loading only the weights/subset used.
+  use plain translucent fills, not `backdrop-filter` (expensive to render);
+  overlays that sit OVER live gameplay (`Countdown`/`LoadingBarks`/`Socials`)
+  use `theme.glassDense` (0.84) — `glassFill` 0.66 washes out over bright
+  footage and drops secondary text below 3:1.
+  Fonts (`fonts.ts`) match mrdemonwolf.com: **Montserrat** (`display`,
+  headings — the site's header font) + **Open Sans** (`body`, status lines /
+  labels / digits — the site's body font; tabular-nums + fixed-width boxes keep
+  numbers from reflowing), loading only the weights/subset used.
   `render-all.mjs` renders the 9 full-frame ids to MP4, then `Socials` to
   `.mov` + `.gif` and a bonus `Background.gif`, into `out/` (which is
   gitignored). `Socials` is omitted from the 9-id MP4 array; `Countdown`
