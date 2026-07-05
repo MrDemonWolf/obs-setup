@@ -13,6 +13,10 @@ export const theme = {
   green: "#3ED598",
   // glass (macOS vibrancy)
   glassFill: "rgba(9, 21, 51, 0.66)",
+  // denser glass for TRANSPARENT overlays that sit over live gameplay — 0.66
+  // washes out over bright footage (secondary text drops below 3:1); 0.84 keeps
+  // every text style ≥5:1 even over white. Use for Countdown/LoadingBarks/Socials.
+  glassDense: "rgba(9, 21, 51, 0.84)",
   glassBorder: "rgba(255, 255, 255, 0.16)",
   glassHi: "rgba(255, 255, 255, 0.10)",
   grid: "rgba(0, 172, 237, 0.10)",

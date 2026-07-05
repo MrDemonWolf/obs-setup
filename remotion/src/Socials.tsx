@@ -67,7 +67,7 @@ export const SocialsScene: React.FC = () => (
         width: "88%",
         height: "62%",
         borderRadius: 16, // macOS window-style corners (30 read too round on a short badge)
-        background: "rgba(9,21,51,0.84)", // denser than glassFill: contrast over gameplay + clean GIF alpha edge
+        background: theme.glassDense, // contrast over gameplay + clean GIF alpha edge (shared with Countdown/LoadingBarks)
         border: `1px solid ${theme.glassBorder}`,
       }}
     >
