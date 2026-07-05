@@ -44,8 +44,10 @@ export const SocialFade: React.FC<{ size?: number }> = ({ size = 44 }) => {
   let idx = 0;
   for (let k = 0; k < items.length; k++) if (f >= STARTS[k]) idx = k;
   const local = (f - STARTS[idx]) / HOLDS[idx]; // 0..1 through this handle's slot
-  // reach 0 by 0.96 — the last frames of a slot are truly invisible, no swap pop
-  const op = interpolate(local, [0, 0.08, 0.9, 0.96], [0, 1, 1, 0], { extrapolateRight: "clamp" });
+  // 0 lands exactly ON the slot boundary (loop seam stays invisible) — the old
+  // [0, .08, .9, .96] stops left the card visibly EMPTY ~1s at every swap and
+  // took ~2s to fade in. Now: ~0.6s in, content holds to 97%, ~0.6s out.
+  const op = interpolate(local, [0, 0.03, 0.97, 1], [0, 1, 1, 0], { extrapolateRight: "clamp" });
   const it = items[idx];
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 18, width: "100%", height: "100%", opacity: op }}>
