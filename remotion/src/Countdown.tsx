@@ -1,5 +1,5 @@
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
-import { theme, radius, loopSin } from "./theme";
+import { theme, radius } from "./theme";
 import { body } from "./fonts";
 import { PawLoader } from "./PawLoader";
 
@@ -9,15 +9,20 @@ import { PawLoader } from "./PawLoader";
 //
 // NOT a seamless loop (the one intentional exception to the loop invariant):
 // set the OBS media source to play ONCE (loop OFF) and start it when you go
-// live for a real countdown. Registered duration = `from`s, so re-render with
-// --props='{"from":600}' AND a matching longer comp for other lengths.
+// live for a real countdown. Registered duration = (`from`+1)s — the extra
+// second is the held 00:00 frame (at exactly from×fps the last frame still
+// reads 00:01). Re-render with --props='{"from":600}' AND a matching longer
+// comp for other lengths.
 export const Countdown: React.FC<{ from?: number; label?: string }> = ({ from = 300, label = "HOWLING IN" }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const rem = Math.max(0, from - Math.floor(frame / fps));
   const mm = String(Math.floor(rem / 60)).padStart(2, "0");
   const ss = String(rem % 60).padStart(2, "0");
-  const glow = 14 + 8 * (0.5 + 0.5 * loopSin(frame, 0.5));
+  // 8s glow period at ANY fps (loopSin's 240-frame period = 4s at this comp's
+  // 60fps — twice the rate every 30fps scene breathes at). Non-looping comp, so
+  // no seam constraint — just match the house cadence.
+  const glow = 14 + 8 * (0.5 + 0.5 * Math.sin(2 * Math.PI * (frame / (8 * fps) + 0.5)));
 
   return (
     <AbsoluteFill style={{ alignItems: "center", justifyContent: "center" }}>
@@ -29,12 +34,14 @@ export const Countdown: React.FC<{ from?: number; label?: string }> = ({ from = 
           gap: 20,
           padding: "48px 96px",
           borderRadius: radius.card,
-          background: theme.glassFill,
+          background: theme.glassDense, // over live gameplay — needs the dense backing
+
           border: `1px solid ${theme.glassBorder}`,
           boxShadow: `0 30px 80px rgba(0,0,0,0.45), inset 0 1px 0 ${theme.glassHi}, 0 0 ${glow}px rgba(0,172,237,0.28)`,
         }}
       >
-        <span style={{ fontFamily: body, fontSize: 34, letterSpacing: 10, color: theme.textDim }}>{label}</span>
+        {/* 36 = the one status-label size everywhere; 0.75 white for small-player margin over gameplay */}
+        <span style={{ fontFamily: body, fontSize: 36, letterSpacing: 10, color: "rgba(255,255,255,0.75)" }}>{label}</span>
         {/* fixed width + tabular figures: MM:SS never reflows as digits change */}
         <span
           style={{
@@ -52,7 +59,8 @@ export const Countdown: React.FC<{ from?: number; label?: string }> = ({ from = 
         >
           {mm}:{ss}
         </span>
-        <PawLoader count={4} size={30} gap={9} />
+        {/* harmonic 1: loopSin's 240f period = 4s at 60fps, matching the 30fps scenes' harmonic-2 sweep */}
+        <PawLoader count={4} size={30} gap={9} harmonic={1} />
       </div>
     </AbsoluteFill>
   );

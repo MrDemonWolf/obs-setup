@@ -1,5 +1,5 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { theme, radius, clamp01, loopSin } from "./theme";
+import { theme, radius, clamp01 } from "./theme";
 import { body } from "./fonts";
 import { Paw } from "./Paw";
 
@@ -52,6 +52,11 @@ const curveLevel = (i: number, p: number) => {
   return 1;
 };
 
+// Glow must complete an INTEGER number of cycles over the comp (13572 % 240 ≠ 0,
+// so plain loopSin pops ~1.2px blur at the loop seam — the invariant violation).
+// H cycles over the full duration ≈ the house 8s breathe (13572/28/60 ≈ 8.08s).
+const GLOW_CYCLES = Math.round(LOADING_BARKS_DURATION / (8 * FPS));
+
 export const LoadingBarks: React.FC = () => {
   const f = useCurrentFrame() % LOADING_BARKS_DURATION;
 
@@ -59,13 +64,14 @@ export const LoadingBarks: React.FC = () => {
   for (let k = 0; k < BARKS.length; k++) if (f >= STARTS[k]) i = k;
   const hold = HOLDS[i];
   const local = f - STARTS[i];
-  const fade = Math.min(14, hold / 4);
+  // ~0.45s crossfade (was a fixed 14f authored for 30fps — 0.23s at 60, an abrupt pop)
+  const fade = Math.min(Math.round(0.45 * FPS), hold / 4);
   const op = clamp01(Math.min(local / fade, (hold - local) / fade));
 
   // bar fills 0 → 100% within THIS phrase (uneven spurts), maxing out right
   // before the next phrase takes over.
   const level = curveLevel(i, clamp01(local / hold));
-  const glow = 14 + 8 * (0.5 + 0.5 * loopSin(useCurrentFrame(), 0.5)); // match Countdown
+  const glow = 14 + 8 * (0.5 + 0.5 * Math.sin(2 * Math.PI * (GLOW_CYCLES * f / LOADING_BARKS_DURATION + 0.5)));
 
   const barW = 700;
   const fillW = Math.round(barW * level);
@@ -74,17 +80,17 @@ export const LoadingBarks: React.FC = () => {
     <AbsoluteFill style={{ alignItems: "center", justifyContent: "center" }}>
       <div
         style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 30,
           padding: "48px 76px",
           borderRadius: radius.card,
-          background: theme.glassFill,
+          background: theme.glassDense, // over live gameplay — needs the dense backing
           border: `1px solid ${theme.glassBorder}`,
           boxShadow: `0 30px 80px rgba(0,0,0,0.45), inset 0 1px 0 ${theme.glassHi}, 0 0 ${glow}px rgba(0,172,237,0.28)`,
         }}
       >
+        {/* op wraps EVERYTHING (text + bar + %): the bar's one-frame 100%→0 reset
+            at each phrase swap happens while fully invisible. op is 0 at both
+            slot edges → the loop seam stays invisible too. */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 30, opacity: op }}>
         <span
           style={{
             fontFamily: body,
@@ -92,7 +98,6 @@ export const LoadingBarks: React.FC = () => {
             color: theme.white,
             letterSpacing: 1,
             whiteSpace: "nowrap",
-            opacity: op,
             textShadow: "0 3px 18px rgba(0,0,0,0.4)",
           }}
         >
@@ -107,8 +112,10 @@ export const LoadingBarks: React.FC = () => {
               width: barW,
               height: 20,
               borderRadius: 8, // macOS-rounded, not a full pill
-              background: "rgba(255,255,255,0.09)",
-              border: `1px solid ${theme.glassBorder}`,
+              // track must read as the bar's denominator: 0.09/0.16 measured
+              // 1.32:1 / 1.63:1 against the card — invisible. These pass 3:1.
+              background: "rgba(255,255,255,0.16)",
+              border: `1px solid rgba(255,255,255,0.36)`,
             }}
           >
             {/* fill */}
@@ -133,15 +140,16 @@ export const LoadingBarks: React.FC = () => {
           <span
             style={{
               fontFamily: body,
-              fontSize: 34,
+              fontSize: 36, // one status-label size everywhere (was 34 — ad-hoc near-duplicate of 36)
               fontVariantNumeric: "tabular-nums",
-              width: 92,
+              width: 98,
               textAlign: "right",
               color: theme.blueBright,
             }}
           >
             {Math.round(level * 100)}%
           </span>
+        </div>
         </div>
       </div>
     </AbsoluteFill>

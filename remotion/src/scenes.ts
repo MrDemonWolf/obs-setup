@@ -38,8 +38,10 @@ export const SCENES: SceneDef[] = [
   { id: "Socials", label: "Socials (GIF)", component: SocialsScene, width: 760, height: 180, durationInFrames: SOCIALS_DURATION, props: {} },
   // Transparent standalone timer — full-frame (chip centered) so it's a drop-in
   // OBS overlay with no repositioning + the previewer stage never reshapes.
-  // 60fps for smooth motion. durationInFrames = from × fps (300s × 60). NOT in render:all (heavy).
-  { id: "Countdown", label: "Countdown (5:00)", component: Countdown, fps: 60, durationInFrames: 300 * 60, props: { from: 300 } },
+  // 60fps for smooth motion. durationInFrames = (from + 1) × fps — the +1s is
+  // the held 00:00 frame (at from×fps the last frame still reads 00:01).
+  // NOT in render:all (heavy).
+  { id: "Countdown", label: "Countdown (5:00)", component: Countdown, fps: 60, durationInFrames: (300 + 1) * 60, props: { from: 300 } },
   // Transparent full-frame overlay — fake wolf-pun loading bar. Seeded schedule
   // (each phrase 20–40s, bar creeps to ~95%); duration = sum of holds (~4 min).
   // 60fps; LOADING_BARKS_DURATION is computed at LOADING_BARKS_FPS so they match.
