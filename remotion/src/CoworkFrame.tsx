@@ -12,7 +12,8 @@ export const Cowork: React.FC<{ cams: Cam[]; moon?: { x?: number; y?: number; r?
   <AbsoluteFill>
     <Background variant="glow" moon={moon} />
     {cams.map((c, i) => (
-      <CamFrame key={i} {...c} />
+      // staggered glow phases — identical phases pulse in lockstep (metronome)
+      <CamFrame key={i} {...c} phase={0.4 + i * 0.33} />
     ))}
   </AbsoluteFill>
 );
