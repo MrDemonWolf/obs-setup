@@ -1,5 +1,5 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { theme, radius, clamp01 } from "./theme";
+import { theme, radius, clamp01, dotGridLayer } from "./theme";
 import { body } from "./fonts";
 import { Paw } from "./Paw";
 
@@ -82,7 +82,8 @@ export const LoadingBarks: React.FC = () => {
         style={{
           padding: "48px 76px",
           borderRadius: radius.card,
-          background: theme.glassDense, // over live gameplay — needs the dense backing
+          // dense backing (over live gameplay) + the shared dot-grid texture
+          background: `${dotGridLayer}, ${theme.glassDense}`,
           border: `1px solid ${theme.glassBorder}`,
           boxShadow: `0 30px 80px rgba(0,0,0,0.45), inset 0 1px 0 ${theme.glassHi}, 0 0 ${glow}px rgba(0,172,237,0.28)`,
         }}
