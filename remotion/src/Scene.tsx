@@ -2,7 +2,6 @@ import { AbsoluteFill } from "remotion";
 import { Background } from "./Background";
 import { TitleChip } from "./TitleChip";
 import { Mascot } from "./Mascot";
-import { PawTrail } from "./wolf";
 import { theme } from "./theme";
 
 export type SceneProps = {
@@ -24,7 +23,6 @@ export const Scene: React.FC<SceneProps> = ({
 }) => (
   <AbsoluteFill style={{ backgroundColor: theme.navyDeep }}>
     {showBackground && <Background variant="night" />}
-    <PawTrail />
     {showTitle && <TitleChip title={title} status={subtitle} />}
     {showMascot && <Mascot src={mascotSrc} />}
   </AbsoluteFill>

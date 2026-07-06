@@ -1,7 +1,7 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { noise2D } from "@remotion/noise";
 import { theme, loopAngle, loopSin, BgVariant } from "./theme";
-import { Starfield, Moon, Embers } from "./wolf";
+import { Starfield, Moon, Embers, PawTrail } from "./wolf";
 
 // Aurora ribbon whose centre drifts on a loop-circle sampled through noise →
 // organic but perfectly seamless. Elongated + tilted like a curtain band, with
@@ -35,9 +35,10 @@ const Aurora: React.FC<{ seed: string; cx: number; cy: number; r: number; rgb: s
   );
 };
 
-// Wolf night background. `night` = full ambience; `glow` = aurora + moon, no
-// busy particles (calm-but-pops, for content-heavy scenes); `minimal` = light
-// (used where a busy bg distracts). `moon` repositions the moon per scene — the
+// Wolf night background. `night` and `glow` share the SAME ambience (aurora +
+// moon + starfield + drifting embers + dot grid + walking paw trail) so every
+// full-frame scene reads as one family; `minimal` = light (no moon/particles,
+// used where a busy bg distracts). `moon` repositions the moon per scene — the
 // default y sits inside the cam frames on JustChatting/Cowork, where the live
 // feed stacked on top in OBS clips it at the border. Pass a spot in clear sky.
 export const Background: React.FC<{ variant?: BgVariant; moon?: { x?: number; y?: number; r?: number } }> = ({
@@ -47,7 +48,7 @@ export const Background: React.FC<{ variant?: BgVariant; moon?: { x?: number; y?
   const frame = useCurrentFrame();
   const gridShift = 8 * loopSin(frame);
   const showMoon = variant !== "minimal"; // night, glow
-  const showParticles = showMoon && variant !== "glow"; // starfield + embers: night
+  const showParticles = showMoon; // starfield + embers + paw trail: night AND glow
 
   return (
     <AbsoluteFill style={{ backgroundColor: theme.navyDeep }}>
@@ -68,6 +69,9 @@ export const Background: React.FC<{ variant?: BgVariant; moon?: { x?: number; y?
           WebkitMaskImage: "radial-gradient(ellipse at 50% 45%, black 55%, transparent 100%)",
         }}
       />
+      {/* walking paw trail — part of the shared ambience, on every full-frame
+          scene (was card-only). Behind whatever the scene stacks on top. */}
+      {showMoon && <PawTrail />}
       <AbsoluteFill style={{ boxShadow: "inset 0 0 320px rgba(2,6,15,0.6)", pointerEvents: "none" }} />
     </AbsoluteFill>
   );
