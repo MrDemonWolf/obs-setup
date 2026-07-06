@@ -1,7 +1,8 @@
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
-import { theme, radius, dotGridLayer } from "./theme";
+import { theme, radius, glassPanel, glassPanelShadow } from "./theme";
 import { body } from "./fonts";
 import { PawLoader } from "./PawLoader";
+import { WindowDots } from "./WindowChrome";
 
 // Standalone countdown card — render it out (transparent .mov) and drop it into
 // OBS as its own media source. Counts `from` seconds down to 0 over the comp
@@ -32,14 +33,18 @@ export const Countdown: React.FC<{ from?: number; label?: string }> = ({ from = 
           flexDirection: "column",
           alignItems: "center",
           gap: 20,
-          padding: "48px 96px",
+          padding: "40px 96px 48px",
           borderRadius: radius.card,
-          // dense backing (over live gameplay) + the shared dot-grid texture
-          background: `${dotGridLayer}, ${theme.glassDense}`,
+          // shared over-gameplay glass panel (dot grid + sheen + dense fill)
+          background: glassPanel,
           border: `1px solid ${theme.glassBorder}`,
-          boxShadow: `0 30px 80px rgba(0,0,0,0.45), inset 0 1px 0 ${theme.glassHi}, 0 0 ${glow}px rgba(0,172,237,0.28)`,
+          boxShadow: glassPanelShadow(glow),
         }}
       >
+        {/* macOS window chrome — left-aligned title bar over the centered content */}
+        <div style={{ width: "100%", display: "flex", marginBottom: 4 }}>
+          <WindowDots />
+        </div>
         {/* 36 = the one status-label size everywhere; 0.75 white for small-player margin over gameplay */}
         <span style={{ fontFamily: body, fontSize: 36, letterSpacing: 10, color: "rgba(255,255,255,0.75)" }}>{label}</span>
         {/* fixed width + tabular figures: MM:SS never reflows as digits change */}
