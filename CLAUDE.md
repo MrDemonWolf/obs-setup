@@ -263,7 +263,7 @@ Architecture:
   end: `render:all` → render Countdown + LoadingBarks ProRes (reused if the
   master already exists, `--force` to re-render) → `to-hevc.sh` the three
   transparent masters → regen `masks/` → assemble a dated OBS bundle
-  (`Overlay (videos)/opaque` MP4s + `Overlay (videos)/transparent` HEVC-alpha
+  (`Overlays/opaque` MP4s + `Overlays/transparent` HEVC-alpha
   `.mov` + `Masks/` + a generated `README.md`) and zip it to
   `~/Downloads/OBS-overlays-<date>.zip` for copying to Google Drive. The bundle
   README carries the file→scene→loop table + the webcam-placement coords (keep
