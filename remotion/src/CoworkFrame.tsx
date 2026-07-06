@@ -26,10 +26,10 @@ const HERO: Cam = { x: 64, y: 40, w: 1152, h: 648 }; // pinned up top; bottom 68
 export const COWORK_LAYOUTS: Record<string, Cam[]> = {
   // Solo: just the hero cam. Open L-shaped band (right column + full-width below).
   solo: [HERO],
-  // Dual: hero + smaller 576×324 second (both true 16:9), 64px outer margins +
-  // 64px gap (64+1152+64+576+64 = 1920). Second is BOTTOM-aligned with the hero
-  // (y = 40+648-324 = 364 → both bottoms at 688): a shared baseline merges all the
-  // open space into one clean full-width band below, instead of splitting the
-  // right column into two short pockets. Moon lives in the top-right sky above it.
-  dual: [HERO, { x: 1280, y: 364, w: 576, h: 324 }],
+  // Dual: hero top-left + smaller 576×324 second pinned to the BOTTOM-RIGHT
+  // corner (64px right + bottom margins: x=1920-64-576=1280, y=1080-64-324=692).
+  // Same 16:9 size, just diagonally opposite the hero — opens a big L-shaped
+  // widget band (below the hero + left of the small cam). Moon sits in the now-
+  // clear top-right sky.
+  dual: [HERO, { x: 1280, y: 692, w: 576, h: 324 }],
 };

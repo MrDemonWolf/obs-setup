@@ -17,7 +17,7 @@ position the cam source there at the given size and the mask lines up 1:1.
 | `just-chatting-chat.png` | Just Chatting **and** VTuber (chat) | 512 × 684 | (1344, 198) |
 | `co-working-solo.png` | Co-Working Solo | 1152 × 648 | (64, 40) |
 | `co-working-dual-big.png` | Co-Working Dual — big cam | 1152 × 648 | (64, 40) |
-| `co-working-dual-small.png` | Co-Working Dual — small cam | 576 × 324 | (1280, 364) |
+| `co-working-dual-small.png` | Co-Working Dual — small cam | 576 × 324 | (1280, 692) |
 
 Notes:
 - **VTuber** (`JustChattingVtuber`) uses only the chat frame — reuse
