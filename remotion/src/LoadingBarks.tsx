@@ -6,21 +6,16 @@ import { WindowDots } from "./WindowChrome";
 
 const BARKS = [
   "Loading barks…",
-  "Paws… hang tight…",
-  "Cranking the awooo…",
   "Gathering the moons…",
+  "Warming up the howl…",
   "Marking every tree…",
   "Wolfing down packets…",
   "Barking up the right tree…",
   "Sniffing out the signal…",
   "Howl-ding, please…",
   "Pawsing to buffer…",
-  "Rooting through the forest…",
-  "Fetching the good bits…",
-  "Warming up the howl…",
   "Chasing my tail and the packets…",
   "Fur real, almost there…",
-  "Fur-get about it, almost done…",
   "Awoo-most ready…",
   "Nearly un-leashed…",
 ];
