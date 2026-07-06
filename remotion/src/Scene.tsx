@@ -3,9 +3,7 @@ import { Background } from "./Background";
 import { TitleChip } from "./TitleChip";
 import { Mascot } from "./Mascot";
 import { PawTrail } from "./wolf";
-import { theme, BgVariant } from "./theme";
-
-export type SceneMood = "hero" | "calm" | "ember";
+import { theme } from "./theme";
 
 export type SceneProps = {
   title: string;
@@ -14,10 +12,7 @@ export type SceneProps = {
   showTitle?: boolean;
   showBackground?: boolean;
   mascotSrc?: string;
-  mood?: SceneMood;
 };
-
-const variantFor = (mood: SceneMood): BgVariant => (mood === "ember" ? "ember" : "night");
 
 export const Scene: React.FC<SceneProps> = ({
   title,
@@ -26,10 +21,9 @@ export const Scene: React.FC<SceneProps> = ({
   showTitle = true,
   showBackground = true,
   mascotSrc,
-  mood = "calm",
 }) => (
   <AbsoluteFill style={{ backgroundColor: theme.navyDeep }}>
-    {showBackground && <Background variant={variantFor(mood)} />}
+    {showBackground && <Background variant="night" />}
     <PawTrail />
     {showTitle && <TitleChip title={title} status={subtitle} />}
     {showMascot && <Mascot src={mascotSrc} />}

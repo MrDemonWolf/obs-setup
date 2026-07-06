@@ -52,4 +52,4 @@ export const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 export const loopTri = (frame: number, phase = 0) =>
   1 - Math.abs(2 * (((frame / VIDEO.durationInFrames) + phase) % 1) - 1);
 
-export type BgVariant = "night" | "ember" | "minimal" | "glow";
+export type BgVariant = "night" | "minimal" | "glow";

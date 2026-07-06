@@ -35,21 +35,19 @@ const Aurora: React.FC<{ seed: string; cx: number; cy: number; r: number; rgb: s
   );
 };
 
-// Wolf night background. `night` = full ambience; `ember` = warm embers for the
-// wind-down scene; `glow` = aurora + moon, no busy particles (calm-but-pops,
-// for content-heavy scenes); `minimal` = light (used where a busy bg distracts).
-// `moon` repositions the moon per scene — the default (300,200,r92) sits inside
-// the cam frames on JustChatting/Cowork, where the live feed stacked on top in
-// OBS clips it into a half-moon riding the border. Pass a spot in clear sky.
+// Wolf night background. `night` = full ambience; `glow` = aurora + moon, no
+// busy particles (calm-but-pops, for content-heavy scenes); `minimal` = light
+// (used where a busy bg distracts). `moon` repositions the moon per scene — the
+// default y sits inside the cam frames on JustChatting/Cowork, where the live
+// feed stacked on top in OBS clips it at the border. Pass a spot in clear sky.
 export const Background: React.FC<{ variant?: BgVariant; moon?: { x?: number; y?: number; r?: number } }> = ({
   variant = "night",
   moon,
 }) => {
   const frame = useCurrentFrame();
   const gridShift = 8 * loopSin(frame);
-  const showMoon = variant !== "minimal"; // night, ember, glow
-  const showParticles = showMoon && variant !== "glow"; // starfield + embers: night, ember
-  const ember = variant === "ember";
+  const showMoon = variant !== "minimal"; // night, glow
+  const showParticles = showMoon && variant !== "glow"; // starfield + embers: night
 
   return (
     <AbsoluteFill style={{ backgroundColor: theme.navyDeep }}>
@@ -58,31 +56,9 @@ export const Background: React.FC<{ variant?: BgVariant; moon?: { x?: number; y?
       />
       {showParticles && <Starfield />}
       {showMoon && <Moon {...moon} />}
-      {/* ember = the whole grade warms (aurora "b" turns to firelight, "a" recedes)
-          so the wind-down reads at a glance — the old 22-vs-16 particle delta +
-          6% wash was imperceptible and all three cards looked identical. */}
-      <Aurora seed="a" cx={430} cy={300} r={520} rgb="0,172,237" alpha={ember ? 0.18 : 0.26} amp={90} tilt={-8} />
-      <Aurora
-        seed="b"
-        cx={1520}
-        cy={840}
-        r={540}
-        rgb={ember ? "224,140,61" : "107,139,245"}
-        alpha={ember ? 0.16 : 0.18}
-        amp={120}
-        tilt={6}
-      />
-      {showParticles && (
-        <Embers
-          count={ember ? 30 : 16}
-          color={ember ? "224,140,61" : "0,172,237"}
-          seed={ember ? 13 : 7}
-        />
-      )}
-      {/* warm ember floor wash — the wind-down mood lives in the grade too */}
-      {ember && (
-        <AbsoluteFill style={{ background: "linear-gradient(to top, rgba(224,140,61,0.12), transparent 45%)" }} />
-      )}
+      <Aurora seed="a" cx={430} cy={300} r={520} rgb="0,172,237" alpha={0.26} amp={90} tilt={-8} />
+      <Aurora seed="b" cx={1520} cy={840} r={540} rgb="107,139,245" alpha={0.18} amp={120} tilt={6} />
+      {showParticles && <Embers count={16} color="0,172,237" seed={7} />}
       <AbsoluteFill
         style={{
           backgroundImage: `radial-gradient(${theme.grid} 1.6px, transparent 1.6px)`,
