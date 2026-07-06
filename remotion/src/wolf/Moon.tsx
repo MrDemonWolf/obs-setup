@@ -1,12 +1,15 @@
 import { useCurrentFrame } from "remotion";
 import { VIDEO, loopSin } from "../theme";
 
-// Full moon with a soft breathing halo, top-left. Pre-baked glow
-// (radialGradient fill), animate opacity only — no live blur. Only the HALO
-// breathes — the solid body stays perfectly still (an 8% body throb swung the
-// disc ~30px in diameter every cycle; a moon is the one thing viewers expect
-// not to move).
-export const Moon: React.FC<{ x?: number; y?: number; r?: number }> = ({ x = 300, y = 200, r = 92 }) => {
+// Full moon with a soft breathing halo. Pre-baked glow (radialGradient fill),
+// animate opacity only — no live blur. Only the HALO breathes — the solid body
+// stays perfectly still (an 8% body throb swung the disc ~30px in diameter every
+// cycle; a moon is the one thing viewers expect not to move).
+// ONE size everywhere: r defaults to MOON_R and scenes only pass {x,y} to place
+// it in clear sky. Keeping a single radius makes the moon read identically on
+// every scene — don't reintroduce per-scene r overrides.
+export const MOON_R = 72;
+export const Moon: React.FC<{ x?: number; y?: number; r?: number }> = ({ x = 300, y = 200, r = MOON_R }) => {
   const f = useCurrentFrame();
   const glow = 0.5 + 0.35 * (0.5 + 0.5 * loopSin(f, 0.5));
   const grow = 1 + 0.08 * loopSin(f, 0.4); // halo-only seamless breathe

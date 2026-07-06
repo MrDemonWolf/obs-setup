@@ -33,8 +33,8 @@ export const SCENES: SceneDef[] = [
   { id: "Streaming", label: "Streaming", component: StreamFrame, props: {} },
   // moon repositioned into clear sky per layout — the default (300,200,r92)
   // sits inside/behind the cam frames, where the live feed clips it in OBS.
-  { id: "CoworkingSolo", label: "Co-Working · Solo", component: Cowork, props: { cams: COWORK_LAYOUTS.solo, moon: { x: 1568, y: 140, r: 60 } } },
-  { id: "CoworkingDual", label: "Co-Working · Dual", component: Cowork, props: { cams: COWORK_LAYOUTS.dual, moon: { x: 1568, y: 140, r: 60 } } },
+  { id: "CoworkingSolo", label: "Co-Working · Solo", component: Cowork, props: { cams: COWORK_LAYOUTS.solo, moon: { x: 1568, y: 150 } } },
+  { id: "CoworkingDual", label: "Co-Working · Dual", component: Cowork, props: { cams: COWORK_LAYOUTS.dual, moon: { x: 1568, y: 150 } } },
   { id: "EndingStream", label: "Ending Stream", component: Scene, props: { title: "Until Next Howl", subtitle: "thanks for running with the pack", showMascot: true, mascotSrc: "logo-mouth-closed.svg", mood: "ember" } },
   { id: "Background", label: "Background", component: BackdropScene, props: {} },
   { id: "Socials", label: "Socials (GIF)", component: SocialsScene, width: 760, height: 180, durationInFrames: SOCIALS_DURATION, props: {} },
