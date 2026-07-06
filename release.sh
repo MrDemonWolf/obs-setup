@@ -48,8 +48,8 @@ python3 "$ROOT/masks/gen_masks.py" \
   || echo "⚠ mask regen skipped (need: pip install pillow) — using committed masks"
 
 echo "▶ assemble bundle → $BUNDLE"
-VID="Overlay (videos)"   # top-level video folder name inside the bundle
-MSK="Masks"              # top-level mask folder name inside the bundle
+VID="Overlays"   # top-level video folder name inside the bundle
+MSK="Masks"      # top-level mask folder name inside the bundle
 rm -rf "$BUNDLE"
 mkdir -p "$BUNDLE/$VID/opaque" "$BUNDLE/$VID/transparent" "$BUNDLE/$MSK"
 cp "$OUT"/0*.mp4 "$OUT"/background.mp4 "$BUNDLE/$VID/opaque/"
@@ -67,9 +67,9 @@ cp "$ROOT"/masks/*.png "$BUNDLE/$MSK/"
 Everything OBS needs is in this folder.
 
 ```
-Overlay (videos)/opaque/        8 full-frame MP4s — set Loop = ON
-Overlay (videos)/transparent/   3 HEVC-alpha .mov (hardware-decode on every Apple Silicon)
-Masks/                          5 rounded-corner webcam masks (PNG, alpha)
+Overlays/opaque/        8 full-frame MP4s — set Loop = ON
+Overlays/transparent/   3 HEVC-alpha .mov (hardware-decode on every Apple Silicon)
+Masks/                  5 rounded-corner webcam masks (PNG, alpha)
 ```
 
 ## Add each as a Media Source
