@@ -263,7 +263,13 @@ Architecture:
   end: `render:all` → render Countdown + LoadingBarks ProRes (reused if the
   master already exists, `--force` to re-render) → `to-hevc.sh` the three
   transparent masters → regen `masks/` → assemble a dated OBS bundle
-  (`videos/opaque` MP4s + `videos/transparent` HEVC-alpha `.mov` + `masks/` +
-  a generated `README.md`) and zip it to `~/Downloads/OBS-overlays-<date>.zip`
-  for copying to Google Drive. The bundle README carries the file→scene→loop
-  table + the webcam-placement coords (keep those in sync with `gen_masks.py`).
+  (`Overlay (videos)/opaque` MP4s + `Overlay (videos)/transparent` HEVC-alpha
+  `.mov` + `Masks/` + a generated `README.md`) and zip it to
+  `~/Downloads/OBS-overlays-<date>.zip` for copying to Google Drive. The bundle
+  README carries the file→scene→loop table + the webcam-placement coords (keep
+  those in sync with `gen_masks.py`).
+- **CI** (`.github/workflows/release.yml`) runs `release.sh --force` on a
+  **macOS runner** on every published GitHub Release and attaches the zip as a
+  release asset (`workflow_dispatch` uploads it as a workflow artifact instead).
+  macOS is mandatory: `to-hevc.sh`'s `hevc_videotoolbox` is Apple-only, so a
+  Linux runner can't produce the HEVC-alpha overlays.
