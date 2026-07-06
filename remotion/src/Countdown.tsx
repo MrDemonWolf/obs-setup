@@ -29,11 +29,12 @@ export const Countdown: React.FC<{ from?: number; label?: string }> = ({ from = 
     <AbsoluteFill style={{ alignItems: "center", justifyContent: "center" }}>
       <div
         style={{
+          position: "relative",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: 20,
-          padding: "40px 96px 48px",
+          gap: 16,
+          padding: "52px 76px 40px",
           borderRadius: radius.card,
           // shared over-gameplay glass panel (dot grid + sheen + dense fill)
           background: glassPanel,
@@ -41,20 +42,21 @@ export const Countdown: React.FC<{ from?: number; label?: string }> = ({ from = 
           boxShadow: glassPanelShadow(glow),
         }}
       >
-        {/* macOS window chrome — left-aligned title bar over the centered content */}
-        <div style={{ width: "100%", display: "flex", marginBottom: 4 }}>
+        {/* window dots pinned to the top-left CORNER (matches Socials) — no domain
+            tag, it's just a widget */}
+        <div style={{ position: "absolute", top: 26, left: 30 }}>
           <WindowDots />
         </div>
         {/* 36 = the one status-label size everywhere; 0.75 white for small-player margin over gameplay */}
-        <span style={{ fontFamily: body, fontSize: 36, letterSpacing: 10, color: "rgba(255,255,255,0.75)" }}>{label}</span>
+        <span style={{ fontFamily: body, fontSize: 30, letterSpacing: 8, color: "rgba(255,255,255,0.75)" }}>{label}</span>
         {/* fixed width + tabular figures: MM:SS never reflows as digits change */}
         <span
           style={{
             fontFamily: body,
             fontWeight: 700,
-            fontSize: 168,
+            fontSize: 132,
             lineHeight: 1,
-            width: 620,
+            width: 490,
             textAlign: "center",
             fontVariantNumeric: "tabular-nums",
             color: theme.white,
@@ -65,7 +67,7 @@ export const Countdown: React.FC<{ from?: number; label?: string }> = ({ from = 
           {mm}:{ss}
         </span>
         {/* harmonic 1: loopSin's 240f period = 4s at 60fps, matching the 30fps scenes' harmonic-2 sweep */}
-        <PawLoader count={4} size={30} gap={9} harmonic={1} />
+        <PawLoader count={4} size={24} gap={7} harmonic={1} />
       </div>
     </AbsoluteFill>
   );

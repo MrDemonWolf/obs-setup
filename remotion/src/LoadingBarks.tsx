@@ -81,7 +81,8 @@ export const LoadingBarks: React.FC = () => {
     <AbsoluteFill style={{ alignItems: "center", justifyContent: "center" }}>
       <div
         style={{
-          padding: "40px 76px 48px",
+          position: "relative",
+          padding: "64px 76px 48px",
           borderRadius: radius.card,
           // shared over-gameplay glass panel (dot grid + sheen + dense fill)
           background: glassPanel,
@@ -89,8 +90,9 @@ export const LoadingBarks: React.FC = () => {
           boxShadow: glassPanelShadow(glow),
         }}
       >
-        {/* macOS window chrome — stays put while the content below fades on swap */}
-        <div style={{ display: "flex", marginBottom: 24 }}>
+        {/* window dots pinned to the top-left CORNER (matches Socials) — no domain
+            tag, it's just a widget; stays put while the content below fades on swap */}
+        <div style={{ position: "absolute", top: 26, left: 30 }}>
           <WindowDots />
         </div>
         {/* op wraps EVERYTHING (text + bar + %): the bar's one-frame 100%→0 reset
