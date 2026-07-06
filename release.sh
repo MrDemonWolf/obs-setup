@@ -48,12 +48,14 @@ python3 "$ROOT/masks/gen_masks.py" \
   || echo "⚠ mask regen skipped (need: pip install pillow) — using committed masks"
 
 echo "▶ assemble bundle → $BUNDLE"
+VID="Overlay (videos)"   # top-level video folder name inside the bundle
+MSK="Masks"              # top-level mask folder name inside the bundle
 rm -rf "$BUNDLE"
-mkdir -p "$BUNDLE/videos/opaque" "$BUNDLE/videos/transparent" "$BUNDLE/masks"
-cp "$OUT"/0*.mp4 "$OUT"/background.mp4 "$BUNDLE/videos/opaque/"
+mkdir -p "$BUNDLE/$VID/opaque" "$BUNDLE/$VID/transparent" "$BUNDLE/$MSK"
+cp "$OUT"/0*.mp4 "$OUT"/background.mp4 "$BUNDLE/$VID/opaque/"
 cp "$OUT"/socials-badge-hevc.mov "$OUT"/loading-barks-hevc.mov \
-   "$OUT"/countdown-hevc.mov "$BUNDLE/videos/transparent/"
-cp "$ROOT"/masks/*.png "$BUNDLE/masks/"
+   "$OUT"/countdown-hevc.mov "$BUNDLE/$VID/transparent/"
+cp "$ROOT"/masks/*.png "$BUNDLE/$MSK/"
 
 # README — quoted heredoc so markdown backticks stay literal; date prepended.
 {
@@ -65,9 +67,9 @@ cp "$ROOT"/masks/*.png "$BUNDLE/masks/"
 Everything OBS needs is in this folder.
 
 ```
-videos/opaque/        8 full-frame MP4s — set Loop = ON
-videos/transparent/   3 HEVC-alpha .mov overlays (hardware-decode on every Apple Silicon)
-masks/                5 rounded-corner webcam masks (PNG, alpha)
+Overlay (videos)/opaque/        8 full-frame MP4s — set Loop = ON
+Overlay (videos)/transparent/   3 HEVC-alpha .mov (hardware-decode on every Apple Silicon)
+Masks/                          5 rounded-corner webcam masks (PNG, alpha)
 ```
 
 ## Add each as a Media Source
