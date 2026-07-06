@@ -1,7 +1,6 @@
 import { useCurrentFrame } from "remotion";
 import { theme, radius, loopSin, loopBreathe } from "./theme";
 import { display, body } from "./fonts";
-import { Paw } from "./Paw";
 
 // True macOS traffic-light hexes, chip-local — the brand red/amber/green
 // (#E0533D/#E6B34B/#3ED598) read brick/mint and break the instant-recognition
@@ -53,18 +52,13 @@ export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, 
         boxShadow: `0 30px 80px rgba(0,0,0,0.45), inset 0 1.5px 0 rgba(255,255,255,0.22), 0 0 ${glow}px rgba(0,172,237,0.28)`,
       }}
     >
-      {/* window traffic lights + tag; a quiet paw closes the rectangle's right
-          edge so short titles ("Off Hunting") don't leave the reserved zone
-          reading as dead space */}
+      {/* window traffic lights + tag */}
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 22 }}>
         <Dot color={MAC_DOT.red} />
         <Dot color={MAC_DOT.amber} />
         <Dot color={MAC_DOT.green} />
         <span style={{ marginLeft: 14, fontFamily: body, fontSize: 24, color: theme.textDim, letterSpacing: 1.5 }}>
           mrdemonwolf.com
-        </span>
-        <span style={{ marginLeft: "auto", display: "flex", opacity: 0.25 }}>
-          <Paw size={40} color={theme.blueBright} />
         </span>
       </div>
 
