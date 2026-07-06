@@ -157,9 +157,12 @@ Architecture:
   read wrong and was removed). Fill is a static vertical gradient +
   diagonal sheen + 1.5px top bevel (fakes macOS glass without `backdrop-filter`).
   Traffic lights use TRUE macOS hexes (`#FF5F57/#FEBC2E/#28C840`) via the shared
-  `WindowChrome.WindowDots` / `MAC_DOT` — reused by the transparent overlays so
-  every glass card reads as the same little window (theme.red/amber/green stay
-  for the mascot). Title tracks -1.5
+  `WindowChrome` (`MAC_DOT` + `WindowDots`; theme.red/amber/green stay for the
+  mascot). The CARD chip renders `WindowChrome.WindowTitleBar` = dots + a
+  `mrdemonwolf.com` tag on one row (it's the branded window). The transparent
+  overlays (Countdown/LoadingBarks/Socials) are just widgets — `WindowDots` only,
+  pinned to the top-left corner (`top:26,left:30`; Socials `top:16,left:18` for
+  its 10px dots), NO domain tag. Title tracks -1.5
   (display-size extrabold). Chip never translates — it breathes in place
   (`1 + 0.007 * loopBreathe(frame, 2)`, under the mascot's amplitude). Chip is
   pinned at `left: 64` (the standard margin). The `Mascot` is pinned to ONE
@@ -242,7 +245,8 @@ Architecture:
   use plain translucent fills, not `backdrop-filter` (expensive to render);
   overlays that sit OVER live gameplay (`Countdown`/`LoadingBarks`/`Socials`)
   share `theme.glassPanel` (dot grid + `glassSheen` + `glassDense` 0.84) +
-  `glassPanelShadow` + `WindowDots`, so they read as the same little macOS window
+  `glassPanelShadow` + `WindowDots` (corner-pinned, no domain tag — just widgets),
+  so they read as the same little macOS window
   as the card chip — `glassFill` 0.66 washes out over bright footage and drops
   secondary text below 3:1.
   Fonts (`fonts.ts`) match mrdemonwolf.com: **Montserrat** (`display`,
