@@ -18,6 +18,7 @@ only. No package manager, no build step, no test framework.
 make gen      # regenerate devices/macbook-pro/scenes/MBP-Streaming.json (+ index.json)
 make backup   # zip ~/Downloads/OBS export, then file a scrubbed copy into devices/<slug>/
 make preview  # serve the previewer at http://localhost:8000 (python3 -m http.server)
+make release  # render all overlays + package a dated OBS bundle .zip in ~/Downloads
 make          # list targets
 ```
 
@@ -98,13 +99,13 @@ npm run lint        # eslint src + tsc
 npm run render:all  # render every scene into out/ (see render-all.mjs)
 # one at a time (comp ids):
 npx remotion render <CompId> out/<name>.mp4
-#   StartingSoon | BRB | JustChatting | JustChattingVtuber | Streaming
-#   CoworkingSolo[Left|Right] | CoworkingDual[Left|Right] | EndingStream | Background | Socials
+#   StartingSoon | BRB | JustChatting | JustChattingVtuber
+#   CoworkingSolo | CoworkingDual | EndingStream | Background | Socials
 ```
 
 Architecture:
 
-- **`src/scenes.ts` is the single source of truth** for the **12** scenes, each
+- **`src/scenes.ts` is the single source of truth** for the **11** scenes, each
   with `id`, `label`, `component`, `props`, and optional `width`/`height`.
   `src/Root.tsx` registers a `<Composition>` per scene (applying per-scene
   `width ?? VIDEO.width` / `height ?? VIDEO.height` — so `Socials` is 760×180,
@@ -178,8 +179,8 @@ Architecture:
   phases 0.4/0.73). No mascot, no widgets — you embed your real cam + chat over
   the frames. **`JustChattingVtuber`** = the same scene with `hideCam` — the
   cam frame drops (VTuber model goes full-screen) but the chat frame stays.
-- **`Streaming`** (`StreamFrame.tsx`) = just `<Background variant="glow" />` —
-  clean animated bg, no bar, no zones. Stack game capture / cam / widgets on top.
+  (A plain-gameplay "Streaming" scene was removed — use `Background` instead;
+  it's the same animated bg to stack game capture / cam / widgets over.)
 - **Co-Working** = one data-driven `Cowork` comp (`CoworkFrame.tsx`):
   `Background variant="glow"` + baked **16:9** `CamFrame`(s) from
   `COWORK_LAYOUTS` (no bar, no widget boxes — the open space is for timer /
@@ -253,8 +254,16 @@ Architecture:
   headings — the site's header font) + **Open Sans** (`body`, status lines /
   labels / digits — the site's body font; tabular-nums + fixed-width boxes keep
   numbers from reflowing), loading only the weights/subset used.
-  `render-all.mjs` renders the 9 full-frame ids to MP4, then `Socials` to
+  `render-all.mjs` renders the 8 full-frame ids to MP4, then `Socials` to
   `.mov` + `.gif` and a bonus `Background.gif`, into `out/` (which is
-  gitignored). `Socials` is omitted from the 9-id MP4 array; `Countdown`
+  gitignored). `Socials` is omitted from the 8-id MP4 array; `Countdown`
   (5 min) + `LoadingBarks` (~4 min) are transparent full-frame ProRes 4444
   (multi-GB, slow) → omitted from `render:all` entirely, rendered manually.
+- **`release.sh`** (repo root, `make release`) runs the whole pipeline end to
+  end: `render:all` → render Countdown + LoadingBarks ProRes (reused if the
+  master already exists, `--force` to re-render) → `to-hevc.sh` the three
+  transparent masters → regen `masks/` → assemble a dated OBS bundle
+  (`videos/opaque` MP4s + `videos/transparent` HEVC-alpha `.mov` + `masks/` +
+  a generated `README.md`) and zip it to `~/Downloads/OBS-overlays-<date>.zip`
+  for copying to Google Drive. The bundle README carries the file→scene→loop
+  table + the webcam-placement coords (keep those in sync with `gen_masks.py`).

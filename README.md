@@ -26,13 +26,13 @@ One command to back up. One click to preview. No lost scenes.
 - **OBS JSON reference** - what the files contain, how source colors are
   stored, and exactly which fields are secrets.
 - **Animated overlays** - Remotion-built scenes with seamless looping motion
-  (Starting Soon, Be Right Back, Just Chatting, Streaming, Co-Working, Ending
+  (Starting Soon, Be Right Back, Just Chatting, Co-Working, Ending
   Stream, Background), rendered to MP4 for OBS media sources.
 - **Live previewer** - a small macOS-style window that plays every overlay
   live, with a button per scene, so you can flip through them before
   rendering.
 - **Layout scenes** - **Co-Working** (Solo / Dual) has rounded 16:9 cam frames
-  with an open widget band below; **Streaming** and **Background** are just the
+  with an open widget band below; **Background** is just the
   animated background (stack your sources on top). **Just Chatting** is a webcam
   frame + a tall chat frame to embed a real chat over. Rounded [webcam
   masks](masks/) clip a live cam to match the frames.
@@ -98,12 +98,22 @@ npm run render:all                            # render everything into out/ (num
 npx remotion render StartingSoon out/01-starting-soon.mp4   # or one at a time
 ```
 
-Composition ids: `StartingSoon`, `BRB`, `JustChatting`, `Streaming`,
+Composition ids: `StartingSoon`, `BRB`, `JustChatting`,
 `Coworking`, `EndingStream`, `Background` (full-frame MP4s), plus `Socials` —
 a 760×180 transparent badge rendered to `socials.mov` (ProRes 4444) +
 `socials.gif`. Add each in OBS as a Media Source with Loop enabled; put the
 backgrounds at the bottom of the scene and stack your screen / webcam / widgets
 on top.
+
+### Package a bundle for OBS
+
+`make release` (or `./release.sh`) runs the whole pipeline — renders every
+overlay, transcodes the transparent ones to HEVC-alpha, regenerates the masks,
+and zips a dated, OBS-ready bundle to `~/Downloads/OBS-overlays-<date>.zip`
+(videos + masks + a README with the file→scene→loop table and webcam-placement
+coords). Copy that zip to Google Drive and drop the files into OBS. The heavy
+Countdown/LoadingBarks ProRes masters are reused if present; `make release
+FORCE=--force` re-renders them.
 
 ### Rounded webcam masks
 
@@ -188,7 +198,7 @@ obs-setup/
     ├── src/                  # scenes + layers
     │   ├── scenes.ts         # every scene (single source of truth)
     │   ├── Root.tsx          # registers each scene as a composition
-    │   ├── Scene.tsx         # card layout; JustChattingScene / StreamFrame / CoworkFrame / BackdropScene / Socials
+    │   ├── Scene.tsx         # card layout; JustChattingScene / CoworkFrame / BackdropScene / Socials
     │   ├── wolf/             # night ambience (Moon, Starfield, Embers, PawTrail)
     │   └── theme.ts          # palette + seamless-loop helpers
     ├── preview/              # macOS-style previewer (Vite + @remotion/player)
