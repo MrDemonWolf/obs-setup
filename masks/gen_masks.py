@@ -10,7 +10,7 @@ is clipped to the exact same rounded rectangle as the frame.
 The geometry here MUST stay in sync with the frame coordinates in
 remotion/src/CoworkFrame.tsx (COWORK_LAYOUTS) and JustChattingScene.tsx, and the
 corner radius with `radius.card` in remotion/src/theme.ts. Re-run after changing
-any of those:  python3 obs-masks/gen_masks.py
+any of those:  python3 masks/gen_masks.py
 
 No app, no deps beyond Pillow (`pip install pillow`).
 """

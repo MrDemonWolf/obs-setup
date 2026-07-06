@@ -35,7 +35,7 @@ One command to back up. One click to preview. No lost scenes.
   with an open widget band below; **Streaming** and **Background** are just the
   animated background (stack your sources on top). **Just Chatting** is a webcam
   frame + a tall chat frame to embed a real chat over. Rounded [webcam
-  masks](obs-masks/) clip a live cam to match the frames.
+  masks](masks/) clip a live cam to match the frames.
 - **Socials badge** - a standalone transparent overlay that fades through your
   platforms one at a time with real brand logos.
 
@@ -108,12 +108,12 @@ on top.
 ### Rounded webcam masks
 
 The Just Chatting and Co-Working overlays draw rounded cam frames. To make a live
-cam match that rounding, [`obs-masks/`](obs-masks/) has a ready-made alpha mask
+cam match that rounding, [`masks/`](masks/) has a ready-made alpha mask
 per cam (`just-chatting-cam`, `just-chatting-chat`, `co-working-solo`,
 `co-working-dual-big`, `co-working-dual-small`). Apply one to the cam source with
 an **Image Mask/Blend** filter (Alpha Mask · Alpha Channel) — see
-[`obs-masks/README.md`](obs-masks/README.md) for the size/position of each and
-the step-by-step. Regenerate with `python3 obs-masks/gen_masks.py` if you retune
+[`masks/README.md`](masks/README.md) for the size/position of each and
+the step-by-step. Regenerate with `python3 masks/gen_masks.py` if you retune
 a frame.
 
 ## Tech Stack
@@ -180,7 +180,7 @@ obs-setup/
 │   ├── backup-guide.md
 │   ├── color-coding.md
 │   └── obs-json-reference.md
-├── obs-masks/                # rounded webcam masks for the cam-frame overlays
+├── masks/                   # rounded webcam masks for the cam-frame overlays
 │   ├── *.png                 # one alpha mask per cam (named per overlay)
 │   ├── gen_masks.py          # regenerate from the frame geometry
 │   └── README.md             # OBS Image Mask/Blend steps
