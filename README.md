@@ -31,10 +31,11 @@ One command to back up. One click to preview. No lost scenes.
 - **Live previewer** - a small macOS-style window that plays every overlay
   live, with a button per scene, so you can flip through them before
   rendering.
-- **Layout scenes** - **Co-Working** has labelled outline zones (webcam / focus
-  timer / tasks / chat); **Streaming** and **Background** are just the animated
-  background (stack your sources on top). **Just Chatting** is a webcam frame +
-  an empty chat panel to embed a real chat over.
+- **Layout scenes** - **Co-Working** (Solo / Dual) has rounded 16:9 cam frames
+  with an open widget band below; **Streaming** and **Background** are just the
+  animated background (stack your sources on top). **Just Chatting** is a webcam
+  frame + a tall chat frame to embed a real chat over. Rounded [webcam
+  masks](obs-masks/) clip a live cam to match the frames.
 - **Socials badge** - a standalone transparent overlay that fades through your
   platforms one at a time with real brand logos.
 
@@ -104,6 +105,17 @@ a 760×180 transparent badge rendered to `socials.mov` (ProRes 4444) +
 backgrounds at the bottom of the scene and stack your screen / webcam / widgets
 on top.
 
+### Rounded webcam masks
+
+The Just Chatting and Co-Working overlays draw rounded cam frames. To make a live
+cam match that rounding, [`obs-masks/`](obs-masks/) has a ready-made alpha mask
+per cam (`just-chatting-cam`, `just-chatting-chat`, `co-working-solo`,
+`co-working-dual-big`, `co-working-dual-small`). Apply one to the cam source with
+an **Image Mask/Blend** filter (Alpha Mask · Alpha Channel) — see
+[`obs-masks/README.md`](obs-masks/README.md) for the size/position of each and
+the step-by-step. Regenerate with `python3 obs-masks/gen_masks.py` if you retune
+a frame.
+
 ## Tech Stack
 
 | Layer        | Technology                          |
@@ -168,6 +180,10 @@ obs-setup/
 │   ├── backup-guide.md
 │   ├── color-coding.md
 │   └── obs-json-reference.md
+├── obs-masks/                # rounded webcam masks for the cam-frame overlays
+│   ├── *.png                 # one alpha mask per cam (named per overlay)
+│   ├── gen_masks.py          # regenerate from the frame geometry
+│   └── README.md             # OBS Image Mask/Blend steps
 └── remotion/                 # animated overlays (separate Node project)
     ├── src/                  # scenes + layers
     │   ├── scenes.ts         # every scene (single source of truth)
