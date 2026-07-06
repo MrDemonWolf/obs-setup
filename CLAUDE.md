@@ -195,8 +195,8 @@ Architecture:
   rounded (or `shape="circle"`) cerulean border + gentle glow (staggered
   `phase` per frame — lockstep pulses read mechanical), transparent centre.
   Add/tweak layouts in `COWORK_LAYOUTS`. **A live OBS cam has square corners →
-  clip it to the frame with a mask from `obs-masks/`** (one alpha PNG per cam,
-  named per overlay; `obs-masks/README.md` has the Image Mask/Blend steps,
+  clip it to the frame with a mask from `masks/`** (one alpha PNG per cam,
+  named per overlay; `masks/README.md` has the Image Mask/Blend steps,
   `gen_masks.py` regenerates them from these coords + `radius.card`).
 - **`Background`** = `BackdropScene.tsx` → just `<Background/>` (aurora +
   starfield + full moon + drifting embers + dot grid); no handle, no paw prints.
