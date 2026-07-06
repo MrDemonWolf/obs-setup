@@ -1,6 +1,5 @@
 import type { FC } from "react";
 import { Scene } from "./Scene";
-import { StreamFrame } from "./StreamFrame";
 import { Cowork, COWORK_LAYOUTS } from "./CoworkFrame";
 import { BackdropScene } from "./BackdropScene";
 import { JustChattingScene } from "./JustChattingScene";
@@ -30,7 +29,6 @@ export const SCENES: SceneDef[] = [
   { id: "BRB", label: "Be Right Back", component: Scene, props: { title: "Off Hunting", subtitle: "brb · back on the trail", showMascot: true, mascotSrc: "logo-mouth-closed.svg" } },
   { id: "JustChatting", label: "Just Chatting", component: JustChattingScene, props: {} },
   { id: "JustChattingVtuber", label: "Just Chatting · VTuber", component: JustChattingScene, props: { hideCam: true } },
-  { id: "Streaming", label: "Streaming", component: StreamFrame, props: {} },
   // moon repositioned into clear sky per layout — the default (300,200,r92)
   // sits inside/behind the cam frames, where the live feed clips it in OBS.
   { id: "CoworkingSolo", label: "Co-Working · Solo", component: Cowork, props: { cams: COWORK_LAYOUTS.solo, moon: { x: 1568 } } },
