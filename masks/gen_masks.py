@@ -25,9 +25,9 @@ RADIUS = 30  # remotion/src/theme.ts radius.card — the CamFrame corner radius
 MASKS = {
     "just-chatting-cam":       (1216, 684, "Just Chatting",            64,  198),
     "just-chatting-chat":      (512,  684, "Just Chatting / VTuber",  1344, 198),
-    "co-working-solo":         (1152, 648, "Co-Working Solo",           64,  40),
-    "co-working-dual-big":     (1152, 648, "Co-Working Dual (big)",     64,  40),
-    "co-working-dual-small":   (576,  324, "Co-Working Dual (small)", 1280, 692),
+    "co-working-solo":         (1400, 788, "Co-Working Solo",           64, 136),
+    "co-working-dual-big":     (1152, 648, "Co-Working Dual (big)",     64, 136),
+    "co-working-dual-small":   (576,  324, "Co-Working Dual (small)", 1280, 628),
 }
 
 OUT = Path(__file__).parent
