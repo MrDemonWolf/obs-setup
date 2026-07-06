@@ -139,7 +139,7 @@ Architecture:
   at each swap happens invisibly, and the glow runs an integer number of cycles
   over the comp (`GLOW_CYCLES`) — plain `loopSin` popped at the loop seam
   (13572 % 240 ≠ 0). `durationInFrames = LOADING_BARKS_DURATION`
-  (sum of holds, ~9 min over 18 phrases) built at `LOADING_BARKS_FPS` (**60**; per-comp `fps` in
+  (sum of holds, ~6.5 min over 13 phrases) built at `LOADING_BARKS_FPS` (**60**; per-comp `fps` in
   `scenes.ts`). **Heavy → NOT in `render:all`**, render manually. Edit
   `BARKS`/seed to taste.
 - **Card scenes** (`StartingSoon`, `BRB`, `EndingStream`) use `src/Scene.tsx`,
@@ -257,7 +257,7 @@ Architecture:
   `render-all.mjs` renders the 8 full-frame ids to MP4, then `Socials` to
   `.mov` + `.gif` and a bonus `Background.gif`, into `out/` (which is
   gitignored). `Socials` is omitted from the 8-id MP4 array; `Countdown`
-  (5 min) + `LoadingBarks` (~9 min) are transparent full-frame ProRes 4444
+  (5 min) + `LoadingBarks` (~6.5 min) are transparent full-frame ProRes 4444
   (multi-GB, slow) → omitted from `render:all` entirely, rendered manually.
 - **`release.sh`** (repo root, `make release`) runs the whole pipeline end to
   end: `render:all` → render Countdown + LoadingBarks ProRes (reused if the
