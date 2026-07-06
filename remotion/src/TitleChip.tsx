@@ -1,7 +1,7 @@
 import { useCurrentFrame } from "remotion";
 import { theme, radius, loopSin, loopBreathe } from "./theme";
 import { display, body } from "./fonts";
-import { WindowDots } from "./WindowChrome";
+import { WindowTitleBar } from "./WindowChrome";
 
 // Fixed chip width so StartingSoon / BRB / EndingStream are all the SAME size
 // (text left-aligned inside). Sized to fit the widest title ("The Pack Gathers")
@@ -44,12 +44,9 @@ export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, 
         boxShadow: `0 30px 80px rgba(0,0,0,0.45), inset 0 1.5px 0 rgba(255,255,255,0.22), 0 0 ${glow}px rgba(0,172,237,0.28)`,
       }}
     >
-      {/* window traffic lights + tag */}
-      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 22 }}>
-        <WindowDots />
-        <span style={{ marginLeft: 14, fontFamily: body, fontSize: 24, color: theme.textDim, letterSpacing: 1.5 }}>
-          mrdemonwolf.com
-        </span>
+      {/* window traffic lights + tag (shared with the transparent overlays) */}
+      <div style={{ marginBottom: 22 }}>
+        <WindowTitleBar />
       </div>
 
       <div
