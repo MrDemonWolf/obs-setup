@@ -11,10 +11,9 @@ import { theme } from "./theme";
 // but keeps the tall chat frame on the right.
 export const JustChattingScene: React.FC<{ hideCam?: boolean }> = ({ hideCam }) => (
   <AbsoluteFill style={{ backgroundColor: theme.navyDeep }}>
-    {/* moon nudged into the 198px top band — the default y sits inside the cam
-        frame, where the live feed would clip it at the border (size is the shared
-        MOON_R, same as every other scene) */}
-    <Background variant="glow" moon={{ x: 300, y: 108 }} />
+    {/* moon on the left, at the shared MOON_Y/MOON_R — sits in the 198px top band
+        above the cam frame (only its left/right x differs from other scenes) */}
+    <Background variant="glow" moon={{ x: 300 }} />
     {/* staggered glow phases so cam + chat don't pulse in lockstep */}
     {!hideCam && <CamFrame x={64} y={198} w={1216} h={684} phase={0.4} />}
     <CamFrame x={1344} y={198} w={512} h={684} phase={0.73} />
