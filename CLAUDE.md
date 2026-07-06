@@ -182,13 +182,16 @@ Architecture:
   (`1152×648 @ x64,y40`, pinned up top) so the primary cam never moves switching
   solo↔dual in OBS. `solo` = just the hero; `dual` = hero + a smaller **576×324**
   second (true 16:9) **bottom-aligned** with the hero at y=364 → shared 688
-  baseline, one clean widget band below. Both scenes park the moon in the
-  top-right pocket `{x:1568,y:150}`. Moon POSITION is a per-scene `moon` prop
-  (the `Background` default y sits inside the cam frames, where OBS's live feed
-  clips it) — but moon SIZE is fixed (`MOON_R`), never per-scene. `CamFrame.tsx` = soft
+  baseline, one clean widget band below. Both scenes park the moon on the RIGHT
+  (`{x:1568}`) — only its x is passed; height/size are the shared `MOON_Y`/`MOON_R`
+  (the `Background` default y would sit inside the cam frames, where OBS's live
+  feed clips it). `CamFrame.tsx` = soft
   rounded (or `shape="circle"`) cerulean border + gentle glow (staggered
   `phase` per frame — lockstep pulses read mechanical), transparent centre.
-  Add/tweak layouts in `COWORK_LAYOUTS`.
+  Add/tweak layouts in `COWORK_LAYOUTS`. **A live OBS cam has square corners →
+  clip it to the frame with a mask from `obs-masks/`** (one alpha PNG per cam,
+  named per overlay; `obs-masks/README.md` has the Image Mask/Blend steps,
+  `gen_masks.py` regenerates them from these coords + `radius.card`).
 - **`Background`** = `BackdropScene.tsx` → just `<Background/>` (aurora +
   starfield + full moon + drifting embers + dot grid); no handle, no paw prints.
   The most flexible overlay.
@@ -204,9 +207,10 @@ Architecture:
 - **Wolf ambience** lives in `src/wolf/` (`Moon`, `Starfield`, `Embers`,
   `PawTrail`; barrel `wolf/index.ts`) + `Background.tsx` (`variant`:
   night/glow/minimal — `glow` = aurora + moon, no starfield/embers;
-  optional `moon={x,y}` repositions the moon into clear sky on frame scenes; its
-  size is the shared `MOON_R`, ONE size on every scene — don't re-add per-scene
-  `r`). Only the moon's HALO breathes — the body stays perfectly still (a body throb
+  optional `moon={x}` repositions the moon into clear sky on frame scenes. Size
+  (`MOON_R`) AND height (`MOON_Y`) are shared — the moon sits at ONE altitude on
+  every scene and only its LEFT/RIGHT x changes (300 left / 1568 right); don't
+  re-add per-scene `r` or `y`. Only the moon's HALO breathes — the body stays still (a body throb
   read wrong on a celestial object). Starfield stars carry seeded integer
   harmonics 2–4 so they twinkle at varied rates instead of one shared breath.
   `PawTrail` runs only on card scenes (via `Scene.tsx`),
