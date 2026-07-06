@@ -26,6 +26,12 @@ export const theme = {
 // macOS-ish rounded radii
 export const radius = { card: 30, pill: 999, dot: 999 } as const;
 
+// The Background's dot-grid as a single CSS background LAYER (46px tile, sized
+// inline) so the transparent overlay cards (Countdown/LoadingBarks/Socials) can
+// echo the same texture: `background: `${dotGridLayer}, ${theme.glassDense}``.
+// Clipped to the card's border-radius automatically — no extra element.
+export const dotGridLayer = `radial-gradient(${theme.grid} 1.6px, transparent 1.6px) 0 0 / 46px 46px`;
+
 // 1080p, 8s seamless loop @30fps.
 export const VIDEO = { fps: 30, width: 1920, height: 1080, durationInFrames: 240 } as const;
 

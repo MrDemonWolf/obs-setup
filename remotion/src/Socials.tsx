@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
-import { theme, VIDEO } from "./theme";
+import { theme, VIDEO, dotGridLayer } from "./theme";
 import { display } from "./fonts";
 
 const items = [
@@ -69,7 +69,8 @@ export const SocialsScene: React.FC = () => (
         width: "88%",
         height: "62%",
         borderRadius: 16, // macOS window-style corners (30 read too round on a short badge)
-        background: theme.glassDense, // contrast over gameplay + clean GIF alpha edge (shared with Countdown/LoadingBarks)
+        // dense backing (contrast over gameplay + clean GIF alpha edge) + shared dot-grid texture
+        background: `${dotGridLayer}, ${theme.glassDense}`,
         border: `1px solid ${theme.glassBorder}`,
       }}
     >

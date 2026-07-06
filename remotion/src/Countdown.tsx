@@ -1,5 +1,5 @@
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
-import { theme, radius } from "./theme";
+import { theme, radius, dotGridLayer } from "./theme";
 import { body } from "./fonts";
 import { PawLoader } from "./PawLoader";
 
@@ -34,8 +34,8 @@ export const Countdown: React.FC<{ from?: number; label?: string }> = ({ from = 
           gap: 20,
           padding: "48px 96px",
           borderRadius: radius.card,
-          background: theme.glassDense, // over live gameplay — needs the dense backing
-
+          // dense backing (over live gameplay) + the shared dot-grid texture
+          background: `${dotGridLayer}, ${theme.glassDense}`,
           border: `1px solid ${theme.glassBorder}`,
           boxShadow: `0 30px 80px rgba(0,0,0,0.45), inset 0 1px 0 ${theme.glassHi}, 0 0 ${glow}px rgba(0,172,237,0.28)`,
         }}
