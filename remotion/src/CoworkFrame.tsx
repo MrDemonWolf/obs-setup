@@ -18,20 +18,18 @@ export const Cowork: React.FC<{ cams: Cam[]; moon?: { x?: number; y?: number; r?
   </AbsoluteFill>
 );
 
-// All boxes true 16:9. Solo + Dual share the SAME top-anchored idea: cam(s) up
-// top (y=72), open widget band below for timer / tasks / chat / now-playing.
-// Solo = one bigger cam; Dual = one HERO + one smaller second. Span x 64..1856.
+// All boxes true 16:9. Solo + Dual share ONE hero footprint: the primary cam is
+// the SAME 1152×648 box at x=64,y=72 in BOTH layouts, so switching Solo↔Dual in
+// OBS never makes the main cam jump — Dual just adds a smaller second cam in the
+// right pocket. Open widget band below for timer / tasks / chat / now-playing.
+const HERO: Cam = { x: 64, y: 72, w: 1152, h: 648 }; // bottom 720
 export const COWORK_LAYOUTS: Record<string, Cam[]> = {
-  // Solo: one big 1280×720 cam centered up top. x = (1920-1280)/2 = 320.
-  // Bottom edge 792 → ~288px open band below.
-  solo: [{ x: 320, y: 72, w: 1280, h: 720 }],
-  // Dual: big HERO 1152×648 left + smaller 576×324 second (both true 16:9), 64px
-  // outer margins + 64px gap (64+1152+64+576+64 = 1920). Second is BOTTOM-aligned
-  // with the hero (y = 72+648-324 = 396 → both bottoms at 720): a shared baseline
-  // merges all the open space into one clean full-width band below, instead of
-  // splitting the right column into two 162px pockets too short for widgets.
-  dual: [
-    { x: 64, y: 72, w: 1152, h: 648 },
-    { x: 1280, y: 396, w: 576, h: 324 },
-  ],
+  // Solo: just the hero cam. Open L-shaped band (right column + full-width below).
+  solo: [HERO],
+  // Dual: hero + smaller 576×324 second (both true 16:9), 64px outer margins +
+  // 64px gap (64+1152+64+576+64 = 1920). Second is BOTTOM-aligned with the hero
+  // (y = 72+648-324 = 396 → both bottoms at 720): a shared baseline merges all the
+  // open space into one clean full-width band below, instead of splitting the
+  // right column into two 162px pockets too short for widgets.
+  dual: [HERO, { x: 1280, y: 396, w: 576, h: 324 }],
 };
