@@ -1,21 +1,13 @@
 import { useCurrentFrame } from "remotion";
 import { theme, radius, loopSin, loopBreathe } from "./theme";
 import { display, body } from "./fonts";
-
-// True macOS traffic-light hexes, chip-local — the brand red/amber/green
-// (#E0533D/#E6B34B/#3ED598) read brick/mint and break the instant-recognition
-// job window chrome exists for. theme.* stays untouched for mascot/other uses.
-const MAC_DOT = { red: "#FF5F57", amber: "#FEBC2E", green: "#28C840" } as const;
+import { WindowDots } from "./WindowChrome";
 
 // Fixed chip width so StartingSoon / BRB / EndingStream are all the SAME size
 // (text left-aligned inside). Sized to fit the widest title ("The Pack Gathers")
 // at 108px with the L/R padding below. If you add a longer title, bump this and
 // re-check the mascot overlap (right-anchored wolf must clear the chip's right edge).
 const CHIP_WIDTH = 1160;
-
-const Dot: React.FC<{ color: string }> = ({ color }) => (
-  <span style={{ width: 15, height: 15, borderRadius: radius.dot, background: color, display: "inline-block" }} />
-);
 
 // Frosted macOS-glass panel: window dots + rounded title + one status line,
 // ending in a blinking terminal cursor.
@@ -54,9 +46,7 @@ export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, 
     >
       {/* window traffic lights + tag */}
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 22 }}>
-        <Dot color={MAC_DOT.red} />
-        <Dot color={MAC_DOT.amber} />
-        <Dot color={MAC_DOT.green} />
+        <WindowDots />
         <span style={{ marginLeft: 14, fontFamily: body, fontSize: 24, color: theme.textDim, letterSpacing: 1.5 }}>
           mrdemonwolf.com
         </span>

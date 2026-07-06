@@ -1,7 +1,8 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { theme, radius, clamp01, dotGridLayer } from "./theme";
+import { theme, radius, clamp01, glassPanel, glassPanelShadow } from "./theme";
 import { body } from "./fonts";
 import { Paw } from "./Paw";
+import { WindowDots } from "./WindowChrome";
 
 const BARKS = [
   "Loading barks…",
@@ -80,14 +81,18 @@ export const LoadingBarks: React.FC = () => {
     <AbsoluteFill style={{ alignItems: "center", justifyContent: "center" }}>
       <div
         style={{
-          padding: "48px 76px",
+          padding: "40px 76px 48px",
           borderRadius: radius.card,
-          // dense backing (over live gameplay) + the shared dot-grid texture
-          background: `${dotGridLayer}, ${theme.glassDense}`,
+          // shared over-gameplay glass panel (dot grid + sheen + dense fill)
+          background: glassPanel,
           border: `1px solid ${theme.glassBorder}`,
-          boxShadow: `0 30px 80px rgba(0,0,0,0.45), inset 0 1px 0 ${theme.glassHi}, 0 0 ${glow}px rgba(0,172,237,0.28)`,
+          boxShadow: glassPanelShadow(glow),
         }}
       >
+        {/* macOS window chrome — stays put while the content below fades on swap */}
+        <div style={{ display: "flex", marginBottom: 24 }}>
+          <WindowDots />
+        </div>
         {/* op wraps EVERYTHING (text + bar + %): the bar's one-frame 100%→0 reset
             at each phrase swap happens while fully invisible. op is 0 at both
             slot edges → the loop seam stays invisible too. */}

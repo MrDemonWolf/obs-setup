@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
-import { theme, VIDEO, dotGridLayer } from "./theme";
+import { theme, VIDEO, glassPanel } from "./theme";
 import { display } from "./fonts";
+import { WindowDots } from "./WindowChrome";
 
 const items = [
   { b: "twitch", h: "/MrDemonWolf" },
@@ -63,17 +64,24 @@ export const SocialsScene: React.FC = () => (
   <AbsoluteFill style={{ alignItems: "center", justifyContent: "center" }}>
     <div
       style={{
+        position: "relative",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         width: "88%",
         height: "62%",
         borderRadius: 16, // macOS window-style corners (30 read too round on a short badge)
-        // dense backing (contrast over gameplay + clean GIF alpha edge) + shared dot-grid texture
-        background: `${dotGridLayer}, ${theme.glassDense}`,
+        // shared over-gameplay glass panel (dot grid + sheen + dense fill); no drop
+        // shadow — keeps a clean GIF alpha edge — just the top bevel
+        background: glassPanel,
         border: `1px solid ${theme.glassBorder}`,
+        boxShadow: `inset 0 1.5px 0 rgba(255,255,255,0.22)`,
       }}
     >
+      {/* small macOS window dots, top-left — stays put while the handle fades */}
+      <div style={{ position: "absolute", top: 16, left: 18 }}>
+        <WindowDots size={10} gap={7} />
+      </div>
       <SocialFade />
     </div>
   </AbsoluteFill>
