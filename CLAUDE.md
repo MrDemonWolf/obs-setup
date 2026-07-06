@@ -144,18 +144,17 @@ Architecture:
 - **Card scenes** (`StartingSoon`, `BRB`, `EndingStream`) use `src/Scene.tsx`,
   which layers `Background` → `PawTrail` (walking footsteps) → `TitleChip`
   (glass panel: title + status line ending in a blinking cerulean `▊` cursor —
-  ONE metaphor per row, no LED dot) → `Mascot`. `mood` picks the vibe:
-  `hero` (open-mouth mascot) / `calm` / `ember` (warm wind-down: floor wash
-  0.12/45%, aurora "b" turns firelight `224,140,61`, aurora "a" recedes, 30
-  embers — deliberately reads warm at a glance). Only `ember` changes the
-  background; the mascot mouth is a static `mascotSrc` in
+  ONE metaphor per row, no LED dot) → `Mascot`. All three cards share ONE cool
+  `night` background — there is no per-scene mood/ember grade (an earlier warm
+  "ember" wind-down on EndingStream read as a jarring different color and was
+  removed). The mascot mouth is a static `mascotSrc` in
   `scenes.ts` (`logo-main.svg` open / `logo-mouth-closed.svg` closed). The
   `Mascot talking` mouth-swap prop exists but no registered scene uses it, and
   the mascot has **no** glow/spotlight.
 - **Card chip: FIXED `CHIP_WIDTH` 1160px, left-aligned, glass-not-flat.** All
-  three cards are the same size (sized to "The Pack Gathers" at 108px); a quiet
-  right-aligned paw (40px @ 25%) on the title-bar row closes the rectangle so
-  short titles don't leave dead space. Fill is a static vertical gradient +
+  three cards are the same size (sized to "The Pack Gathers" at 108px); short
+  titles just leave some open space on the right (a paw glyph used to fill it but
+  read wrong and was removed). Fill is a static vertical gradient +
   diagonal sheen + 1.5px top bevel (fakes macOS glass without `backdrop-filter`).
   Traffic lights use TRUE macOS hexes (`#FF5F57/#FEBC2E/#28C840`, chip-local
   `MAC_DOT` — theme.red/amber/green stay for the mascot). Title tracks -1.5
@@ -168,9 +167,9 @@ Architecture:
   title is never hidden behind it. **If you lengthen a title past "The Pack
   Gathers" bump `CHIP_WIDTH`, and enlarging the mascot creeps it left over the
   text — re-check the chip/wolf overlap either way.**
-- **`JustChatting`** = `JustChattingScene.tsx`: `glow` `Background` (moon shrunk
-  into the 198px top band, `{x:300,y:100,r:68}` — the default sat half-inside
-  the cam frame) + a 16:9 `CamFrame` + a tall chat `CamFrame` (staggered glow
+- **`JustChatting`** = `JustChattingScene.tsx`: `glow` `Background` (moon placed
+  in the 198px top band, `{x:300,y:108}` — the default y sat half-inside the cam
+  frame) + a 16:9 `CamFrame` + a tall chat `CamFrame` (staggered glow
   phases 0.4/0.73). No mascot, no widgets — you embed your real cam + chat over
   the frames. **`JustChattingVtuber`** = the same scene with `hideCam` — the
   cam frame drops (VTuber model goes full-screen) but the chat frame stays.
@@ -179,14 +178,14 @@ Architecture:
 - **Co-Working** = one data-driven `Cowork` comp (`CoworkFrame.tsx`):
   `Background variant="glow"` + baked **16:9** `CamFrame`(s) from
   `COWORK_LAYOUTS` (no bar, no widget boxes — the open space is for timer /
-  tasks / chat / now-playing OBS sources). Cams anchored up top (y=72), open
-  widget band below. 2 registered variants: `solo` (one 1280×720 cam centered up
-  top; moon in the left gutter `{x:180,y:200,r:88}`) and `dual` (big **1152×648
-  hero** left + smaller **576×324** second, both true 16:9; second
-  **bottom-aligned** with the hero at y=396 → shared 720 baseline, one clean
-  widget band below; moon in the top-right pocket `{x:1568,y:140,r:60}`).
-  Moon positions are per-scene `moon` props — the `Background` default sits
-  inside the cam frames, where OBS's live feed clips it. `CamFrame.tsx` = soft
+  tasks / chat / now-playing OBS sources). Solo + dual share ONE `HERO` cam box
+  (`1152×648 @ x64,y40`, pinned up top) so the primary cam never moves switching
+  solo↔dual in OBS. `solo` = just the hero; `dual` = hero + a smaller **576×324**
+  second (true 16:9) **bottom-aligned** with the hero at y=364 → shared 688
+  baseline, one clean widget band below. Both scenes park the moon in the
+  top-right pocket `{x:1568,y:150}`. Moon POSITION is a per-scene `moon` prop
+  (the `Background` default y sits inside the cam frames, where OBS's live feed
+  clips it) — but moon SIZE is fixed (`MOON_R`), never per-scene. `CamFrame.tsx` = soft
   rounded (or `shape="circle"`) cerulean border + gentle glow (staggered
   `phase` per frame — lockstep pulses read mechanical), transparent centre.
   Add/tweak layouts in `COWORK_LAYOUTS`.
@@ -204,9 +203,10 @@ Architecture:
   + `socials.gif`.
 - **Wolf ambience** lives in `src/wolf/` (`Moon`, `Starfield`, `Embers`,
   `PawTrail`; barrel `wolf/index.ts`) + `Background.tsx` (`variant`:
-  night/ember/glow/minimal — `glow` = aurora + moon, no starfield/embers;
-  optional `moon={x,y,r}` repositions the moon into clear sky on frame scenes).
-  Only the moon's HALO breathes — the body stays perfectly still (a body throb
+  night/glow/minimal — `glow` = aurora + moon, no starfield/embers;
+  optional `moon={x,y}` repositions the moon into clear sky on frame scenes; its
+  size is the shared `MOON_R`, ONE size on every scene — don't re-add per-scene
+  `r`). Only the moon's HALO breathes — the body stays perfectly still (a body throb
   read wrong on a celestial object). Starfield stars carry seeded integer
   harmonics 2–4 so they twinkle at varied rates instead of one shared breath.
   `PawTrail` runs only on card scenes (via `Scene.tsx`),
