@@ -4,29 +4,32 @@ import { CamFrame } from "./CamFrame";
 
 // Co-Working overlays: animated `glow` background + baked 16:9 cam frame(s).
 // No bar, no widget boxes — the open space in each layout is where your OBS
-// widget sources (timer / tasks / chat / now-playing) go.
+// widget sources (timer / tasks / chat / now-playing) go. `moon` repositions
+// the background moon into clear sky (the default sits inside the cam frames).
 type Cam = { x: number; y: number; w: number; h: number };
 
-export const Cowork: React.FC<{ cams: Cam[] }> = ({ cams }) => (
+export const Cowork: React.FC<{ cams: Cam[]; moon?: { x?: number; y?: number; r?: number } }> = ({ cams, moon }) => (
   <AbsoluteFill>
-    <Background variant="glow" />
+    <Background variant="glow" moon={moon} />
     {cams.map((c, i) => (
-      <CamFrame key={i} {...c} />
+      // staggered glow phases — identical phases pulse in lockstep (metronome)
+      <CamFrame key={i} {...c} phase={0.4 + i * 0.33} />
     ))}
   </AbsoluteFill>
 );
 
-// All boxes true 16:9. Solo + Dual share the SAME layout: cam(s) anchored across
-// the top (y=72), open widget band below for timer / tasks / chat / now-playing.
-// Solo = one bigger cam; Dual = two side-by-side. Both span x 64..1856.
+// All boxes true 16:9. Solo + Dual share ONE hero footprint: the primary cam is
+// the SAME 1152×648 box at x=64,y=72 in BOTH layouts, so switching Solo↔Dual in
+// OBS never makes the main cam jump — Dual just adds a smaller second cam in the
+// right pocket. Open widget band below for timer / tasks / chat / now-playing.
+const HERO: Cam = { x: 64, y: 40, w: 1152, h: 648 }; // pinned up top; bottom 688
 export const COWORK_LAYOUTS: Record<string, Cam[]> = {
-  // Solo: one big 1280×720 cam centered up top. x = (1920-1280)/2 = 320.
-  // Bottom edge 792 → ~288px open band below.
-  solo: [{ x: 320, y: 72, w: 1280, h: 720 }],
-  // Dual: two 864×486 cams side by side up top (64px outer margins, 64px gap).
-  // Bottom edge 558 → ~520px open band below. Right cam x = 64+864+64 = 992.
-  dual: [
-    { x: 64, y: 72, w: 864, h: 486 },
-    { x: 992, y: 72, w: 864, h: 486 },
-  ],
+  // Solo: just the hero cam. Open L-shaped band (right column + full-width below).
+  solo: [HERO],
+  // Dual: hero top-left + smaller 576×324 second pinned to the BOTTOM-RIGHT
+  // corner (64px right + bottom margins: x=1920-64-576=1280, y=1080-64-324=692).
+  // Same 16:9 size, just diagonally opposite the hero — opens a big L-shaped
+  // widget band (below the hero + left of the small cam). Moon sits in the now-
+  // clear top-right sky.
+  dual: [HERO, { x: 1280, y: 692, w: 576, h: 324 }],
 };
