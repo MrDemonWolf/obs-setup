@@ -115,6 +115,11 @@ coords). Copy that zip to Google Drive and drop the files into OBS. The heavy
 Countdown/LoadingBarks ProRes masters are reused if present; `make release
 FORCE=--force` re-renders them.
 
+**On GitHub Release**, `.github/workflows/release.yml` runs the same pipeline on
+a macOS runner (needed — HEVC-alpha uses Apple's VideoToolbox) and attaches the
+zip as a release asset. `workflow_dispatch` builds it as a downloadable artifact
+without a release.
+
 ### Rounded webcam masks
 
 The Just Chatting and Co-Working overlays draw rounded cam frames. To make a live
