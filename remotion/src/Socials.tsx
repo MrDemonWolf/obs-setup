@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
-import { theme, VIDEO } from "./theme";
+import { theme, VIDEO, glassPanel } from "./theme";
 import { display } from "./fonts";
+import { WindowDots } from "./WindowChrome";
 
 const items = [
   { b: "twitch", h: "/MrDemonWolf" },
@@ -44,8 +45,10 @@ export const SocialFade: React.FC<{ size?: number }> = ({ size = 44 }) => {
   let idx = 0;
   for (let k = 0; k < items.length; k++) if (f >= STARTS[k]) idx = k;
   const local = (f - STARTS[idx]) / HOLDS[idx]; // 0..1 through this handle's slot
-  // reach 0 by 0.96 — the last frames of a slot are truly invisible, no swap pop
-  const op = interpolate(local, [0, 0.08, 0.9, 0.96], [0, 1, 1, 0], { extrapolateRight: "clamp" });
+  // 0 lands exactly ON the slot boundary (loop seam stays invisible) — the old
+  // [0, .08, .9, .96] stops left the card visibly EMPTY ~1s at every swap and
+  // took ~2s to fade in. Now: ~0.6s in, content holds to 97%, ~0.6s out.
+  const op = interpolate(local, [0, 0.03, 0.97, 1], [0, 1, 1, 0], { extrapolateRight: "clamp" });
   const it = items[idx];
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 18, width: "100%", height: "100%", opacity: op }}>
@@ -61,16 +64,24 @@ export const SocialsScene: React.FC = () => (
   <AbsoluteFill style={{ alignItems: "center", justifyContent: "center" }}>
     <div
       style={{
+        position: "relative",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         width: "88%",
         height: "62%",
         borderRadius: 16, // macOS window-style corners (30 read too round on a short badge)
-        background: "rgba(9,21,51,0.84)", // denser than glassFill: contrast over gameplay + clean GIF alpha edge
+        // shared over-gameplay glass panel (dot grid + sheen + dense fill); no drop
+        // shadow — keeps a clean GIF alpha edge — just the top bevel
+        background: glassPanel,
         border: `1px solid ${theme.glassBorder}`,
+        boxShadow: `inset 0 1.5px 0 rgba(255,255,255,0.22)`,
       }}
     >
+      {/* small macOS window dots, top-left — stays put while the handle fades */}
+      <div style={{ position: "absolute", top: 16, left: 18 }}>
+        <WindowDots size={10} gap={7} />
+      </div>
       <SocialFade />
     </div>
   </AbsoluteFill>

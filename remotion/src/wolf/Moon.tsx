@@ -1,13 +1,20 @@
 import { useCurrentFrame } from "remotion";
 import { VIDEO, loopSin } from "../theme";
 
-// Full moon with a soft breathing halo, top-left. Pre-baked glow
-// (radialGradient fill), animate opacity only — no live blur. Body + surface
-// detail live in one scaled group so the mare/limb shading breathes with it.
-export const Moon: React.FC<{ x?: number; y?: number; r?: number }> = ({ x = 300, y = 200, r = 92 }) => {
+// Full moon with a soft breathing halo. Pre-baked glow (radialGradient fill),
+// animate opacity only — no live blur. Only the HALO breathes — the solid body
+// stays perfectly still (an 8% body throb swung the disc ~30px in diameter every
+// cycle; a moon is the one thing viewers expect not to move).
+// ONE size AND one height everywhere: r defaults to MOON_R and y to MOON_Y, so
+// the moon reads identically on every scene and only its LEFT/RIGHT position
+// changes (scenes pass just `x` — 300 = left, 1568 = right pocket). Don't
+// reintroduce per-scene r or y overrides; it's meant to sit at one altitude.
+export const MOON_R = 72;
+export const MOON_Y = 108;
+export const Moon: React.FC<{ x?: number; y?: number; r?: number }> = ({ x = 300, y = MOON_Y, r = MOON_R }) => {
   const f = useCurrentFrame();
   const glow = 0.5 + 0.35 * (0.5 + 0.5 * loopSin(f, 0.5));
-  const grow = 1 + 0.08 * loopSin(f, 0.4); // seamless breathe/grow
+  const grow = 1 + 0.08 * loopSin(f, 0.4); // halo-only seamless breathe
   return (
     <svg width={VIDEO.width} height={VIDEO.height} style={{ position: "absolute" }}>
       <defs>
@@ -34,7 +41,7 @@ export const Moon: React.FC<{ x?: number; y?: number; r?: number }> = ({ x = 300
         </clipPath>
       </defs>
       <circle cx={x} cy={y} r={r * 2.6 * grow} fill="url(#moonHalo)" opacity={glow} />
-      <g transform={`translate(${x} ${y}) scale(${grow})`}>
+      <g transform={`translate(${x} ${y})`}>
         <circle cx={0} cy={0} r={r} fill="url(#moonBody)" />
         <g clipPath="url(#moonClip)">
           {/* static mare/crater detail — texture, not motion */}
