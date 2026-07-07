@@ -35,7 +35,7 @@ console.log("\n▶ Rendering socials-badge (mov + gif)…");
 execSync("npx remotion render Socials out/socials-badge.mov --codec=prores --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le --log=error", { stdio: "inherit" });
 execSync("npx remotion render Socials out/socials-badge.gif --codec=gif --log=error", { stdio: "inherit" });
 
-// NOTE: Countdown (5 min) + LoadingBarks (~4 min) are transparent full-frame
+// NOTE: Countdown (5 min) + LoadingBarks (~6.1 min) are transparent full-frame
 // ProRes 4444 → each multi-GB and slow. Kept OUT of this batch; render on demand:
 //   npx remotion render LoadingBarks out/loading-barks.mov --codec=prores --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le --log=error
 //   npx remotion render Countdown    out/countdown.mov     --codec=prores --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le --log=error

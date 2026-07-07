@@ -37,7 +37,7 @@ scenes are 1920×1080 and loop seamlessly; the three transparent overlays
 - **Countdown** — transparent 5:00 timer chip, full-frame. The one intentional
   non-loop: set the OBS media source to play ONCE (Loop off), start on going
   live.
-- **LoadingBarks** — transparent fake loading bar cycling wolf puns (~6.5 min
+- **LoadingBarks** — transparent fake loading bar cycling wolf puns (~6.1 min
   loop). Edit `BARKS` in `src/LoadingBarks.tsx`.
 
 The wolf night ambience (full moon, stars, drifting embers) lives in
