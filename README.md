@@ -26,16 +26,16 @@ One command to back up. One click to preview. No lost scenes.
 - **OBS JSON reference** - what the files contain, how source colors are
   stored, and exactly which fields are secrets.
 - **Animated overlays** - Remotion-built scenes with seamless looping motion
-  (Starting Soon, Be Right Back, Just Chatting, Streaming, Co-Working, Ending
+  (Starting Soon, Be Right Back, Just Chatting, Co-Working, Ending
   Stream, Background), rendered to MP4 for OBS media sources.
 - **Live previewer** - a small macOS-style window that plays every overlay
   live, with a button per scene, so you can flip through them before
   rendering.
 - **Layout scenes** - **Co-Working** (Solo / Dual) has rounded 16:9 cam frames
-  with an open widget band below; **Streaming** and **Background** are just the
+  with an open widget band below; **Background** is just the
   animated background (stack your sources on top). **Just Chatting** is a webcam
   frame + a tall chat frame to embed a real chat over. Rounded [webcam
-  masks](obs-masks/) clip a live cam to match the frames.
+  masks](masks/) clip a live cam to match the frames.
 - **Socials badge** - a standalone transparent overlay that fades through your
   platforms one at a time with real brand logos.
 
@@ -98,22 +98,37 @@ npm run render:all                            # render everything into out/ (num
 npx remotion render StartingSoon out/01-starting-soon.mp4   # or one at a time
 ```
 
-Composition ids: `StartingSoon`, `BRB`, `JustChatting`, `Streaming`,
+Composition ids: `StartingSoon`, `BRB`, `JustChatting`,
 `Coworking`, `EndingStream`, `Background` (full-frame MP4s), plus `Socials` —
 a 760×180 transparent badge rendered to `socials.mov` (ProRes 4444) +
 `socials.gif`. Add each in OBS as a Media Source with Loop enabled; put the
 backgrounds at the bottom of the scene and stack your screen / webcam / widgets
 on top.
 
+### Package a bundle for OBS
+
+`make release` (or `./release.sh`) runs the whole pipeline — renders every
+overlay, transcodes the transparent ones to HEVC-alpha, regenerates the masks,
+and zips a dated, OBS-ready bundle to `~/Downloads/OBS-overlays-<date>.zip`
+(videos + masks + a README with the file→scene→loop table and webcam-placement
+coords). Copy that zip to Google Drive and drop the files into OBS. The heavy
+Countdown/LoadingBarks ProRes masters are reused if present; `make release
+FORCE=--force` re-renders them.
+
+**On GitHub Release**, `.github/workflows/release.yml` runs the same pipeline on
+a macOS runner (needed — HEVC-alpha uses Apple's VideoToolbox) and attaches the
+zip as a release asset. `workflow_dispatch` builds it as a downloadable artifact
+without a release.
+
 ### Rounded webcam masks
 
 The Just Chatting and Co-Working overlays draw rounded cam frames. To make a live
-cam match that rounding, [`obs-masks/`](obs-masks/) has a ready-made alpha mask
+cam match that rounding, [`masks/`](masks/) has a ready-made alpha mask
 per cam (`just-chatting-cam`, `just-chatting-chat`, `co-working-solo`,
 `co-working-dual-big`, `co-working-dual-small`). Apply one to the cam source with
 an **Image Mask/Blend** filter (Alpha Mask · Alpha Channel) — see
-[`obs-masks/README.md`](obs-masks/README.md) for the size/position of each and
-the step-by-step. Regenerate with `python3 obs-masks/gen_masks.py` if you retune
+[`masks/README.md`](masks/README.md) for the size/position of each and
+the step-by-step. Regenerate with `python3 masks/gen_masks.py` if you retune
 a frame.
 
 ## Tech Stack
@@ -180,7 +195,7 @@ obs-setup/
 │   ├── backup-guide.md
 │   ├── color-coding.md
 │   └── obs-json-reference.md
-├── obs-masks/                # rounded webcam masks for the cam-frame overlays
+├── masks/                   # rounded webcam masks for the cam-frame overlays
 │   ├── *.png                 # one alpha mask per cam (named per overlay)
 │   ├── gen_masks.py          # regenerate from the frame geometry
 │   └── README.md             # OBS Image Mask/Blend steps
@@ -188,7 +203,7 @@ obs-setup/
     ├── src/                  # scenes + layers
     │   ├── scenes.ts         # every scene (single source of truth)
     │   ├── Root.tsx          # registers each scene as a composition
-    │   ├── Scene.tsx         # card layout; JustChattingScene / StreamFrame / CoworkFrame / BackdropScene / Socials
+    │   ├── Scene.tsx         # card layout; JustChattingScene / CoworkFrame / BackdropScene / Socials
     │   ├── wolf/             # night ambience (Moon, Starfield, Embers, PawTrail)
     │   └── theme.ts          # palette + seamless-loop helpers
     ├── preview/              # macOS-style previewer (Vite + @remotion/player)

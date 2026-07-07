@@ -1,0 +1,58 @@
+name: Build OBS overlay bundle
+
+# Renders every overlay, transcodes the transparent ones to HEVC-alpha, packages
+# the dated OBS bundle (release.sh), and attaches the zip to the GitHub Release.
+#
+# macOS runner is REQUIRED: to-hevc.sh encodes HEVC-with-alpha via
+# hevc_videotoolbox, which only exists on Apple platforms (no Linux equivalent).
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch: {}   # manual run — builds + uploads an artifact, no release asset
+
+permissions:
+  contents: write         # upload the zip as a release asset
+
+jobs:
+  bundle:
+    runs-on: macos-14     # Apple Silicon — has VideoToolbox
+    timeout-minutes: 90   # the Countdown + LoadingBarks ProRes renders are slow
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: remotion/package-lock.json
+
+      - name: Install remotion deps
+        run: npm ci
+        working-directory: remotion
+
+      - name: Ensure ffmpeg + Pillow
+        run: |
+          ffmpeg -version >/dev/null 2>&1 || brew install ffmpeg
+          python3 -m pip install --user --quiet pillow || true
+
+      - name: Render + package bundle
+        run: ./release.sh --force
+
+      - name: Locate bundle
+        id: bundle
+        run: echo "zip=$(ls "$HOME/Downloads/OBS-overlays-"*.zip | head -1)" >> "$GITHUB_OUTPUT"
+
+      # Manual/dispatch runs: keep the zip as a workflow artifact.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: obs-overlay-bundle
+          path: ${{ steps.bundle.outputs.zip }}
+          if-no-files-found: error
+
+      # Release runs: attach the zip to the published release.
+      - name: Attach to release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ github.event.release.tag_name }}" "${{ steps.bundle.outputs.zip }}" --clobber
