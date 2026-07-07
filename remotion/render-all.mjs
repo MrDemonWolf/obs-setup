@@ -7,7 +7,6 @@ const scenes = [
   { id: "StartingSoon", file: "01-starting-soon" },
   { id: "JustChatting", file: "02-just-chatting" },
   { id: "JustChattingVtuber", file: "02-just-chatting-vtuber" },
-  { id: "Streaming", file: "03-streaming" },
   { id: "CoworkingSolo", file: "04-co-working-solo" },
   { id: "CoworkingDual", file: "05-co-working-dual" },
   { id: "BRB", file: "06-be-right-back" },

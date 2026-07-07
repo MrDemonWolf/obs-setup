@@ -56,7 +56,7 @@ cam frame's size/position in `remotion/src/CoworkFrame.tsx` or
 `JustChattingScene.tsx`, or the corner radius in `remotion/src/theme.ts`, re-run:
 
 ```bash
-python3 obs-masks/gen_masks.py   # needs Pillow: pip install pillow
+python3 masks/gen_masks.py   # needs Pillow: pip install pillow
 ```
 
 It rewrites all five PNGs and self-checks that corners are transparent and

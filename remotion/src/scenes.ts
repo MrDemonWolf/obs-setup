@@ -1,6 +1,5 @@
 import type { FC } from "react";
 import { Scene } from "./Scene";
-import { StreamFrame } from "./StreamFrame";
 import { Cowork, COWORK_LAYOUTS } from "./CoworkFrame";
 import { BackdropScene } from "./BackdropScene";
 import { JustChattingScene } from "./JustChattingScene";
@@ -30,7 +29,6 @@ export const SCENES: SceneDef[] = [
   { id: "BRB", label: "Be Right Back", component: Scene, props: { title: "Off Hunting", subtitle: "brb · back on the trail", showMascot: true, mascotSrc: "logo-mouth-closed.svg" } },
   { id: "JustChatting", label: "Just Chatting", component: JustChattingScene, props: {} },
   { id: "JustChattingVtuber", label: "Just Chatting · VTuber", component: JustChattingScene, props: { hideCam: true } },
-  { id: "Streaming", label: "Streaming", component: StreamFrame, props: {} },
   // moon repositioned into clear sky per layout — the default (300,200,r92)
   // sits inside/behind the cam frames, where the live feed clips it in OBS.
   { id: "CoworkingSolo", label: "Co-Working · Solo", component: Cowork, props: { cams: COWORK_LAYOUTS.solo, moon: { x: 1568 } } },
@@ -45,7 +43,7 @@ export const SCENES: SceneDef[] = [
   // NOT in render:all (heavy).
   { id: "Countdown", label: "Countdown (5:00)", component: Countdown, fps: 60, durationInFrames: (300 + 1) * 60, props: { from: 300 } },
   // Transparent full-frame overlay — fake wolf-pun loading bar. Seeded schedule
-  // (each phrase 20–40s, bar creeps to ~95%); duration = sum of holds (~4 min).
+  // (each phrase 20–40s, bar creeps to ~95%); duration = sum of holds (~6.5 min, 13 phrases).
   // 60fps; LOADING_BARKS_DURATION is computed at LOADING_BARKS_FPS so they match.
   { id: "LoadingBarks", label: "Loading Barks", component: LoadingBarks, fps: LOADING_BARKS_FPS, durationInFrames: LOADING_BARKS_DURATION, props: {} },
 ];
