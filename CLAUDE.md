@@ -184,11 +184,12 @@ Architecture:
 - **Co-Working** = one data-driven `Cowork` comp (`CoworkFrame.tsx`):
   `Background variant="glow"` + baked **16:9** `CamFrame`(s) from
   `COWORK_LAYOUTS` (no bar, no widget boxes — the open space is for timer /
-  tasks / chat / now-playing OBS sources). Solo + dual share ONE `HERO` cam box
-  (`1152×648 @ x64,y40`, pinned up top) so the primary cam never moves switching
-  solo↔dual in OBS. `solo` = just the hero; `dual` = hero top-left + a smaller
-  **576×324** second (true 16:9) pinned to the **bottom-right corner** (`x=1280,
-  y=692`, 64px right+bottom margins) — diagonally opposite the hero, opening an
+  tasks / chat / now-playing OBS sources). Both layouts share ONE top-left pin
+  (`x64,y136` — nudged down from the old y40 to open a wider bottom widget
+  band), but the main cam JUMPS size switching solo↔dual (accepted trade-off
+  for bigger cams both ways): `solo` = one **1400×788** hero; `dual` = a
+  **1152×648** hero + a smaller **576×324** second (true 16:9) pinned to the
+  **right** (`x=1280, y=628`) — diagonally opposite the hero, opening an
   L-shaped widget band. Both scenes park the moon on the RIGHT
   (`{x:1568}`) — only its x is passed; height/size are the shared `MOON_Y`/`MOON_R`
   (the `Background` default y would sit inside the cam frames, where OBS's live

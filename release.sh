@@ -84,7 +84,7 @@ Masks/                  5 rounded-corner webcam masks (PNG, alpha)
 |---|---|---|
 | `opaque/01-starting-soon.mp4` | Starting Soon | ON |
 | `opaque/02-just-chatting.mp4` | Just Chatting | ON |
-| `opaque/02-just-chatting-vtuber.mp4` | Just Chatting · VTuber | ON |
+| `opaque/03-just-chatting-vtuber.mp4` | Just Chatting · VTuber | ON |
 | `opaque/04-co-working-solo.mp4` | Co-Working · Solo | ON |
 | `opaque/05-co-working-dual.mp4` | Co-Working · Dual | ON |
 | `opaque/06-be-right-back.mp4` | Be Right Back | ON |
