@@ -278,6 +278,34 @@
       "filters": []
     },
     {
+      "name": "Rewards - Right",
+      "uuid": "3f6157cc-2088-5945-a3b4-ec2635ca157f",
+      "id": "browser_source",
+      "versioned_id": "browser_source",
+      "settings": {
+        "url": "",
+        "width": 1920,
+        "height": 1080
+      },
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
       "name": "Timer",
       "uuid": "ba777b3e-219a-5cbc-9614-3b20385ebe1d",
       "id": "browser_source",
@@ -1035,7 +1063,7 @@
       "id": "scene",
       "versioned_id": "scene",
       "settings": {
-        "id_counter": 3,
+        "id_counter": 4,
         "custom_size": false,
         "items": [
           {
@@ -1080,8 +1108,8 @@
             }
           },
           {
-            "name": "Rewards",
-            "source_uuid": "6b5e5821-4ae9-5dfd-9909-cb7d82480054",
+            "name": "Rewards - Right",
+            "source_uuid": "3f6157cc-2088-5945-a3b4-ec2635ca157f",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -1105,6 +1133,47 @@
             "crop_right": 0,
             "crop_bottom": 0,
             "id": 2,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -5857761,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "Rewards",
+            "source_uuid": "6b5e5821-4ae9-5dfd-9909-cb7d82480054",
+            "visible": false,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 3,
             "group_item_backup": false,
             "scale_filter": "disable",
             "blend_method": "default",
@@ -1145,7 +1214,7 @@
             "crop_top": 0,
             "crop_right": 0,
             "crop_bottom": 0,
-            "id": 3,
+            "id": 4,
             "group_item_backup": false,
             "scale_filter": "disable",
             "blend_method": "default",

@@ -102,8 +102,15 @@ scene has its own wrapper holding the SAME three widget sources:
 | `[src] Wolfathon · Co-Working Dual`| Co-Working [Multi] |
 
 Arrange the widgets inside each wrapper once (open the `[src]` scene, drag);
-the other scenes never move. One `Rewards` browser source only — delete the
-old `Wolfathon - Rewards - Right` duplicate after import.
+the other scenes never move.
+
+**Position variants are intentional.** `Rewards` and `Rewards - Right` are
+the SAME widget as two sources — one placed left-focus, one right-focus.
+Toggle their visibility to switch which side of the screen the widget sits
+on, depending on what else is up. The Solo wrapper ships with `Rewards`
+hidden and `Rewards - Right` visible (matching the live rig). Add more
+`<Widget> - Right` / `- Left` variants the same way when a widget needs a
+second home.
 
 ### Scenes to sources (top = front)
 
@@ -115,6 +122,9 @@ old `Wolfathon - Rewards - Right` duplicate after import.
 | Co-Working [Multi] | Main Cam, Second Cam, Now Playing, Wolfathon · Co-Working Dual, Alerts, Audio, Co-Working Dual Video |
 | Be Right Back      | Be Right Back Video, Alerts, Audio                                              |
 | Ending             | Ending Video, Audio                                                             |
+
+The Solo wrapper's contents: Wheel of Dares, Rewards (hidden), Rewards -
+Right, Timer.
 
 `[src] Alerts` on the Mini = Chat Overlay + Sound Alerts + Twitch Alerts
 (purple). Audio is the same three per-app captures as the MacBook Pro.

@@ -139,11 +139,12 @@ MACBOOK_PRO = {
 
 # Mac Mini (main home rig, OBS 32) — realigned to the live 2026-07 export with
 # fixes: typo'd names cleaned ("Co-workking Main Cam", "Co-Workng Video"),
-# the duplicate "Wolfathon - Rewards - Right" browser source dropped (ONE
-# Rewards source, positioned per wrapper scene), the empty global "Wolfathon"
-# group replaced by PER-SCENE [src] wrappers (edit one scene's widget layout
-# without touching the others), full colour coding, and cams pinned to the
-# overlay cam-frame coords (masks/gen_masks.py).
+# the empty global "Wolfathon" group replaced by PER-SCENE [src] wrappers
+# (edit one scene's widget layout without touching the others), full colour
+# coding, and cams pinned to the overlay cam-frame coords (masks/gen_masks.py).
+# "Rewards" vs "Rewards - Right" is INTENTIONAL (user convention): the same
+# widget as two position-variant sources, toggled by visibility to switch
+# left/right focus per what's on screen. Keep both.
 MAC_MINI = {
     "slug": "mac-mini",
     "label": "Mac Mini",
@@ -171,6 +172,8 @@ MAC_MINI = {
         {"name": "Wheel of Dares", "id": "browser_source", "cat": "widgets",
          "settings": bs()},
         {"name": "Rewards", "id": "browser_source", "cat": "widgets",
+         "settings": bs()},
+        {"name": "Rewards - Right", "id": "browser_source", "cat": "widgets",
          "settings": bs()},
         {"name": "Timer", "id": "browser_source", "cat": "widgets",
          "settings": bs()},
@@ -202,13 +205,18 @@ MAC_MINI = {
                                            ("Twitch Alerts", "alerts")]},
         {"name": "[src] Audio", "items": [("Discord", "audio"), ("Google Chrome", "audio"),
                                           ("Apple Music", "audio")]},
-        # Per-scene Wolfathon wrappers — SAME three widget sources, one wrapper
+        # Per-scene Wolfathon wrappers — the same widget sources, one wrapper
         # per main scene, so each scene's widget arrangement is independent.
         # Arrange each wrapper once in OBS (drag inside the [src] scene).
+        # Solo carries BOTH Rewards variants (left hidden, right visible —
+        # matching the live rig): toggle visibility to flip screen focus.
         {"name": "[src] Wolfathon · Live", "items": [("Wheel of Dares", "widgets"),
                                                      ("Rewards", "widgets"), ("Timer", "widgets")]},
-        {"name": "[src] Wolfathon · Co-Working Solo", "items": [("Wheel of Dares", "widgets"),
-                                                                ("Rewards", "widgets"), ("Timer", "widgets")]},
+        {"name": "[src] Wolfathon · Co-Working Solo", "items": [
+            ("Wheel of Dares", "widgets"),
+            {"name": "Rewards", "cat": "widgets", "visible": False},
+            ("Rewards - Right", "widgets"),
+            ("Timer", "widgets")]},
         {"name": "[src] Wolfathon · Co-Working Dual", "items": [("Wheel of Dares", "widgets"),
                                                                 ("Rewards", "widgets"), ("Timer", "widgets")]},
     ],
