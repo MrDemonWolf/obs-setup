@@ -1,6 +1,6 @@
 # OBS setup — common commands. Run `make` for help.
 .DEFAULT_GOAL := help
-.PHONY: help backup preview gen release
+.PHONY: help backup preview gen release masks
 
 help: ## Show this help
 	@grep -E '^[a-z]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | expand -t18
@@ -17,3 +17,6 @@ gen: ## Regenerate the MacBook Pro scene collection JSON
 
 release: ## Render overlays + package a dated OBS bundle .zip in ~/Downloads
 	@bash release.sh $(FORCE)
+
+masks: ## Regenerate the rounded webcam masks (needs: pip install pillow)
+	@python3 masks/gen_masks.py

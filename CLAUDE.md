@@ -139,7 +139,7 @@ Architecture:
   at each swap happens invisibly, and the glow runs an integer number of cycles
   over the comp (`GLOW_CYCLES`) — plain `loopSin` popped at the loop seam
   (13572 % 240 ≠ 0). `durationInFrames = LOADING_BARKS_DURATION`
-  (sum of holds, ~6.5 min over 13 phrases) built at `LOADING_BARKS_FPS` (**60**; per-comp `fps` in
+  (sum of holds, ~6.1 min over 13 phrases) built at `LOADING_BARKS_FPS` (**60**; per-comp `fps` in
   `scenes.ts`). **Heavy → NOT in `render:all`**, render manually. Edit
   `BARKS`/seed to taste.
 - **Card scenes** (`StartingSoon`, `BRB`, `EndingStream`) use `src/Scene.tsx`,
@@ -173,9 +173,10 @@ Architecture:
   title is never hidden behind it. **If you lengthen a title past "The Pack
   Gathers" bump `CHIP_WIDTH`, and enlarging the mascot creeps it left over the
   text — re-check the chip/wolf overlap either way.**
-- **`JustChatting`** = `JustChattingScene.tsx`: `glow` `Background` (moon placed
-  in the 198px top band, `{x:300,y:108}` — the default y sat half-inside the cam
-  frame) + a 16:9 `CamFrame` + a tall chat `CamFrame` (staggered glow
+- **`JustChatting`** = `JustChattingScene.tsx`: `glow` `Background` (moon parked
+  LEFT, `{x:300}` — only x is passed; the shared `MOON_Y` 108 keeps it in the
+  198px top band, clear of the cam frame) + a 16:9 `CamFrame` + a tall chat
+  `CamFrame` (staggered glow
   phases 0.4/0.73). No mascot, no widgets — you embed your real cam + chat over
   the frames. **`JustChattingVtuber`** = the same scene with `hideCam` — the
   cam frame drops (VTuber model goes full-screen) but the chat frame stays.
@@ -184,11 +185,12 @@ Architecture:
 - **Co-Working** = one data-driven `Cowork` comp (`CoworkFrame.tsx`):
   `Background variant="glow"` + baked **16:9** `CamFrame`(s) from
   `COWORK_LAYOUTS` (no bar, no widget boxes — the open space is for timer /
-  tasks / chat / now-playing OBS sources). Solo + dual share ONE `HERO` cam box
-  (`1152×648 @ x64,y40`, pinned up top) so the primary cam never moves switching
-  solo↔dual in OBS. `solo` = just the hero; `dual` = hero top-left + a smaller
-  **576×324** second (true 16:9) pinned to the **bottom-right corner** (`x=1280,
-  y=692`, 64px right+bottom margins) — diagonally opposite the hero, opening an
+  tasks / chat / now-playing OBS sources). Both layouts share ONE top-left pin
+  (`x64,y136` — nudged down from the old y40 to open a wider bottom widget
+  band), but the main cam JUMPS size switching solo↔dual (accepted trade-off
+  for bigger cams both ways): `solo` = one **1400×788** hero; `dual` = a
+  **1152×648** hero + a smaller **576×324** second (true 16:9) pinned to the
+  **right** (`x=1280, y=628`) — diagonally opposite the hero, opening an
   L-shaped widget band. Both scenes park the moon on the RIGHT
   (`{x:1568}`) — only its x is passed; height/size are the shared `MOON_Y`/`MOON_R`
   (the `Background` default y would sit inside the cam frames, where OBS's live
@@ -257,7 +259,7 @@ Architecture:
   `render-all.mjs` renders the 8 full-frame ids to MP4, then `Socials` to
   `.mov` + `.gif` and a bonus `Background.gif`, into `out/` (which is
   gitignored). `Socials` is omitted from the 8-id MP4 array; `Countdown`
-  (5 min) + `LoadingBarks` (~6.5 min) are transparent full-frame ProRes 4444
+  (5 min) + `LoadingBarks` (~6.1 min) are transparent full-frame ProRes 4444
   (multi-GB, slow) → omitted from `render:all` entirely, rendered manually.
 - **`release.sh`** (repo root, `make release`) runs the whole pipeline end to
   end: `render:all` → render Countdown + LoadingBarks ProRes (reused if the

@@ -6,7 +6,7 @@ import { execSync } from "node:child_process";
 const scenes = [
   { id: "StartingSoon", file: "01-starting-soon" },
   { id: "JustChatting", file: "02-just-chatting" },
-  { id: "JustChattingVtuber", file: "02-just-chatting-vtuber" },
+  { id: "JustChattingVtuber", file: "03-just-chatting-vtuber" },
   { id: "CoworkingSolo", file: "04-co-working-solo" },
   { id: "CoworkingDual", file: "05-co-working-dual" },
   { id: "BRB", file: "06-be-right-back" },
@@ -35,7 +35,7 @@ console.log("\n▶ Rendering socials-badge (mov + gif)…");
 execSync("npx remotion render Socials out/socials-badge.mov --codec=prores --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le --log=error", { stdio: "inherit" });
 execSync("npx remotion render Socials out/socials-badge.gif --codec=gif --log=error", { stdio: "inherit" });
 
-// NOTE: Countdown (5 min) + LoadingBarks (~4 min) are transparent full-frame
+// NOTE: Countdown (5 min) + LoadingBarks (~6.1 min) are transparent full-frame
 // ProRes 4444 → each multi-GB and slow. Kept OUT of this batch; render on demand:
 //   npx remotion render LoadingBarks out/loading-barks.mov --codec=prores --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le --log=error
 //   npx remotion render Countdown    out/countdown.mov     --codec=prores --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le --log=error
