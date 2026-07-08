@@ -40,8 +40,19 @@ prores() { # <CompId> <outfile>
 prores Countdown    countdown.mov
 prores LoadingBarks loading-barks.mov
 
+# Stinger transition — short, so always render (no reuse gate). The SFX is baked
+# in via <Audio>, so the ProRes master carries an audio track.
+echo "▶ render Stinger (ProRes 4444)…"
+npx remotion render Stinger out/stinger.mov --codec=prores --prores-profile=4444 \
+  --image-format=png --pixel-format=yuva444p10le --log=error
+
+# Stinger joins the HEVC-alpha transcode. WebM-alpha is the "ideal" portable
+# stinger format, but Homebrew ffmpeg (local + the CI macOS runner) isn't built
+# with libvpx alpha — VP8/VP9 silently drop the alpha channel. HEVC-alpha .mov
+# keeps transparency, hardware-decodes on every Apple Silicon chip, and OBS on
+# macOS reads it natively (both target Macs). See README note.
 echo "▶ transcode transparent masters → HEVC-alpha (hvc1)…"
-./to-hevc.sh out/socials-badge.mov out/countdown.mov out/loading-barks.mov
+./to-hevc.sh out/socials-badge.mov out/countdown.mov out/loading-barks.mov out/stinger.mov
 
 echo "▶ regenerate webcam masks…"
 python3 "$ROOT/masks/gen_masks.py" \
@@ -52,12 +63,14 @@ echo "▶ assemble bundle → $BUNDLE"
 # transparent split), masks in Masks/, README.md at the zip root. Nothing else.
 VID="Overlays"   # top-level video folder name inside the bundle
 MSK="Masks"      # top-level mask folder name inside the bundle
+STG="Stinger"    # OBS stinger-transition folder (its own folder, by request)
 rm -rf "$BUNDLE"
-mkdir -p "$BUNDLE/$VID" "$BUNDLE/$MSK"
+mkdir -p "$BUNDLE/$VID" "$BUNDLE/$MSK" "$BUNDLE/$STG"
 cp "$OUT"/0*.mp4 "$OUT"/background.mp4 \
    "$OUT"/socials-badge-hevc.mov "$OUT"/loading-barks-hevc.mov \
    "$OUT"/countdown-hevc.mov "$BUNDLE/$VID/"
 cp "$ROOT"/masks/*.png "$BUNDLE/$MSK/"
+cp "$OUT"/stinger-hevc.mov "$R"/public/stinger.wav "$BUNDLE/$STG/"
 
 # README — quoted heredoc so markdown backticks stay literal; date prepended.
 {
@@ -71,6 +84,7 @@ Everything OBS needs is in this folder.
 ```
 Overlays/   11 videos — 8 full-frame MP4s + 3 transparent HEVC-alpha .mov
 Masks/      5 rounded-corner webcam masks (PNG, alpha)
+Stinger/    1 OBS stinger transition (HEVC-alpha .mov) + its baked SFX (.wav)
 ```
 
 ## Add each as a Media Source
@@ -94,6 +108,27 @@ Masks/      5 rounded-corner webcam masks (PNG, alpha)
 | `socials-badge-hevc.mov` | Socials badge (over anything) | ON |
 | `loading-barks-hevc.mov` | Loading overlay (over anything) | ON |
 | `countdown-hevc.mov` | 5:00 countdown | **OFF** — start on going live |
+
+## Stinger transition (scene-cut wipe)
+
+`Stinger/stinger-hevc.mov` is a **transition**, not a Media Source. Set it up once:
+
+1. Scene Transitions (bottom-right) → **+** → **Stinger**.
+2. **Video File** = `Stinger/stinger-hevc.mov`.
+3. **Transition Point Type** = **Time**, **Transition Point** = **2000 ms** — the
+   middle of the fully-covered hold (covered ~1360–2640 ms; OBS swaps the scene
+   here, unseen). Adjust if you swap in a longer/shorter clip.
+4. **Audio Fade Style** = **Crossfade** (the whoosh is baked into the file).
+5. OK. Every scene cut now plays the wipe once; OBS swaps scenes behind the cover.
+
+**Format note:** WebM-alpha (VP9/VP8) is the portable/cross-platform stinger
+format, but it needs an ffmpeg built with libvpx alpha — Homebrew's build (used
+here and on the CI runner) drops the alpha. So the bundle ships **HEVC-alpha
+`.mov`**, which keeps transparency and OBS reads natively on macOS (your setup).
+On Windows OBS, re-encode the ProRes master to VP9-alpha webm with an
+alpha-capable ffmpeg.
+
+`Stinger/stinger.wav` is the raw SFX (already baked into the .mov) — kept for reference.
 
 ## Webcam placement (Co-Working + Just Chatting)
 
