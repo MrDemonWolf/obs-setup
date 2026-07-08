@@ -108,12 +108,27 @@ const TYPES = {
   image_source:["Image","▨"], ffmpeg_source:["Media","►"], group:["Group","▤"],
 };
 
-// ABGR signed int (OBS) -> css color, or null when no color set.
+// ABGR signed int (OBS) -> css color, or null when unset/zero/empty.
+// Live exports store an empty string here when a preset swatch is used instead.
 function abgrToCss(v){
-  if(v===undefined||v===null) return null;
+  if(typeof v !== "number" || v === 0) return null;
   let u = v < 0 ? v + 0x100000000 : v;
   const b=(u>>>16)&255, g=(u>>>8)&255, r=u&255;
   return `rgb(${r},${g},${b})`;
+}
+
+// OBS built-in "Color" swatches. Live rigs colour via these (private_settings
+// .color-preset = index, color = "") rather than a custom int, so decode them
+// too or preset-coloured collections show up blank. Index: 0 none, 1 custom,
+// 2-9 = the 8 swatches. Source: obs-studio OBSBasic_SceneItems.cpp bgColor map.
+const OBS_PRESET = {
+  2:"#FF4444", 3:"#FFFF44", 4:"#44FF44", 5:"#44FFFF",
+  6:"#4444FF", 7:"#FF44FF", 8:"#888888", 9:"#DDDDDD",
+};
+// Scene-item colour: a custom int wins, else the preset swatch, else null.
+function itemColor(ps){
+  if(!ps) return null;
+  return abgrToCss(ps.color) || OBS_PRESET[ps["color-preset"]] || null;
 }
 
 function typeInfo(id){ return TYPES[id] || TYPES[(id||"").replace(/_v\d+$/,"")] || [id||"?","•"]; }
@@ -154,7 +169,7 @@ function renderCollection(coll, host, title){
     const rows = items.length ? items.map(it => {
       const ref = byName[it.name];
       const [tlabel,ticon] = typeInfo(ref ? ref.id : "");
-      const col = abgrToCss(it.private_settings && it.private_settings.color) || "var(--line)";
+      const col = itemColor(it.private_settings) || "var(--line)";
       return `<li class="item" style="border-left-color:${col}">
         <span style="color:${col}">${ticon}</span>${it.name}
         <span class="type">${tlabel}</span></li>`;

@@ -7,24 +7,31 @@ which is why the color lives on each source *where it appears inside a scene*.
 
 ## The palette
 
-These are OBS's **8 built-in preset colors** (right-click a source or group,
-then Color). One color per category, matching the live rig.
+One category = one color. The **"OBS swatch to click"** column is what you
+pick in OBS (right-click a source or group -> Color -> the colored square);
+that's exactly what the live rig uses. The generated collection stores a close
+custom hex instead (the `Source hex` column) so the previewer legend has a
+stable color, but on your rig you just click the swatch.
 
-| Color        | Meaning              | Source hex | OBS stored value (ABGR) |
-| ------------ | -------------------- | ---------- | ----------------------- |
-| Green        | Cam feeds (webcam, NDI, PNG Tuber) | `#2EA043`  | `0xFF43A02E`  |
-| Purple       | Alerts (Chat Overlay + Sound Alerts + Twitch Alerts) | `#8957E5` | `0xFFE55789` |
-| Teal         | Wolfathon widgets (Wheel of Dares / Rewards / Timer) | `#1F9EA6` | `0xFFA69E1F` |
-| Blue         | Now Playing (WolfWave) | `#388BFD` | `0xFFFD8B38`            |
-| Yellow       | Screen / display capture (when added) | `#BB8009` | `0xFF0980BB` |
-| Red          | Standby video (Starting Soon / Be Right Back / Ending) | `#DA3633` | `0xFF3336DA` |
-| Gray (light) | Audio Group (Discord / Google Chrome / Apple Music) | `#8B949E` | `0xFF9E948B` |
-| Gray (dark)  | Background image / overlay-frame videos | `#6E7681`  | `0xFF81766E` |
+| OBS swatch to click | Meaning              | Source hex | OBS stored value (ABGR) |
+| ------------------- | -------------------- | ---------- | ----------------------- |
+| **Green**   | Cam feeds (Main / Second / NDI / PNG Tuber) | `#2EA043`  | `0xFF43A02E`  |
+| **Magenta** | Alerts (Chat Overlay + Sound Alerts + Twitch Alerts) | `#8957E5` | `0xFFE55789` |
+| **Cyan**    | Wolfathon widgets (Wheel of Dares / Rewards / Timer) | `#1F9EA6` | `0xFFA69E1F` |
+| **Blue**    | Now Playing (WolfWave) | `#388BFD` | `0xFFFD8B38`            |
+| **Yellow**  | Screen / display capture (when added) | `#BB8009` | `0xFF0980BB` |
+| **Red**     | Standby / overlay video (Starting Soon / BRB / Ending / bg) | `#DA3633` | `0xFF3336DA` |
+| **White**   | Audio Group (Discord / Google Chrome / Apple Music) | `#8B949E` | `0xFF9E948B` |
+| **Gray**    | Background image / overlay-frame videos | `#6E7681`  | `0xFF81766E` |
 
-The "stored value" column is how OBS writes the color in the scene JSON: a
-32-bit **ABGR** integer (`0xAABBGGRR`), so the red channel is the low byte.
-See [obs-json-reference.md](obs-json-reference.md#source-list-color) for the
-byte-order details and worked examples.
+The live rig colors via OBS's **preset swatches**: the item stores
+`private_settings.color-preset` (an index) and leaves `color` empty. The
+generated collection instead writes a custom `color` int (`color-preset` 0).
+The previewer decodes **both**. OBS's 8 swatches, by `color-preset` index:
+`2`=red, `3`=yellow, `4`=green, `5`=cyan, `6`=blue, `7`=magenta, `8`=gray,
+`9`=white (`0`=none, `1`=custom). The "stored value" column is how a custom
+color is written: a 32-bit **ABGR** integer (`0xAABBGGRR`), red is the low
+byte. See [obs-json-reference.md](obs-json-reference.md#source-list-color).
 
 ## Where it's defined
 
