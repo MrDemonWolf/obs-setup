@@ -1,0 +1,4 @@
+# Local-only drop folder for stinger reference media (gitignored).
+# Put Stringer.mov + Stringer.wav here so the shell can read them
+# (Google Drive is TCC-blocked). Contents stay out of git; this file
+# keeps the empty folder tracked. See remotion/.gitignore.
