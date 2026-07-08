@@ -103,8 +103,16 @@ def main():
                 os.makedirs(os.path.dirname(dest), exist_ok=True)
                 shutil.copy2(full, dest)
 
+    # index lists EVERYTHING in scenes/ (not just this walk), so a generated
+    # collection (gen_scene_collection.py) and this backup coexist. Keep in
+    # sync with write_index() in gen_scene_collection.py.
+    all_scenes = sorted(
+        "scenes/" + n
+        for n in os.listdir(os.path.join(dest_root, "scenes"))
+        if n.endswith(".json")
+    ) if os.path.isdir(os.path.join(dest_root, "scenes")) else sorted(scenes)
     with open(os.path.join(dest_root, "index.json"), "w") as f:
-        json.dump({"device": slug, "label": label, "scenes": sorted(scenes)}, f, indent=2)
+        json.dump({"device": slug, "label": label, "scenes": all_scenes}, f, indent=2)
         f.write("\n")
 
     print(f"device: {label} ({slug})")

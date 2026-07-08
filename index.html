@@ -93,7 +93,7 @@
 <script>
 // Category legend — mirror of PALETTE in scripts/gen_scene_collection.py
 const LEGEND = [
-  ["#2EA043","Webcam"], ["#8957E5","Alerts"], ["#1F9EA6","Wolfathon widgets"],
+  ["#2EA043","Cam feeds"], ["#8957E5","Alerts"], ["#1F9EA6","Wolfathon widgets"],
   ["#388BFD","Now Playing"], ["#BB8009","Screen"],
   ["#DA3633","Standby video"], ["#8B949E","Audio"], ["#6E7681","Background"],
 ];
@@ -147,7 +147,9 @@ function renderCollection(coll, host, title){
       grid = null; return;
     }
     if(!grid){ grid = document.createElement("div"); grid.className = "grid"; wrap.appendChild(grid); }
-    const items = (s.settings && s.settings.items) || [];
+    // OBS stores scene items bottom -> top (array first = bottom layer);
+    // show them top -> bottom like the OBS Sources panel.
+    const items = ((s.settings && s.settings.items) || []).slice().reverse();
     const isSrc = name.startsWith("[src]");
     const rows = items.length ? items.map(it => {
       const ref = byName[it.name];

@@ -12,7 +12,7 @@ preview: ## Serve the HTML previewer at http://localhost:8000
 	@echo "Previewer: http://localhost:8000  (Ctrl-C to stop)"
 	@python3 -m http.server 8000
 
-gen: ## Regenerate the MacBook Pro scene collection JSON
+gen: ## Regenerate both device scene collections (MacBook Pro + Mac Mini)
 	@python3 scripts/gen_scene_collection.py
 
 release: ## Render overlays + package a dated OBS bundle .zip in ~/Downloads
