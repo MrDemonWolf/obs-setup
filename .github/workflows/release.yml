@@ -17,7 +17,9 @@ permissions:
 jobs:
   bundle:
     runs-on: macos-14     # Apple Silicon — has VideoToolbox
-    timeout-minutes: 120  # Countdown + LoadingBarks ProRes ≈ 27+28 min alone; full run ~80 min
+    # Measured on a real run: renders ~85 min + SOFTWARE HEVC transcodes
+    # (no HW encoder in the VM) ~65 min for countdown+loading-barks ≈ 155 min.
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
 
