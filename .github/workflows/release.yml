@@ -29,8 +29,12 @@ jobs:
           cache: npm
           cache-dependency-path: remotion/package-lock.json
 
+      # npm install, NOT npm ci: npm's lock validation of bundled wasm deps
+      # (@tailwindcss/oxide-wasm32-wasi -> @emnapi/*) breaks across npm
+      # versions — npm ci fails "Missing @emnapi/core from lock file" no
+      # matter which npm generated the lock.
       - name: Install remotion deps
-        run: npm ci
+        run: npm install --no-audit --no-fund
         working-directory: remotion
 
       - name: Ensure ffmpeg + Pillow
