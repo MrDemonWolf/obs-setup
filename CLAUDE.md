@@ -15,7 +15,9 @@ only. No package manager, no build step, no test framework.
 ## Commands
 
 ```bash
-make gen      # regenerate devices/macbook-pro/scenes/MBP-Streaming.json (+ index.json)
+make gen      # regenerate BOTH device scene collections (+ index.json each):
+              #   devices/macbook-pro/scenes/MBP-Streaming.json
+              #   devices/mac-mini/scenes/Mini-Streaming.json
 make backup   # zip ~/Downloads/OBS export, then file a scrubbed copy into devices/<slug>/
 make preview  # serve the previewer at http://localhost:8000 (python3 -m http.server)
 make release  # render all overlays + package a dated OBS bundle .zip in ~/Downloads
@@ -37,23 +39,33 @@ make          # list targets
 Three pieces, joined by a few conventions that must stay in sync.
 
 ### 1. Scene generation (`scripts/gen_scene_collection.py`)
-Data-driven: the `LAYOUT` blocks (`LEAVES`, `SRC_SCENES`, `MAIN_SCENES`,
-`DIVIDERS`, `SCENE_ORDER`) and `PALETTE` at the top of the file are the source
-of truth for the MacBook Pro setup. Editing those + `make gen` rewrites the
-importable collection. UUIDs are deterministic (`uuid5`) so regenerating
-produces no spurious diffs.
+Data-driven: one layout dict per device (`MACBOOK_PRO`, `MAC_MINI` — listed in
+`DEVICES`), each holding `leaves` / `src_scenes` / `main_scenes` / `dividers` /
+`scene_order`, plus the shared `PALETTE`. Editing those + `make gen` rewrites
+both importable collections. UUIDs are deterministic (`uuid5`, per-device
+namespace) so regenerating produces no spurious diffs. Scene items accept
+`(name, cat)` tuples or dicts with `pos`/`bounds` (Scale-to-inner, pins cams
+into the overlay frames) and `visible`.
 
-The non-obvious part is **color**: OBS stores a source's list color on the
+Two non-obvious parts. **Color**: OBS stores a source's list color on the
 *scene item* at `private_settings.color`, as a **signed 32-bit ABGR integer**
 (`0xAABBGGRR`, red is the low byte). `abgr()` encodes it; the previewer's
-`abgrToCss()` decodes it. See `docs/obs-json-reference.md`.
+`abgrToCss()` decodes it. See `docs/obs-json-reference.md`. **Layer order**:
+OBS renders the scene-item JSON array first→last, so the FIRST element is the
+BOTTOM layer; layouts are authored top→bottom (like the OBS Sources panel) and
+`scene_source()` reverses on write. The Mac Mini layout's headline feature is
+PER-SCENE `[src] Wolfathon · <scene>` wrappers — a wrapper/group's internal
+layout is global, so per-scene arrangements need per-scene wrappers (same
+three widget sources inside each).
 
 ### 2. Backup pipeline (`scripts/backup.sh` → `scripts/sanitize.py`)
 `backup.sh` detects the device from `scutil --get ComputerName` (substring
 `MacBook`/`Mini`), zips the **full raw** export to
 `~/Downloads/OBS-backups/<Label>-<date>.zip` (for Google Drive — keeps
 secrets, never git), then calls `sanitize.py` to mirror the export into
-`devices/<slug>/` and write that device's `index.json`.
+`devices/<slug>/` and write that device's `index.json` (built from everything
+in `scenes/`, so generated + backed-up collections coexist — keep in sync with
+`write_index()` in the generator).
 
 **Secret boundary — the critical invariant:** two fields are secrets and are
 wiped to `""` before anything reaches git:

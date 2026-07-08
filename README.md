@@ -37,8 +37,9 @@ One command to back up. One download to restock OBS. No lost scenes.
 - **Secret-safe by default.** Browser widget URLs and Twitch stream
   keys are wiped before anything reaches git. The full un-wiped copy
   is zipped to your Downloads folder for Google Drive.
-- **Import-ready scenes.** A generated OBS scene collection for the
-  MacBook Pro with every source color-coded, ready to import.
+- **Import-ready scenes.** Generated OBS scene collections for both
+  Macs with every source color-coded, cams pre-pinned to the overlay
+  frames, and per-scene Wolfathon widget wrappers (Mac Mini).
 - **Consistent color coding.** One palette across scenes and sources,
   so a glance tells you camera vs. alerts vs. screen vs. standby.
 - **HTML previewer.** A color-coded map of every scene that runs
@@ -87,7 +88,8 @@ Quick start:
    locally with `make release`.)
 2. To import the scene layout, clone the repo and in OBS use
    `Scene Collection -> Import ->`
-   `devices/macbook-pro/scenes/MBP-Streaming.json`.
+   `devices/macbook-pro/scenes/MBP-Streaming.json` (MacBook Pro) or
+   `devices/mac-mini/scenes/Mini-Streaming.json` (Mac Mini).
 3. After import, select your camera device and display, and paste
    your alert and widget URLs (they ship empty on purpose).
 4. Run `make preview` and open <http://localhost:8000> to see the
@@ -102,7 +104,7 @@ Everything runs through `make`:
 | `make backup`  | Zips your `~/Downloads/OBS` export, then files a scrubbed copy into the repo for the current device.  |
 | `make release` | Renders every overlay, regenerates masks, and zips a dated OBS bundle into `~/Downloads`.             |
 | `make preview` | Serves the color-coded previewer at <http://localhost:8000>.                                          |
-| `make gen`     | Regenerates the MacBook Pro scene collection JSON.                                                    |
+| `make gen`     | Regenerates both device scene collections (MacBook Pro + Mac Mini).                                   |
 | `make masks`   | Regenerates the rounded webcam masks from the frame geometry.                                         |
 | `make`         | Lists the available commands.                                                                         |
 

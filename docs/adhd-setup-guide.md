@@ -3,18 +3,21 @@
 One rule: color = category. In OBS, right-click a source or a group, pick
 Color, click the swatch. Only the 8 built-in OBS colors are used.
 
+Two devices, two collections: the MacBook Pro tables are first, the
+[Mac Mini section](#mac-mini-mini-streaming-collection) is at the bottom.
+
 ## Colors to category
 
 | OBS color    | Category                          |
 | ------------ | --------------------------------- |
-| Green        | Webcam (you, live)                |
-| Purple       | Alerts (Sound Alerts + Twitch Alerts) |
+| Green        | Cam feeds (webcam, NDI, PNG Tuber)|
+| Purple       | Alerts (Chat Overlay + Sound Alerts + Twitch Alerts) |
 | Teal         | Wolfathon widgets (wheel/rewards/timer) |
 | Blue         | Now Playing (WolfWave)            |
 | Yellow       | Screen / display (when you add it)|
-| Red          | Standby videos (Starting Soon / Be Right Back) |
+| Red          | Standby videos (Starting Soon / Be Right Back / Ending) |
 | Gray (light) | Audio (Discord / Chrome / Apple Music) |
-| Gray (dark)  | Background image                  |
+| Gray (dark)  | Background image / overlay-frame videos |
 
 ## Groups (build once, color the group)
 
@@ -76,3 +79,69 @@ is this Mac only (Google Drive mount); the Mac Mini has its own path.
   captures the live setup (scrubbed), so the previewer and `devices/` match what
   you actually run. The generator (`make gen`) is just the starting seed.
 - Yellow (Screen) is reserved for when you add a Display Capture source.
+
+## Mac Mini (Mini Streaming collection)
+
+Import `devices/mac-mini/scenes/Mini-Streaming.json`. It is the cleaned-up
+version of the live rig: typo names fixed (`Co-workking Main Cam` ->
+`Main Cam`, `Co-Workng Video` -> `Co-Working Solo Video`), every item
+color-coded, and the old empty global `Wolfathon` group replaced with
+per-scene wrappers.
+
+### Per-scene Wolfathon wrappers (the point of this layout)
+
+A group's or wrapper's internal layout is SHARED by every scene that uses it —
+that is why the widgets kept fighting across scenes (and why a duplicate
+`Rewards - Right` source existed just to get a second position). Now each
+scene has its own wrapper holding the SAME three widget sources:
+
+| Wrapper                            | Used by            |
+| ---------------------------------- | ------------------ |
+| `[src] Wolfathon · Live`           | Live               |
+| `[src] Wolfathon · Co-Working Solo`| Co-Working [Solo]  |
+| `[src] Wolfathon · Co-Working Dual`| Co-Working [Multi] |
+
+Arrange the widgets inside each wrapper once (open the `[src]` scene, drag);
+the other scenes never move. One `Rewards` browser source only — delete the
+old `Wolfathon - Rewards - Right` duplicate after import.
+
+### Scenes to sources (top = front)
+
+| Scene              | Sources (top to bottom)                                                        |
+| ------------------ | ------------------------------------------------------------------------------ |
+| Starting Soon      | Starting Soon Video, Now Playing, Alerts, Audio                                 |
+| Live               | PNG Tuber, NDI Source (hidden), Wolfathon · Live, Alerts, Audio, Background Video |
+| Co-Working [Solo]  | Main Cam, Now Playing, Wolfathon · Co-Working Solo, Alerts, Audio, Co-Working Solo Video |
+| Co-Working [Multi] | Main Cam, Second Cam, Now Playing, Wolfathon · Co-Working Dual, Alerts, Audio, Co-Working Dual Video |
+| Be Right Back      | Be Right Back Video, Alerts, Audio                                              |
+| Ending             | Ending Video, Audio                                                             |
+
+`[src] Alerts` on the Mini = Chat Overlay + Sound Alerts + Twitch Alerts
+(purple). Audio is the same three per-app captures as the MacBook Pro.
+
+### Cams are pre-pinned to the overlay frames
+
+The import already places cams exactly inside the overlay cam frames
+(Scale-to-inner-bounds), matching `masks/` and the bundle README:
+
+| Scene              | Source     | Position   | Size       | Mask                        |
+| ------------------ | ---------- | ---------- | ---------- | --------------------------- |
+| Co-Working [Solo]  | Main Cam   | 64, 136    | 1400 × 788 | `co-working-solo.png`       |
+| Co-Working [Multi] | Main Cam   | 64, 136    | 1152 × 648 | `co-working-dual-big.png`   |
+| Co-Working [Multi] | Second Cam | 1280, 628  | 576 × 324  | `co-working-dual-small.png` |
+
+Add the Image Mask/Blend filter per cam (see `masks/README.md`) and you are
+done.
+
+### Overlay videos
+
+The Mini's media sources point at the rendered bundle synced to Google Drive:
+
+```
+.../My Drive/MultiMedia Projects/Social Media/Twitch/Overlays/
+```
+
+`01-starting-soon.mp4`, `04-co-working-solo.mp4`, `05-co-working-dual.mp4`,
+`06-be-right-back.mp4`, `07-ending-stream.mp4`, `background.mp4` — all Loop ON.
+Drop the newest bundle's `Overlays/` contents into that Drive folder to update
+every scene at once.

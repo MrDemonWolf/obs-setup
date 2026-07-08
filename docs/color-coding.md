@@ -12,14 +12,14 @@ then Color). One color per category, matching the live rig.
 
 | Color        | Meaning              | Source hex | OBS stored value (ABGR) |
 | ------------ | -------------------- | ---------- | ----------------------- |
-| Green        | Webcam (you, live)   | `#2EA043`  | `0xFF43A02E`            |
-| Purple       | Alerts (Sound Alerts + Twitch Alerts) | `#8957E5` | `0xFFE55789` |
+| Green        | Cam feeds (webcam, NDI, PNG Tuber) | `#2EA043`  | `0xFF43A02E`  |
+| Purple       | Alerts (Chat Overlay + Sound Alerts + Twitch Alerts) | `#8957E5` | `0xFFE55789` |
 | Teal         | Wolfathon widgets (Wheel of Dares / Rewards / Timer) | `#1F9EA6` | `0xFFA69E1F` |
 | Blue         | Now Playing (WolfWave) | `#388BFD` | `0xFFFD8B38`            |
 | Yellow       | Screen / display capture (when added) | `#BB8009` | `0xFF0980BB` |
-| Red          | Standby video (Starting Soon / Be Right Back) | `#DA3633` | `0xFF3336DA` |
+| Red          | Standby video (Starting Soon / Be Right Back / Ending) | `#DA3633` | `0xFF3336DA` |
 | Gray (light) | Audio Group (Discord / Google Chrome / Apple Music) | `#8B949E` | `0xFF9E948B` |
-| Gray (dark)  | Background image     | `#6E7681`  | `0xFF81766E`            |
+| Gray (dark)  | Background image / overlay-frame videos | `#6E7681`  | `0xFF81766E` |
 
 The "stored value" column is how OBS writes the color in the scene JSON: a
 32-bit **ABGR** integer (`0xAABBGGRR`), so the red channel is the low byte.
@@ -59,3 +59,11 @@ Scenes prefixed `[src]` are reusable building blocks (nested "source scenes")
 that hold one real input each, so you configure a camera once and drop
 `[src] Camera` into every scene that needs it. The empty scenes named with
 dashes (`──────`) are just visual dividers in the scene list.
+
+A wrapper's INTERNAL layout is shared everywhere it appears (same as an OBS
+Group) — so anything you arrange differently per scene gets a **per-scene
+wrapper** instead of one shared one. That's why the Mac Mini has
+`[src] Wolfathon · Live`, `[src] Wolfathon · Co-Working Solo`, and
+`[src] Wolfathon · Co-Working Dual`: the SAME three widget sources (one
+browser connection each), arranged independently per scene. Drag the widgets
+around inside one wrapper without touching the other scenes.
