@@ -48,13 +48,15 @@ python3 "$ROOT/masks/gen_masks.py" \
   || echo "⚠ mask regen skipped (need: pip install pillow) — using committed masks"
 
 echo "▶ assemble bundle → $BUNDLE"
+# Flat layout by request: ALL videos in one Overlays/ folder (no opaque/
+# transparent split), masks in Masks/, README.md at the zip root. Nothing else.
 VID="Overlays"   # top-level video folder name inside the bundle
 MSK="Masks"      # top-level mask folder name inside the bundle
 rm -rf "$BUNDLE"
-mkdir -p "$BUNDLE/$VID/opaque" "$BUNDLE/$VID/transparent" "$BUNDLE/$MSK"
-cp "$OUT"/0*.mp4 "$OUT"/background.mp4 "$BUNDLE/$VID/opaque/"
-cp "$OUT"/socials-badge-hevc.mov "$OUT"/loading-barks-hevc.mov \
-   "$OUT"/countdown-hevc.mov "$BUNDLE/$VID/transparent/"
+mkdir -p "$BUNDLE/$VID" "$BUNDLE/$MSK"
+cp "$OUT"/0*.mp4 "$OUT"/background.mp4 \
+   "$OUT"/socials-badge-hevc.mov "$OUT"/loading-barks-hevc.mov \
+   "$OUT"/countdown-hevc.mov "$BUNDLE/$VID/"
 cp "$ROOT"/masks/*.png "$BUNDLE/$MSK/"
 
 # README — quoted heredoc so markdown backticks stay literal; date prepended.
@@ -67,9 +69,8 @@ cp "$ROOT"/masks/*.png "$BUNDLE/$MSK/"
 Everything OBS needs is in this folder.
 
 ```
-Overlays/opaque/        8 full-frame MP4s — set Loop = ON
-Overlays/transparent/   3 HEVC-alpha .mov (hardware-decode on every Apple Silicon)
-Masks/                  5 rounded-corner webcam masks (PNG, alpha)
+Overlays/   11 videos — 8 full-frame MP4s + 3 transparent HEVC-alpha .mov
+Masks/      5 rounded-corner webcam masks (PNG, alpha)
 ```
 
 ## Add each as a Media Source
@@ -82,17 +83,17 @@ Masks/                  5 rounded-corner webcam masks (PNG, alpha)
 
 | File | Scene | Loop |
 |---|---|---|
-| `opaque/01-starting-soon.mp4` | Starting Soon | ON |
-| `opaque/02-just-chatting.mp4` | Just Chatting | ON |
-| `opaque/03-just-chatting-vtuber.mp4` | Just Chatting · VTuber | ON |
-| `opaque/04-co-working-solo.mp4` | Co-Working · Solo | ON |
-| `opaque/05-co-working-dual.mp4` | Co-Working · Dual | ON |
-| `opaque/06-be-right-back.mp4` | Be Right Back | ON |
-| `opaque/07-ending-stream.mp4` | Ending Stream | ON |
-| `opaque/background.mp4` | Background (also plain gameplay) | ON |
-| `transparent/socials-badge-hevc.mov` | Socials badge (over anything) | ON |
-| `transparent/loading-barks-hevc.mov` | Loading overlay (over anything) | ON |
-| `transparent/countdown-hevc.mov` | 5:00 countdown | **OFF** — start on going live |
+| `01-starting-soon.mp4` | Starting Soon | ON |
+| `02-just-chatting.mp4` | Just Chatting | ON |
+| `03-just-chatting-vtuber.mp4` | Just Chatting · VTuber | ON |
+| `04-co-working-solo.mp4` | Co-Working · Solo | ON |
+| `05-co-working-dual.mp4` | Co-Working · Dual | ON |
+| `06-be-right-back.mp4` | Be Right Back | ON |
+| `07-ending-stream.mp4` | Ending Stream | ON |
+| `background.mp4` | Background (also plain gameplay) | ON |
+| `socials-badge-hevc.mov` | Socials badge (over anything) | ON |
+| `loading-barks-hevc.mov` | Loading overlay (over anything) | ON |
+| `countdown-hevc.mov` | 5:00 countdown | **OFF** — start on going live |
 
 ## Webcam placement (Co-Working + Just Chatting)
 
