@@ -15,18 +15,15 @@ position the cam source there at the given size and the mask lines up 1:1.
 |---|---|---|---|
 | `just-chatting-cam.png` | Just Chatting | 1216 × 684 | (64, 198) |
 | `just-chatting-chat.png` | Just Chatting **and** VTuber (chat) | 512 × 684 | (1344, 198) |
-| `co-working-solo.png` | Co-Working Solo | 1152 × 648 | (64, 40) |
-| `co-working-dual-big.png` | Co-Working Dual — big cam | 1152 × 648 | (64, 40) |
-| `co-working-dual-small.png` | Co-Working Dual — small cam | 576 × 324 | (1280, 692) |
+| `co-working-solo.png` | Co-Working Solo | 1400 × 788 | (64, 136) |
+| `co-working-dual-big.png` | Co-Working Dual — big cam | 1152 × 648 | (64, 136) |
+| `co-working-dual-small.png` | Co-Working Dual — small cam | 576 × 324 | (1280, 628) |
 
 Notes:
 - **VTuber** (`JustChattingVtuber`) uses only the chat frame — reuse
   `just-chatting-chat.png`; the model itself goes full-screen, unmasked.
-- `co-working-solo.png` and `co-working-dual-big.png` are identical (same box);
-  they're shipped as two names so you grab the right one per scene without
-  thinking about it.
-- `Streaming`, `Background`, and the card scenes (Starting Soon / BRB / Ending)
-  have **no** cam frame, so no mask.
+- `Background` and the card scenes (Starting Soon / BRB / Ending) have **no**
+  cam frame, so no mask.
 
 ## Apply one in OBS
 
