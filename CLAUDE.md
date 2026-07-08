@@ -117,7 +117,7 @@ npx remotion render <CompId> out/<name>.mp4
 
 Architecture:
 
-- **`src/scenes.ts` is the single source of truth** for the **11** scenes, each
+- **`src/scenes.ts` is the single source of truth** for the **12** scenes, each
   with `id`, `label`, `component`, `props`, and optional `width`/`height`.
   `src/Root.tsx` registers a `<Composition>` per scene (applying per-scene
   `width ?? VIDEO.width` / `height ?? VIDEO.height` — so `Socials` is 760×180,
@@ -126,8 +126,9 @@ Architecture:
 - **`PawLoader`** (`PawLoader.tsx`) = reusable row of paws pulsing in a
   traveling wave (seamless via integer `harmonic`). Used inside `Countdown`
   (with `harmonic={1}` — at 60fps that matches the 30fps scenes' sweep rate).
-  Reuses `Paw` (realistic wolf print: 3-lobe pad + splayed toes, shared with
-  `PawTrail`, the LoadingBarks fill-edge rider, and the TitleChip corner mark).
+  Reuses `Paw` (wolf print: ONE smooth rounded pad + splayed toes — the old
+  3-lobe pad read as "bites" at large sizes — shared with `PawTrail`, the
+  LoadingBarks fill-edge rider, the TitleChip corner mark, and the Stinger).
 - **`Countdown`** (`Countdown.tsx`) = transparent standalone timer chip
   (`HOWLING IN` + `M:SS` + `PawLoader`). Counts `from`s → 0 over the comp
   duration then holds at 00:00. **The one intentional non-loop** — render it out
@@ -154,6 +155,23 @@ Architecture:
   (sum of holds, ~6.1 min over 13 phrases) built at `LOADING_BARKS_FPS` (**60**; per-comp `fps` in
   `scenes.ts`). **Heavy → NOT in `render:all`**, render manually. Edit
   `BARKS`/seed to taste.
+- **`Stinger`** (`Stinger.tsx`) = the OBS **stinger transition** (a transition,
+  NOT a Media Source): 4s @60fps full-frame alpha wipe. Navy panel (cerulean +
+  white leading-edge stripes welded FLUSH at the edge) sweeps in L→R → holds
+  fully covered ~1.3s (OBS swaps scenes behind it; Transition Point ~2000ms =
+  `STINGER_POINT_MS`) → exits right with a back-loaded snap. Paw prints are
+  **painted ON the panel** (children of the moving layer, counter-skewed
+  `skewX(9)`) so they ride the sweep — stamp in on a slow L→R march
+  (`STAMP_FIRST/LAST`), fade out L→R (`UNSTAMP_FIRST/LAST`), remainder rides
+  off. The real whoosh SFX is baked in via `<Audio>` (`public/stinger.wav`,
+  from `reference/Stringer.wav` — gitignored local drop folder), delayed so its
+  impact lands on the cover. Plays ONCE (like Countdown, plain `interpolate`,
+  no loop helpers). Panel sized in **composition px** (`useVideoConfig().width`),
+  NEVER `vw` — in the Player preview `vw` = browser viewport ≠ canvas and the
+  cover visibly fails. NOT in `render:all`; `release.sh` renders it (ProRes
+  4444 → HEVC-alpha) into the bundle's own `Stinger/` folder. WebM-alpha would
+  be the portable stinger format but Homebrew/CI ffmpeg lacks libvpx-alpha
+  (VP8/VP9 silently drop alpha) → ship HEVC-alpha `.mov` (fine on macOS OBS).
 - **Card scenes** (`StartingSoon`, `BRB`, `EndingStream`) use `src/Scene.tsx`,
   which layers `Background` → `PawTrail` (walking footsteps) → `TitleChip`
   (glass panel: title + status line ending in a blinking cerulean `▊` cursor —
@@ -275,14 +293,17 @@ Architecture:
   (multi-GB, slow) → omitted from `render:all` entirely, rendered manually.
 - **`release.sh`** (repo root, `make release`) runs the whole pipeline end to
   end: `render:all` → render Countdown + LoadingBarks ProRes (reused if the
-  master already exists, `--force` to re-render) → `to-hevc.sh` the three
-  transparent masters → regen `masks/` → assemble a dated OBS bundle
+  master already exists, `--force` to re-render) → render the Stinger ProRes
+  (always fresh, it's short) → `to-hevc.sh` the four transparent masters →
+  regen `masks/` → assemble a dated OBS bundle
   (flat `Overlays/` with all 11 videos, MP4 + HEVC-alpha `.mov` together —
-  NO opaque/transparent subfolders, per user — + `Masks/` + a generated
+  NO opaque/transparent subfolders, per user — + `Masks/` + a **`Stinger/`**
+  folder holding `stinger-hevc.mov` + `stinger.wav`, per user — + a generated
   `README.md`) and zip it to
   `~/Downloads/OBS-overlays-<date>.zip` for copying to Google Drive. The bundle
   README carries the file→scene→loop table + the webcam-placement coords (keep
-  those in sync with `gen_masks.py`).
+  those in sync with `gen_masks.py`) + the Stinger transition setup
+  (Transition Point 2000 ms = the middle of the covered hold).
 - **CI** (`.github/workflows/release.yml`) runs `release.sh --force` on a
   **macOS runner** on every published GitHub Release and attaches the zip as a
   release asset (`workflow_dispatch` uploads it as a workflow artifact instead).
