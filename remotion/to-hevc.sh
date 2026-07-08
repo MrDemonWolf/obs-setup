@@ -14,7 +14,10 @@ set -euo pipefail
 for f in "$@"; do
   [ -f "$f" ] || { echo "skip (missing): $f" >&2; continue; }
   o="${f%.mov}-hevc.mov"
-  ffmpeg -y -i "$f" -c:v hevc_videotoolbox -alpha_quality 0.9 -b:v 12M \
-    -tag:v hvc1 "$o" -loglevel error
+  # -allow_sw 1: virtualized macOS (CI runners) has no hardware encoder
+  # session — this permits Apple's software HEVC encoder there; real Macs
+  # still pick the hardware path first.
+  ffmpeg -y -i "$f" -c:v hevc_videotoolbox -allow_sw 1 -alpha_quality 0.9 \
+    -b:v 12M -tag:v hvc1 "$o" -loglevel error
   echo "→ $o"
 done

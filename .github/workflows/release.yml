@@ -17,18 +17,26 @@ permissions:
 jobs:
   bundle:
     runs-on: macos-14     # Apple Silicon — has VideoToolbox
-    timeout-minutes: 90   # the Countdown + LoadingBarks ProRes renders are slow
+    # Measured on a real run: renders ~85 min + SOFTWARE HEVC transcodes
+    # (no HW encoder in the VM) ~65 min for countdown+loading-barks ≈ 155 min.
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
 
+      # node 24 = what generates package-lock.json locally; npm 10 (node 20)
+      # rejects the npm-11 lockfile layout for bundled wasm deps (@emnapi/*).
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
           cache-dependency-path: remotion/package-lock.json
 
+      # npm install, NOT npm ci: npm's lock validation of bundled wasm deps
+      # (@tailwindcss/oxide-wasm32-wasi -> @emnapi/*) breaks across npm
+      # versions — npm ci fails "Missing @emnapi/core from lock file" no
+      # matter which npm generated the lock.
       - name: Install remotion deps
-        run: npm ci
+        run: npm install --no-audit --no-fund
         working-directory: remotion
 
       - name: Ensure ffmpeg + Pillow
