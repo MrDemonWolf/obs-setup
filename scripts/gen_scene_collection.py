@@ -266,11 +266,20 @@ DEVICES = [MACBOOK_PRO, MAC_MINI]
 
 
 # --- Builders ----------------------------------------------------------------
+# Source ids that can carry audio: their `mixers` (OBS audio-track bitmask)
+# must be non-zero or the imported source is routed to NO tracks — silent on
+# stream/recording until re-ticked in Advanced Audio Properties. 255 = all
+# tracks, matching the live rig's export.
+AUDIO_IDS = {"sck_audio_capture", "ffmpeg_source", "ndi_source",
+             "macos-avcapture", "av_capture_input"}
+
+
 def base_source(suid, name, sid, settings, vid=None):
     return {
         "name": name, "uuid": suid(name), "id": sid,
         "versioned_id": vid or sid, "settings": settings,
-        "mixers": 0, "sync": 0, "flags": 0, "volume": 1.0, "balance": 0.5,
+        "mixers": 255 if sid in AUDIO_IDS else 0,
+        "sync": 0, "flags": 0, "volume": 1.0, "balance": 0.5,
         "enabled": True, "muted": False,
         "push-to-mute": False, "push-to-mute-delay": 0,
         "push-to-talk": False, "push-to-talk-delay": 0,
@@ -386,9 +395,16 @@ def selfcheck():
     assert abgr("#00FF00") == -16711936, abgr("#00FF00")   # green -> mid byte
     assert abgr("#0000FF") == -65536, abgr("#0000FF")      # blue -> high byte
     for dev in DEVICES:
-        names = {lf["name"] for lf in dev["leaves"]}
-        names |= {s["name"] for s in dev["src_scenes"] + dev["main_scenes"]}
-        names |= set(dev["dividers"])
+        # names must be UNIQUE across leaves + scenes + dividers: suid() keys
+        # uuid5 on the name alone, so a duplicate would emit two sources with
+        # the same uuid and scene items would resolve ambiguously on import.
+        all_names = ([lf["name"] for lf in dev["leaves"]]
+                     + [s["name"] for s in dev["src_scenes"] + dev["main_scenes"]]
+                     + list(dev["dividers"]))
+        assert len(all_names) == len(set(all_names)), \
+            f"{dev['slug']}: duplicate source/scene names: " \
+            f"{sorted(n for n in all_names if all_names.count(n) > 1)}"
+        names = set(all_names)
         for sc in dev["src_scenes"] + dev["main_scenes"]:
             for spec in sc["items"]:
                 spec = norm_item(spec)

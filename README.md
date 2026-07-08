@@ -223,9 +223,9 @@ npm install
 
 ### Development Scripts
 
-- `scripts/gen_scene_collection.py` - builds the MacBook Pro scene
-  collection from the layout defined at the top of the file. Run with
-  `make gen`.
+- `scripts/gen_scene_collection.py` - builds both device scene
+  collections (MacBook Pro + Mac Mini) from the per-device layouts
+  defined at the top of the file. Run with `make gen`.
 - `scripts/sanitize.py` - copies an OBS export into
   `devices/<slug>/`, wiping browser URLs and stream keys. Called by
   the backup script.
@@ -264,7 +264,9 @@ obs-setup/
 │   │   ├── index.json        # which scene files exist (read by the previewer)
 │   │   ├── scenes/           # scene collection JSON (secret-free)
 │   │   └── profiles/         # profile settings (stream key wiped)
-│   └── mac-mini/             # main home setup (populated on first backup)
+│   └── mac-mini/             # main home rig
+│       ├── index.json        # which scene files exist (read by the previewer)
+│       └── scenes/           # generated collection + sanitized live backup
 ├── scripts/
 │   ├── gen_scene_collection.py
 │   ├── sanitize.py

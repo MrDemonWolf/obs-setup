@@ -47,7 +47,7 @@
       "id": "macos-avcapture",
       "versioned_id": "macos-avcapture",
       "settings": {},
-      "mixers": 0,
+      "mixers": 255,
       "sync": 0,
       "flags": 0,
       "volume": 1.0,
@@ -71,7 +71,7 @@
       "id": "macos-avcapture",
       "versioned_id": "macos-avcapture",
       "settings": {},
-      "mixers": 0,
+      "mixers": 255,
       "sync": 0,
       "flags": 0,
       "volume": 1.0,
@@ -95,7 +95,7 @@
       "id": "ndi_source",
       "versioned_id": "ndi_source",
       "settings": {},
-      "mixers": 0,
+      "mixers": 255,
       "sync": 0,
       "flags": 0,
       "volume": 1.0,
@@ -341,7 +341,7 @@
       "settings": {
         "application": "com.hnc.Discord"
       },
-      "mixers": 0,
+      "mixers": 255,
       "sync": 0,
       "flags": 0,
       "volume": 1.0,
@@ -367,7 +367,7 @@
       "settings": {
         "application": "com.google.Chrome"
       },
-      "mixers": 0,
+      "mixers": 255,
       "sync": 0,
       "flags": 0,
       "volume": 1.0,
@@ -393,7 +393,7 @@
       "settings": {
         "application": "com.apple.Music"
       },
-      "mixers": 0,
+      "mixers": 255,
       "sync": 0,
       "flags": 0,
       "volume": 1.0,
@@ -420,7 +420,7 @@
         "local_file": "/Users/nathanialhenniges/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/MultiMedia Projects/Social Media/Twitch/Overlays/01-starting-soon.mp4",
         "looping": true
       },
-      "mixers": 0,
+      "mixers": 255,
       "sync": 0,
       "flags": 0,
       "volume": 1.0,
@@ -447,7 +447,7 @@
         "local_file": "/Users/nathanialhenniges/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/MultiMedia Projects/Social Media/Twitch/Overlays/06-be-right-back.mp4",
         "looping": true
       },
-      "mixers": 0,
+      "mixers": 255,
       "sync": 0,
       "flags": 0,
       "volume": 1.0,
@@ -474,7 +474,7 @@
         "local_file": "/Users/nathanialhenniges/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/MultiMedia Projects/Social Media/Twitch/Overlays/07-ending-stream.mp4",
         "looping": true
       },
-      "mixers": 0,
+      "mixers": 255,
       "sync": 0,
       "flags": 0,
       "volume": 1.0,
@@ -501,7 +501,7 @@
         "local_file": "/Users/nathanialhenniges/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/MultiMedia Projects/Social Media/Twitch/Overlays/background.mp4",
         "looping": true
       },
-      "mixers": 0,
+      "mixers": 255,
       "sync": 0,
       "flags": 0,
       "volume": 1.0,
@@ -528,7 +528,7 @@
         "local_file": "/Users/nathanialhenniges/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/MultiMedia Projects/Social Media/Twitch/Overlays/04-co-working-solo.mp4",
         "looping": true
       },
-      "mixers": 0,
+      "mixers": 255,
       "sync": 0,
       "flags": 0,
       "volume": 1.0,
@@ -555,7 +555,7 @@
         "local_file": "/Users/nathanialhenniges/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/MultiMedia Projects/Social Media/Twitch/Overlays/05-co-working-dual.mp4",
         "looping": true
       },
-      "mixers": 0,
+      "mixers": 255,
       "sync": 0,
       "flags": 0,
       "volume": 1.0,
