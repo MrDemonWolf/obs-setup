@@ -6,6 +6,7 @@ import { JustChattingScene } from "./JustChattingScene";
 import { SocialsScene, SOCIALS_DURATION } from "./Socials";
 import { Countdown } from "./Countdown";
 import { LoadingBarks, LOADING_BARKS_DURATION, LOADING_BARKS_FPS } from "./LoadingBarks";
+import { Stinger, STINGER_FPS, STINGER_DURATION } from "./Stinger";
 
 // Single source of truth for every scene. `component` picks the layout.
 // `width`/`height` override the
@@ -46,4 +47,7 @@ export const SCENES: SceneDef[] = [
   // (each phrase 20–40s, bar creeps to ~95%); duration = sum of holds (~6.1 min, 13 phrases).
   // 60fps; LOADING_BARKS_DURATION is computed at LOADING_BARKS_FPS so they match.
   { id: "LoadingBarks", label: "Loading Barks", component: LoadingBarks, fps: LOADING_BARKS_FPS, durationInFrames: LOADING_BARKS_DURATION, props: {} },
+  // OBS stinger transition (Paw Swipe). Transparent full-frame, 60fps, plays
+  // ONCE (not a loop) — like Countdown, kept out of render:all.
+  { id: "Stinger", label: "Stinger", component: Stinger, fps: STINGER_FPS, durationInFrames: STINGER_DURATION, props: {} },
 ];
