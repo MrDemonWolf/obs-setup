@@ -129,10 +129,10 @@ The easiest path is the release bundle - no local rendering needed:
 1. Go to the
    [Releases page](https://github.com/MrDemonWolf/obs-setup/releases)
    and download `OBS-overlays-<date>.zip` from the newest release.
-2. Unzip. Inside: `Overlays/opaque/` (full-frame looping MP4s),
-   `Overlays/transparent/` (HEVC-alpha `.mov` widgets), `Masks/`
-   (webcam masks), and a `README.md` with the file-to-scene table,
-   loop settings, and exact webcam placement coordinates.
+2. Unzip. Inside: `Overlays/` (all 11 videos — looping MP4s plus
+   HEVC-alpha `.mov` widgets), `Masks/` (webcam masks), and a
+   `README.md` with the file-to-scene table, loop settings, and exact
+   webcam placement coordinates.
 3. Add each video in OBS as a Media Source and follow that README.
 
 To build the same bundle locally:
