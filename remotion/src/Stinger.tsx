@@ -83,14 +83,16 @@ const usePanelX = () => {
 // Slow walking march IN: paw i stamps at an even time cadence (first lands as
 // the sweep settles, last lands mid-hold) — reads as the wolf unhurriedly
 // walking through while the screen is covered.
-const STAMP_FIRST = 0.26; // panel nearly settled — first paw slides in with it
-const STAMP_LAST = 0.55; // mid-hold
+const STAMP_FIRST = 0.1975; // first paw slides in as the panel covers
+const STAMP_LAST = 0.4875; // last paw lands mid-hold
 
 // March OUT: paws fade LEFT->RIGHT (oldest print first — the trail evaporates
 // behind the wolf in his direction of travel); whatever remains rides off with
 // the panel (the paws are painted ON it).
-const UNSTAMP_FIRST = 0.68; // leftmost paw lifts just after the hold ends
-const UNSTAMP_LAST = 0.85; // rightmost paw lifts last
+// Paws hold through the whole cover, then fade L->R right as the exit begins
+// (whatever's left rides off with the panel).
+const UNSTAMP_FIRST = 0.8075; // leftmost paw lifts deep into the exit
+const UNSTAMP_LAST = 0.9575; // rightmost paw lifts last (carried off by the swoosh)
 
 // Paw prints painted ON the cover panel (rendered as its children), so they
 // MOVE WITH the panel through the sweeps — one welded layer, no gating math.
