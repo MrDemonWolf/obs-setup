@@ -49,10 +49,15 @@ One command to back up. One download to restock OBS. No lost scenes.
   Co-Working Solo/Dual, Be Right Back, Ending Stream, Background,
   Socials badge, Countdown, Loading Barks), rendered to video for OBS
   media sources.
+- **Branded stinger transition.** A 4-second alpha wipe (`Stinger`) for
+  OBS scene cuts: a navy panel with a cerulean-and-white leading edge
+  sweeps across, holds fully covered while OBS swaps the scene behind
+  it, and a wolf paw trail walks through. Ships with its baked whoosh
+  SFX in the bundle's own `Stinger/` folder.
 - **One-command release bundle.** `make release` renders every
-  overlay, transcodes the transparent ones to HEVC-alpha, regenerates
-  the webcam masks, and zips a dated OBS drop-in bundle to
-  `~/Downloads`.
+  overlay, renders the stinger, transcodes the transparent ones to
+  HEVC-alpha, regenerates the webcam masks, and zips a dated OBS
+  drop-in bundle to `~/Downloads`.
 - **CI-built bundles.** Every published GitHub Release builds the
   same bundle on a macOS runner and attaches the zip as a release
   asset, so the newest files are always one download away.
@@ -132,10 +137,13 @@ The easiest path is the release bundle - no local rendering needed:
    [Releases page](https://github.com/MrDemonWolf/obs-setup/releases)
    and download `OBS-overlays-<date>.zip` from the newest release.
 2. Unzip. Inside: `Overlays/` (all 11 videos — looping MP4s plus
-   HEVC-alpha `.mov` widgets), `Masks/` (webcam masks), and a
-   `README.md` with the file-to-scene table, loop settings, and exact
-   webcam placement coordinates.
-3. Add each video in OBS as a Media Source and follow that README.
+   HEVC-alpha `.mov` widgets), `Masks/` (webcam masks), `Stinger/`
+   (the transition video `stinger-hevc.mov` + its `stinger.wav`), and
+   a `README.md` with the file-to-scene table, loop settings, exact
+   webcam placement coordinates, and the OBS stinger setup.
+3. Add each video in OBS as a Media Source and follow that README. For
+   the stinger, add it under **Scene Transitions → + → Stinger** (not a
+   Media Source) with Transition Point **2000 ms**.
 
 To build the same bundle locally:
 
@@ -167,9 +175,10 @@ Composition ids: `StartingSoon`, `BRB`, `JustChatting`,
 `EndingStream`, `Background` (full-frame MP4s), plus three
 transparent overlays: `Socials` (760x180 badge), `Countdown` (5:00
 timer, plays once), and `LoadingBarks` (fake loading bar with wolf
-puns). The heavy `Countdown` and `LoadingBarks` ProRes masters are
-excluded from `render:all`; `make release` (or a manual
-`npx remotion render`) handles them.
+puns), plus the `Stinger` transition (4s alpha wipe, plays once). The
+heavy `Countdown` and `LoadingBarks` ProRes masters are excluded from
+`render:all`; `make release` (or a manual `npx remotion render`)
+handles them and the stinger.
 
 ### Rounded webcam masks
 
