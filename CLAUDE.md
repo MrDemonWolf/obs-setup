@@ -156,14 +156,16 @@ Architecture:
   `scenes.ts`). **Heavy → NOT in `render:all`**, render manually. Edit
   `BARKS`/seed to taste.
 - **`Stinger`** (`Stinger.tsx`) = the OBS **stinger transition** (a transition,
-  NOT a Media Source): 4s @60fps full-frame alpha wipe. Navy panel (cerulean +
-  white leading-edge stripes welded FLUSH at the edge) sweeps in L→R → holds
-  fully covered ~1.3s (OBS swaps scenes behind it; Transition Point ~2000ms =
-  `STINGER_POINT_MS`) → exits right with a back-loaded snap. Paw prints are
+  NOT a Media Source): 4s @60fps full-frame alpha wipe. Navy panel (leading edge
+  welded FLUSH, ordered navy → cerulean → thin WHITE outermost tip — matches the
+  original stinger) sweeps in L→R → holds fully covered ~1.5s (OBS swaps scenes
+  behind it; Transition Point 2000ms = `STINGER_POINT_MS`, mid-hold) → exits
+  right with a back-loaded snap. Paw prints are
   **painted ON the panel** (children of the moving layer, counter-skewed
   `skewX(9)`) so they ride the sweep — stamp in on a slow L→R march
-  (`STAMP_FIRST/LAST`), fade out L→R (`UNSTAMP_FIRST/LAST`), remainder rides
-  off. The real whoosh SFX is baked in via `<Audio>` (`public/stinger.wav`,
+  (`STAMP_FIRST/LAST`), hold through the full cover, then fade out L→R deep into
+  the exit (`UNSTAMP_FIRST/LAST`) so the swoosh carries the last prints off. The
+  real whoosh SFX is baked in via `<Audio>` (`public/stinger.wav`,
   from `reference/Stringer.wav` — gitignored local drop folder), delayed so its
   impact lands on the cover. Plays ONCE (like Countdown, plain `interpolate`,
   no loop helpers). Panel sized in **composition px** (`useVideoConfig().width`),

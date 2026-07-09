@@ -73,9 +73,12 @@ npx remotion render Socials out/socials-badge.mov --codec=prores --prores-profil
 npx remotion render Socials out/socials-badge.gif --codec=gif
 ```
 
-Composition ids (left arg): `StartingSoon`, `BRB`, `JustChatting`, `Streaming`,
-`Coworking`, `EndingStream`, `Background`, `Socials`. The output filename (right
-arg) is up to you — `render:all` uses the numbered names above.
+Composition ids (left arg): `StartingSoon`, `BRB`, `JustChatting`,
+`JustChattingVtuber`, `CoworkingSolo`, `CoworkingDual`, `EndingStream`,
+`Background`, `Socials`, `Countdown`, `LoadingBarks`, and the `Stinger`
+transition. The output filename (right arg) is up to you — `render:all` uses the
+numbered names above (Countdown, LoadingBarks, and Stinger render via
+`make release`).
 
 ## Customize
 
