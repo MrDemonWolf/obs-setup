@@ -24,12 +24,12 @@ import { Paw } from "./Paw";
 // Plays ONCE per cut — like Countdown, NOT a seamless loop, so motion is plain
 // interpolate (no loop* helper).
 export const STINGER_FPS = 60;
-export const STINGER_SECONDS = 4; // total clip; ~1.3s is held fully covered
+export const STINGER_SECONDS = 4; // total clip; ~1.5s is held fully covered
 export const STINGER_DURATION = Math.round(STINGER_SECONDS * STINGER_FPS);
 
 // Phase boundaries (fractions of the clip). Fully covered across [IN_END, OUT_START].
 const IN_END = 0.34;
-const OUT_START = 0.66;
+const OUT_START = 0.7225; // hold lingers before the panel exits
 export const STINGER_COVER = 0.5; // transition point = middle of the covered hold
 
 // OBS Stinger "Transition Point" (ms) — a frame inside the fully-covered window.
@@ -154,15 +154,15 @@ export const Stinger: React.FC = () => {
           transform: `translateX(${x * 1.1 * width}px) skewX(-9deg)`,
         }}
       >
-        {/* leading-edge stripes, FLUSH with the panel's right edge (white is the
-            outermost tip, cerulean right behind it, then navy) — one welded unit
-            so the edge reads as part of the panel, not floating bars */}
+        {/* leading-edge stripes, FLUSH with the panel's right edge: navy →
+            CERULEAN → thin WHITE as the outermost tip — one welded unit, part
+            of the panel */}
         <div
           style={{
             position: "absolute",
             top: 0,
             right: 18,
-            width: 56,
+            width: 52,
             height: "100%",
             background: theme.blue,
             boxShadow: `0 0 90px ${theme.blueBright}, 0 0 36px ${theme.blue}`,
