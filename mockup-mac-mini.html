@@ -1,0 +1,74 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Mac Mini — OBS scene mockup</title>
+<style>
+  :root{ color-scheme:dark; --bg:#0e0f13; --card:#181a20; --edge:#2a2d36; --txt:#e8e8ec; --dim:#9aa0ac; }
+  *{box-sizing:border-box}
+  body{margin:0;font:14px/1.4 -apple-system,Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--txt);padding:24px}
+  h1{font-size:18px;margin:0 0 2px}
+  .sub{color:var(--dim);margin:0 0 20px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));gap:20px}
+  .card{background:var(--card);border:1px solid var(--edge);border-radius:10px;overflow:hidden}
+  .card h2{font-size:14px;margin:0;padding:10px 12px;border-bottom:1px solid var(--edge);display:flex;justify-content:space-between}
+  .card h2 span{color:var(--dim);font-weight:400}
+  .canvas{position:relative;width:100%;aspect-ratio:16/9;background:
+    repeating-linear-gradient(45deg,#101216 0 12px,#0c0d11 12px 24px)}
+  .item{position:absolute;border-radius:4px;font-size:10px;color:#fff;
+    display:flex;align-items:flex-start;padding:2px 4px;overflow:hidden;
+    text-shadow:0 1px 2px rgba(0,0,0,.7);white-space:nowrap}
+  .item.overlay{border-style:dashed}
+  .legend{display:flex;flex-wrap:wrap;gap:12px;margin:22px 0 0;color:var(--dim);font-size:12px}
+  .legend b{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:5px}
+</style>
+<h1>Mac Mini — OBS scene mockup</h1>
+<p class="sub">From <code>devices/mac-mini/scenes/Streaming.json</code> · canvas 1920×1080 · boxes to scale · audio-only + logical groups hidden</p>
+<div class="grid" id="grid"></div>
+<div class="legend" id="legend"></div>
+<script>
+const CW=1920, CH=1080;
+// color/label by source type + name keyword
+function style(it){
+  const n=it.name.toLowerCase(), id=it.id;
+  if(id==='ffmpeg_source'||id==='ndi_source') return {c:'#2b3a52',fill:'#1c2636',tag:'video bg'};
+  if(id==='macos-avcapture')                   return {c:'#3aa0ff',fill:'#173049',tag:'camera'};
+  if(id==='syphon-input')                       return {c:'#c060e0',fill:'#3a1a44',tag:'PNG tuber'};
+  // browser sources
+  if(n.includes('chat'))        return {c:'#8b7bff',fill:'#241f4a',tag:'chat'};
+  if(n.includes('timer'))       return {c:'#22c3b8',fill:'#123330',tag:'timer'};
+  if(n.includes('now playing')) return {c:'#ff6fae',fill:'#3a1226',tag:'now playing'};
+  if(n.includes('wolfathon'))   return {c:'#3ecf6a',fill:'#123322',tag:'wolfathon'};
+  if(n.includes('alert')||n.includes('sound')) return {c:'#f5b23e',fill:'#332510',tag:'alerts'};
+  return {c:'#9aa0ac',fill:'#22242b',tag:'browser'};
+}
+const DATA = {"Be Right Back":[{"name":"Be Right Back Video","x":0,"y":0,"w":1920,"h":1080,"id":"ffmpeg_source"},{"name":"Chat Overlay","x":1526,"y":0,"w":400,"h":300,"id":"browser_source"},{"name":"Sound Alerts","x":559.999755859375,"y":239.99998474121094,"w":800,"h":600,"id":"browser_source"},{"name":"Twitch Alerts","x":246,"y":0,"w":1439.9999618530273,"h":1079.9999713897705,"id":"browser_source"}],"Co-Working [Multi]":[{"name":"Co-Working Multi Video","x":0,"y":0,"w":1920,"h":1080,"id":"ffmpeg_source"},{"name":"Chat Overlay","x":1520,"y":0,"w":400,"h":300,"id":"browser_source"},{"name":"Sound Alerts","x":553.999755859375,"y":239.99998474121094,"w":800,"h":600,"id":"browser_source"},{"name":"Twitch Alerts","x":239.99998474121094,"y":0,"w":1439.9999618530273,"h":1079.9999713897705,"id":"browser_source"},{"name":"Co-Working [Multi] Small Cam","x":1284,"y":695,"w":570,"h":315.9999918937683,"id":"macos-avcapture"},{"name":"Co-Working [Multi] Main Cam","x":68,"y":45,"w":1145.0000381469727,"h":637.9999995231628,"id":"macos-avcapture"},{"name":"Wolfathon - Wheel of Dares","x":487,"y":67,"w":945.9999704360962,"h":945.9999704360962,"id":"browser_source"},{"name":"Wolfathon - Rewards","x":0,"y":799,"w":399.99998474121094,"h":280.9999966621399,"id":"browser_source"},{"name":"Wolfathon - Timer","x":1279,"y":23,"w":626.0000014305115,"h":95.99999189376831,"id":"browser_source"},{"name":"Now Playing","x":1288,"y":537,"w":550.000011920929,"h":132.00000286102295,"id":"browser_source"}],"Co-Working [Solo]":[{"name":"Co-Workng Video","x":0,"y":0,"w":1920,"h":1080,"id":"ffmpeg_source"},{"name":"Co-workking Main Cam","x":64,"y":45,"w":1127.9999542236328,"h":635.0000238418579,"id":"macos-avcapture"},{"name":"Wolfathon - Wheel of Dares","x":487,"y":67,"w":945.9999704360962,"h":945.9999704360962,"id":"browser_source"},{"name":"Wolfathon - Rewards - Right","x":1520,"y":799,"w":399.99998474121094,"h":280.9999966621399,"id":"browser_source"},{"name":"Chat Overlay","x":1520,"y":0,"w":400,"h":300,"id":"browser_source"},{"name":"Sound Alerts","x":553.999755859375,"y":239.99998474121094,"w":800,"h":600,"id":"browser_source"},{"name":"Twitch Alerts","x":239.99998474121094,"y":0,"w":1439.9999618530273,"h":1079.9999713897705,"id":"browser_source"},{"name":"Now Playing","x":0,"y":948,"w":550.000011920929,"h":132.00000286102295,"id":"browser_source"},{"name":"Wolfathon - Timer","x":1279,"y":23,"w":626.0000014305115,"h":95.99999189376831,"id":"browser_source"}],"Ending":[{"name":"Ending Video","x":0,"y":0,"w":1920,"h":1080,"id":"ffmpeg_source"}],"Live":[{"name":"Background Video","x":0,"y":0,"w":1920,"h":1080,"id":"ffmpeg_source"},{"name":"NDI Source","x":0,"y":0,"w":1920,"h":1080,"id":"ndi_source"},{"name":"PNG Tuber","x":1461,"y":697,"w":569,"h":441,"id":"syphon-input"},{"name":"Chat Overlay","x":1526,"y":0,"w":400,"h":300,"id":"browser_source"},{"name":"Sound Alerts","x":559.999755859375,"y":239.99998474121094,"w":800,"h":600,"id":"browser_source"},{"name":"Twitch Alerts","x":246,"y":0,"w":1439.9999618530273,"h":1079.9999713897705,"id":"browser_source"}],"Starting Soon":[{"name":"Starting Soon Video","x":0,"y":0,"w":1920,"h":1080,"id":"ffmpeg_source"},{"name":"Chat Overlay","x":1526,"y":0,"w":400,"h":300,"id":"browser_source"},{"name":"Sound Alerts","x":559.999755859375,"y":239.99998474121094,"w":800,"h":600,"id":"browser_source"},{"name":"Twitch Alerts","x":246,"y":0,"w":1439.9999618530273,"h":1079.9999713897705,"id":"browser_source"},{"name":"Now Playing","x":1420,"y":0,"w":500,"h":120,"id":"browser_source"}]};
+const grid=document.getElementById('grid');
+for(const [scene,items] of Object.entries(DATA)){
+  const card=document.createElement('div'); card.className='card';
+  card.innerHTML=`<h2>${scene}<span>${items.length} sources</span></h2>`;
+  const cv=document.createElement('div'); cv.className='canvas';
+  // paint order: array first = bottom, later = top (DOM append order matches)
+  for(const it of items){
+    const el=document.createElement('div'); el.className='item';
+    const s=style(it);
+    // clip full-canvas transparent overlay widgets so they don't overflow
+    const w=Math.min(it.w, CW-it.x), h=Math.min(it.h, CH-it.y);
+    const overlay = it.w>CW*1.05 || it.h>CH*1.05; // alert layers span the whole canvas
+    if(overlay) el.classList.add('overlay');
+    el.style.left  =(it.x/CW*100)+'%';
+    el.style.top   =(it.y/CH*100)+'%';
+    el.style.width =(w/CW*100)+'%';
+    el.style.height=(h/CH*100)+'%';
+    el.style.border= '1.5px solid '+s.c;
+    el.style.background = overlay ? 'transparent' : s.fill+'cc';
+    el.textContent=it.name;
+    el.title=`${it.name} — ${s.tag} · ${Math.round(it.x)},${Math.round(it.y)} · ${Math.round(it.w)}×${Math.round(it.h)}`;
+    cv.appendChild(el);
+  }
+  card.appendChild(cv); grid.appendChild(card);
+}
+// legend
+const seen={}; for(const items of Object.values(DATA)) for(const it of items){const s=style(it); seen[s.tag]=s.c;}
+document.getElementById('legend').innerHTML =
+  Object.entries(seen).map(([t,c])=>`<span><b style="background:${c}"></b>${t}</span>`).join('')
+  + '<span><b style="background:transparent;border:1.5px dashed #f5b23e"></b>full-canvas overlay (clipped)</span>';
+</script>
