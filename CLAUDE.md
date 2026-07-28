@@ -75,8 +75,9 @@ Only the Downloads `.zip` keeps them. Do not weaken this in `sanitize.py`.
 
 ### 3. Previewer (`index.html`, repo root)
 Self-contained (inline CSS+JS, no build; the only external ref is a Google
-Fonts link that degrades to system fonts offline). Device tabs (All /
-MacBook Pro / Mac Mini, persisted in localStorage), click-to-copy on every
+Fonts link that degrades to system fonts offline). Device tabs (Mac Mini
+default / MacBook Pro, plus Dropped for drag-dropped files; persisted in
+localStorage), click-to-copy on every
 scene/source name + media path chip (toast feedback), and OBS-Sources-panel
 styling: color-tinted rows, and `[src]` wrapper references render as
 expandable folders (native `<details>`) showing their contents inline, like

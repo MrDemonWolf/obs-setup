@@ -254,7 +254,11 @@ async function copy(text){
 }
 document.addEventListener("click", e => {
   const el = e.target.closest("[data-copy]");
-  if(el) copy(el.getAttribute("data-copy"));
+  if(el){
+    // copy clicks inside a folder <summary> must not toggle the folder
+    e.preventDefault(); e.stopPropagation();
+    copy(el.getAttribute("data-copy"));
+  }
 });
 
 // col ("rgb(..)" or "#hex") -> translucent tint for OBS-style colored rows.
@@ -282,7 +286,7 @@ function rowHtml(it, byName){
   const core = `<span style="color:${col};flex:none">${ticon}</span>
     <span class="nm" data-copy="${esc(it.name)}" style="cursor:pointer" title="click to copy name">${esc(it.name)}</span>
     ${chip}${pchip}
-    <span class="type">${tlabel}</span>
+    <span class="type">${esc(tlabel)}</span>
     <button class="cbtn" data-copy="${esc(it.name)}" title="copy source name">⎘</button>`;
   if(isFolder){
     const kids = ((ref.settings && ref.settings.items) || []).slice().reverse()
@@ -339,7 +343,7 @@ function renderCollection(coll, host, title, slug){
 }
 
 // --- device tabs --------------------------------------------------------------
-function renderTabs(){
+function renderTabs(prefer){
   const slugs = [...new Set([...document.querySelectorAll(".device")].map(d => d.dataset.slug))];
   const cur = localStorage.getItem("obs-prev-tab");
   const tabs = document.getElementById("tabs");
@@ -347,7 +351,9 @@ function renderTabs(){
   const label = s => NAMES[s] || s.split("-").map(w => w[0].toUpperCase()+w.slice(1)).join(" ");
   tabs.innerHTML = slugs.map(s =>
     `<button data-tab="${s}">${label(s)}</button>`).join("");
-  applyTab(slugs.includes(cur) ? cur : slugs[0]);   // DEVICES[0] = default
+  // preferred tab (e.g. a just-dropped file) wins, then the saved tab,
+  // then the first section (DEVICES[0] = default).
+  applyTab(slugs.includes(prefer) ? prefer : slugs.includes(cur) ? cur : slugs[0]);
 }
 function applyTab(tab){
   if(!tab) return;
@@ -385,10 +391,15 @@ const drop = document.getElementById("drop");
 ["dragover","dragenter"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("hover"); }));
 ["dragleave","drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("hover"); }));
 drop.addEventListener("drop", async e => {
+  let dropped = false;
   for(const f of e.dataTransfer.files){
-    try { renderCollection(JSON.parse(await f.text()), document.getElementById("out"), f.name, "dropped"); }
+    try {
+      renderCollection(JSON.parse(await f.text()), document.getElementById("out"), f.name, "dropped");
+      dropped = true;
+    }
     catch(err){ alert(`${f.name}: not a valid OBS scene JSON`); }
   }
+  if(dropped) renderTabs("dropped");   // show the just-dropped collection immediately
 });
 
 renderLegend();
