@@ -19,56 +19,90 @@ Two devices, two collections: the MacBook Pro tables are first, the
 | Gray (light) | Audio (Discord / Chrome / Apple Music) |
 | Gray (dark)  | Background image / overlay-frame videos |
 
-## Groups (build once, color the group)
+## MacBook Pro (MBP Streaming layout)
 
-Select the sources, right-click, Group Selected Items, name it, then right-click
-the group and pick Color.
+Build this BY HAND in OBS — the tables below are your checklist. The layout
+mirrors the Mac Mini's scene flow (same scene names, same wrapper pattern,
+same overlay videos) adapted to what travels: ONE webcam — no NDI, no PNG
+Tuber, no second cam — so Live fronts the webcam and there is a single
+Co-Working scene (the solo layout).
 
-| Group    | Color        | Sources inside                     |
-| -------- | ------------ | ---------------------------------- |
-| Alerts   | Purple       | Sound Alerts, Twitch Alerts        |
-| Wolfathon| Teal         | Wheel of Dares, Rewards, Timer     |
-| Audio    | Gray (light) | Discord, Google Chrome, Apple Music|
+The repo never writes into OBS. Sync goes ONE way, OBS -> repo: export your
+collection, run `make backup`, done (see
+[backup-guide.md](backup-guide.md)). The generated
+`devices/macbook-pro/scenes/MBP-Streaming.json` exists only as an optional
+reference / spare copy of this layout — ignore it if you're building by
+hand.
 
-For each Audio source: Add Source, pick **macOS Audio Capture**, set Method to
-**Application**, choose the app. That is the newest-OBS way (OBS 30+, macOS 13+,
-ScreenCaptureKit) and needs no BlackHole or Loopback.
+### Wrappers (arrive pre-built and colored)
+
+| Wrapper                      | Color        | Sources inside                     |
+| ---------------------------- | ------------ | ---------------------------------- |
+| [src] Alerts                 | Purple       | Chat Overlay, Sound Alerts, Twitch Alerts |
+| [src] Audio                  | Gray (light) | Discord, Google Chrome, Apple Music|
+| [src] Wolfathon · Live       | Teal         | Wheel of Dares, Rewards, Timer     |
+| [src] Wolfathon · Co-Working | Teal         | Wheel of Dares, Rewards (hidden), Rewards - Right, Timer |
+
+Wolfathon wrappers are PER SCENE — a wrapper's internal layout is shared by
+every scene that uses it, so each scene gets its own copy to arrange (the
+[Mac Mini section](#per-scene-wolfathon-wrappers-the-point-of-this-layout)
+explains why). Open the `[src]` scene, drag once, done.
+
+Each Audio source is **macOS Audio Capture**, Method **Application** (OBS 30+,
+macOS 13+, ScreenCaptureKit — no BlackHole or Loopback).
 Docs: https://obsproject.com/kb/macos-desktop-audio-capture-guide
 
 For per-source volume levels (Compressor settings per source, target dBFS
 lanes), see [audio-levels.md](audio-levels.md).
 
-## Standalone sources
+### Standalone sources
 
-| Source              | OBS source type      | Color       |
-| ------------------- | -------------------- | ----------- |
-| Webcam              | Video Capture Device | Green       |
-| Now Playing         | Browser              | Blue        |
-| Starting Soon Video | Media Source         | Red         |
-| Be Right Back Video | Media Source         | Red         |
-| Background          | Image                | Gray (dark) |
+| Source                     | OBS source type      | Color       |
+| -------------------------- | -------------------- | ----------- |
+| Webcam                     | Video Capture Device | Green       |
+| Now Playing                | Browser              | Blue        |
+| Co-Working Timer Widget    | Browser              | Teal        |
+| Co-Working Tasklist Widget | Browser              | Teal        |
+| Starting Soon Video        | Media Source         | Red         |
+| Be Right Back Video        | Media Source         | Red         |
+| Ending Video               | Media Source         | Red         |
+| Background Video           | Media Source         | Gray (dark) |
+| Co-Working Solo Video      | Media Source         | Gray (dark) |
 
-## Scenes to sources
+### Scenes to sources (top = front)
 
-Top of the list = front. Bottom = behind. Background always last.
+Opaque full-frame media (the webcam, the standby videos) always sits BELOW
+the widget/alert overlays — on top it would hide them.
 
-| Scene         | Sources (top to bottom)                                          |
-| ------------- | ---------------------------------------------------------------- |
-| Starting Soon | Starting Soon Video, Alerts, Audio, Background                    |
-| Be Right Back | Be Right Back Video, Alerts, Audio, Background                    |
-| Live          | Webcam, Now Playing, Wolfathon, Alerts, Audio, Background         |
-| Co-Working    | Webcam, Now Playing, Wolfathon, Alerts, Audio, Background         |
+| Scene         | Sources (top to bottom)                                                        |
+| ------------- | ------------------------------------------------------------------------------ |
+| Starting Soon | Now Playing, Alerts, Audio, Starting Soon Video                                 |
+| Live          | Wolfathon · Live, Alerts, Webcam (full-frame), Audio, Background Video          |
+| Co-Working    | Co-Working Timer Widget, Co-Working Tasklist Widget, Now Playing, Alerts, Wolfathon · Co-Working, Webcam (pinned), Audio, Co-Working Solo Video |
+| Be Right Back | Alerts, Audio, Be Right Back Video                                              |
+| Ending        | Audio, Ending Video                                                             |
 
-## Background and standby images
+### Cam is pre-pinned to the overlay frame
 
-Both the Background image and the Starting Soon / BRB video live in this folder:
+| Scene      | Source | Position | Size       | Mask                  |
+| ---------- | ------ | -------- | ---------- | --------------------- |
+| Co-Working | Webcam | 64, 136  | 1400 × 788 | `co-working-solo.png` |
+
+Add the Image Mask/Blend filter on the webcam (see `masks/README.md`) to
+round its corners into the frame.
+
+### Overlay videos
+
+Same rendered bundle as the Mini, synced to Google Drive:
 
 ```
-/Users/nathanialhenniges/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/MultiMedia Projects/Social Media/Twitch/Scenes Images
+/Users/nathanialhenniges/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/MultiMedia Projects/Social Media/Twitch/Overlays
 ```
 
-Point the Image / Media source at the file you want from that folder. This path
-is this Mac only (Google Drive mount); the Mac Mini has its own path.
+`01-starting-soon.mp4`, `04-co-working-solo.mp4`, `06-be-right-back.mp4`,
+`07-ending-stream.mp4`, `background.mp4` — all Loop ON. One bundle serves
+both Macs: drop a new bundle's `Overlays/` into that folder and every scene
+on every device updates at once.
 
 ## Notes
 
@@ -80,13 +114,15 @@ is this Mac only (Google Drive mount); the Mac Mini has its own path.
   you actually run. The generator (`make gen`) is just the starting seed.
 - Yellow (Screen) is reserved for when you add a Display Capture source.
 
-## Mac Mini (Mini Streaming collection)
+## Mac Mini (Mini Streaming layout)
 
-Import `devices/mac-mini/scenes/Mini-Streaming.json`. It is the cleaned-up
-version of the live rig: typo names fixed (`Co-workking Main Cam` ->
-`Main Cam`, `Co-Workng Video` -> `Co-Working Solo Video`), every item
-color-coded, and the old empty global `Wolfathon` group replaced with
-per-scene wrappers.
+Same deal: build by hand using the tables below; `make backup` stores what
+you built. This is the cleaned-up version of the live rig: typo names fixed
+(`Co-workking Main Cam` -> `Main Cam`, `Co-Workng Video` -> `Co-Working Solo
+Video`), every item color-coded, and the old empty global `Wolfathon` group
+replaced with per-scene wrappers. The generated
+`devices/mac-mini/scenes/Mini-Streaming.json` is the optional reference copy
+of this layout.
 
 ### Per-scene Wolfathon wrappers (the point of this layout)
 
@@ -114,14 +150,17 @@ second home.
 
 ### Scenes to sources (top = front)
 
+Opaque feeds (standby videos, cams, NDI) sit BELOW the widget/alert
+overlays, like the live rig — unhiding NDI must never blank chat/alerts.
+
 | Scene              | Sources (top to bottom)                                                        |
 | ------------------ | ------------------------------------------------------------------------------ |
-| Starting Soon      | Starting Soon Video, Now Playing, Alerts, Audio                                 |
-| Live               | PNG Tuber, NDI Source (hidden), Wolfathon · Live, Alerts, Audio, Background Video |
-| Co-Working [Solo]  | Main Cam, Now Playing, Wolfathon · Co-Working Solo, Alerts, Audio, Co-Working Solo Video |
-| Co-Working [Multi] | Main Cam, Second Cam, Now Playing, Wolfathon · Co-Working Dual, Alerts, Audio, Co-Working Dual Video |
-| Be Right Back      | Be Right Back Video, Alerts, Audio                                              |
-| Ending             | Ending Video, Audio                                                             |
+| Starting Soon      | Now Playing, Alerts, Audio, Starting Soon Video                                 |
+| Live               | Wolfathon · Live, Alerts, PNG Tuber, NDI Source (hidden), Audio, Background Video |
+| Co-Working [Solo]  | Co-Working Timer Widget, Co-Working Tasklist Widget, Now Playing, Alerts, Wolfathon · Co-Working Solo, Main Cam, Audio, Co-Working Solo Video |
+| Co-Working [Multi] | Co-Working Timer Widget, Co-Working Tasklist Widget, Now Playing, Alerts, Wolfathon · Co-Working Dual, Main Cam, Second Cam, Audio, Co-Working Dual Video |
+| Be Right Back      | Alerts, Audio, Be Right Back Video                                              |
+| Ending             | Audio, Ending Video                                                             |
 
 The Solo wrapper's contents: Wheel of Dares, Rewards (hidden), Rewards -
 Right, Timer.
