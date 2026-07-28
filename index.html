@@ -4,82 +4,186 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>OBS Setup Previewer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
+  /* Night-sky wolf theme — matches the stream overlays (navy + cerulean). */
   :root {
-    --bg:#0d1117; --panel:#161b22; --panel2:#1c2230; --line:#30363d;
-    --text:#e6edf3; --dim:#8b949e; --accent:#58a6ff;
+    --bg:#0a0f1e; --bg2:#0d1426; --panel:#111a30; --panel2:#0d1526;
+    --line:#223052; --line2:#2c3d66; --text:#e8eef7; --dim:#8b99b5;
+    --cer:#4fc3f7; --cer2:#58b6ff;
+    --dot-r:#FF5F57; --dot-a:#FEBC2E; --dot-g:#28C840;
+    --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
   }
   * { box-sizing:border-box; }
+  html { scrollbar-color:var(--line2) var(--bg); }
   body {
-    margin:0; font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
-    background:var(--bg); color:var(--text);
+    margin:0; color:var(--text);
+    font:15px/1.55 "Open Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:
+      radial-gradient(1100px 500px at 85% -10%, rgba(79,195,247,.10), transparent 60%),
+      radial-gradient(900px 420px at -10% 8%, rgba(88,101,242,.08), transparent 55%),
+      radial-gradient(1.2px 1.2px at 22% 34%, rgba(232,238,247,.35) 49%, transparent 51%),
+      radial-gradient(1.2px 1.2px at 68% 12%, rgba(232,238,247,.28) 49%, transparent 51%),
+      radial-gradient(1.4px 1.4px at 44% 78%, rgba(232,238,247,.22) 49%, transparent 51%),
+      radial-gradient(1px 1px at 90% 60%, rgba(232,238,247,.3) 49%, transparent 51%),
+      radial-gradient(rgba(79,195,247,.05) 1px, transparent 1.4px) 0 0/26px 26px,
+      var(--bg);
+    background-attachment:fixed;
+    min-height:100vh;
   }
+  h1,h2,h3 { font-family:"Montserrat","Open Sans",sans-serif; letter-spacing:-.3px; }
+
   header {
-    padding:20px 24px; border-bottom:1px solid var(--line);
-    position:sticky; top:0; background:var(--bg); z-index:5;
+    position:sticky; top:0; z-index:9;
+    padding:16px 24px 14px;
+    background:rgba(10,15,30,.86); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
   }
-  h1 { margin:0 0 4px; font-size:20px; }
-  .sub { color:var(--dim); font-size:13px; }
-  main { padding:24px; max-width:1100px; margin:0 auto; }
+  .hrow { display:flex; align-items:center; gap:18px; flex-wrap:wrap; max-width:1240px; margin:0 auto; }
+  h1 { margin:0; font-size:19px; font-weight:800; white-space:nowrap; }
+  h1 .paw { color:var(--cer); margin-right:6px; }
+  .sub { color:var(--dim); font-size:12.5px; flex-basis:100%; max-width:1240px; margin:2px auto 0; }
 
-  /* Legend */
-  .legend { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  /* Device switcher */
+  .tabs {
+    display:flex; background:var(--panel2); border:1px solid var(--line);
+    border-radius:10px; padding:3px; gap:3px;
+  }
+  .tabs button {
+    appearance:none; border:0; background:transparent; color:var(--dim);
+    font:600 13.5px "Open Sans",sans-serif; padding:7px 16px; border-radius:8px;
+    cursor:pointer; transition:color .15s, background .15s;
+  }
+  .tabs button:hover { color:var(--text); }
+  .tabs button.on {
+    background:linear-gradient(180deg, rgba(79,195,247,.22), rgba(79,195,247,.10));
+    color:var(--cer); box-shadow:inset 0 0 0 1px rgba(79,195,247,.35);
+  }
+
+  .legend { display:flex; flex-wrap:wrap; gap:6px; margin-left:auto; }
   .legend .key {
-    display:flex; align-items:center; gap:7px; background:var(--panel);
-    border:1px solid var(--line); border-radius:20px; padding:4px 12px 4px 8px; font-size:13px;
+    display:flex; align-items:center; gap:6px; background:var(--panel);
+    border:1px solid var(--line); border-radius:20px; padding:2px 10px 2px 7px;
+    font-size:11.5px; color:var(--dim);
   }
-  .dot { width:13px; height:13px; border-radius:50%; flex:none; }
+  .dot { width:10px; height:10px; border-radius:50%; flex:none; }
 
-  /* Device sections */
-  .device { margin-bottom:32px; }
-  .device > h2 { font-size:16px; border-bottom:1px solid var(--line); padding-bottom:8px; }
-  .count { color:var(--dim); font-weight:normal; font-size:13px; }
+  main { padding:26px 24px 80px; max-width:1240px; margin:0 auto; }
 
-  /* Divider scenes */
+  /* Collection section */
+  .device { margin-bottom:38px; }
+  .device[hidden] { display:none; }
+  .device > h2 {
+    font-size:15px; font-weight:800; margin:0 0 14px; padding-bottom:9px;
+    border-bottom:1px solid var(--line); display:flex; align-items:baseline; gap:10px;
+  }
+  .device > h2 .dev {
+    font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--cer);
+    background:rgba(79,195,247,.1); border:1px solid rgba(79,195,247,.3);
+    padding:2px 9px; border-radius:12px; font-family:"Open Sans",sans-serif;
+  }
+  .count { color:var(--dim); font-weight:400; font-size:12.5px; }
+
   .divider {
-    text-align:center; color:var(--dim); letter-spacing:2px; font-size:13px;
-    margin:20px 0 8px; text-transform:uppercase;
+    text-align:center; color:var(--dim); letter-spacing:3px; font-size:11px;
+    margin:22px 0 12px; text-transform:uppercase;
   }
 
-  /* Scene grid */
-  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; }
+  /* Scene cards = little macOS windows (like the overlay chips) */
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)); gap:16px; }
   .scene {
-    background:var(--panel); border:1px solid var(--line); border-radius:12px;
-    padding:14px 16px; border-left:5px solid var(--line);
+    background:linear-gradient(180deg, #131d36, var(--panel) 40%);
+    border:1px solid var(--line); border-radius:12px; overflow:hidden;
+    box-shadow:0 10px 26px rgba(0,0,0,.32);
   }
-  .scene.src { background:var(--panel2); border-style:dashed; }
-  .scene h3 { margin:0 0 2px; font-size:15px; display:flex; align-items:center; gap:8px; }
+  .scene.src { border-style:dashed; opacity:.92; }
+  .titlebar {
+    display:flex; align-items:center; gap:8px; padding:9px 12px;
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg, rgba(255,255,255,.045), transparent);
+  }
+  .winDots { display:flex; gap:5px; flex:none; }
+  .winDots i { width:9px; height:9px; border-radius:50%; display:block; }
+  .titlebar h3 { margin:0; font-size:13.5px; font-weight:700; letter-spacing:0; }
+  .titlebar .n { color:var(--dim); font-size:11px; margin-left:auto; white-space:nowrap; }
   .badge {
-    font-size:10px; letter-spacing:.5px; background:#3b2f00; color:#e3b341;
-    border-radius:5px; padding:1px 6px; text-transform:uppercase;
+    font-size:9px; letter-spacing:.8px; color:var(--cer);
+    border:1px solid rgba(79,195,247,.4); border-radius:4px; padding:0 5px;
+    text-transform:uppercase;
   }
-  .scene .meta { color:var(--dim); font-size:12px; margin-bottom:10px; }
-  ul.items { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
-  li.item {
-    display:flex; align-items:center; gap:9px; background:#0d1117;
-    border:1px solid var(--line); border-left:4px solid var(--line);
-    border-radius:7px; padding:6px 10px; font-size:13px;
-  }
-  li.item .type { color:var(--dim); font-size:11px; margin-left:auto; }
-  .empty { color:var(--dim); font-style:italic; font-size:13px; }
 
-  /* Drop zone / fallback */
-  #drop {
-    border:2px dashed var(--line); border-radius:12px; padding:26px; text-align:center;
-    color:var(--dim); margin-bottom:24px;
+  /* Layer list — styled like the OBS Sources panel (colored rows, folders) */
+  ul.items { list-style:none; margin:0; padding:10px 12px 12px; display:flex; flex-direction:column; gap:5px; }
+  ul.items ul { list-style:none; margin:0; padding:2px 8px 8px 26px; display:flex; flex-direction:column; gap:4px; }
+  li.item {
+    display:flex; align-items:center; gap:8px; background:var(--bg2);
+    border:1px solid var(--line); border-left:4px solid var(--line);
+    border-radius:7px; padding:5px 8px; font-size:12.5px; min-height:31px;
   }
-  #drop.hover { border-color:var(--accent); color:var(--text); }
+  li.folder { display:block; padding:0; }
+  li.folder > details > summary {
+    display:flex; align-items:center; gap:8px; padding:5px 8px; min-height:31px;
+    cursor:pointer; list-style:none; font-size:12.5px;
+  }
+  li.folder > details > summary::-webkit-details-marker { display:none; }
+  .arrow { flex:none; font-size:9px; color:var(--dim); transition:transform .15s; width:10px; }
+  details[open] > summary .arrow { transform:rotate(90deg); }
+  li.folder > details > summary:hover .cbtn { opacity:1; }
+  li.item .nm { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  li.item .type { color:var(--dim); font-size:10.5px; margin-left:auto; flex:none; }
+  .chip {
+    font:600 10px var(--mono); color:var(--cer); background:rgba(79,195,247,.08);
+    border:1px solid rgba(79,195,247,.25); border-radius:5px; padding:1px 6px;
+    cursor:pointer; flex:none; transition:background .15s;
+  }
+  .chip:hover { background:rgba(79,195,247,.2); }
+  .chip.hid { color:var(--dim); border-color:var(--line2); background:transparent; }
+  .cbtn {
+    appearance:none; border:0; background:transparent; color:var(--dim);
+    font-size:12px; cursor:pointer; padding:2px 4px; border-radius:5px; flex:none;
+    opacity:0; transition:opacity .12s, color .12s, background .12s;
+  }
+  li.item:hover .cbtn, .titlebar:hover .cbtn { opacity:1; }
+  .cbtn:hover { color:var(--cer); background:rgba(79,195,247,.12); }
+  .empty { color:var(--dim); font-style:italic; font-size:12.5px; padding:0 12px 12px; }
+
+  /* Drop zone */
+  #drop {
+    border:2px dashed var(--line2); border-radius:12px; padding:26px; text-align:center;
+    color:var(--dim); margin-bottom:26px; background:rgba(17,26,48,.5);
+  }
+  #drop.hover { border-color:var(--cer); color:var(--text); }
   #drop b { color:var(--text); }
-  code { background:var(--panel); padding:1px 6px; border-radius:5px; font-size:12px; }
-  .note { color:var(--dim); font-size:13px; }
-  a { color:var(--accent); }
+  code { background:var(--panel); border:1px solid var(--line); padding:1px 6px; border-radius:5px; font-size:12px; font-family:var(--mono); }
+  .note { color:var(--dim); font-size:12.5px; }
+  a { color:var(--cer2); }
+
+  /* Copy toast */
+  #toast {
+    position:fixed; left:50%; bottom:26px; transform:translate(-50%, 16px);
+    background:#132039; border:1px solid rgba(79,195,247,.45); color:var(--text);
+    padding:9px 16px; border-radius:10px; font-size:13px; z-index:99;
+    box-shadow:0 12px 30px rgba(0,0,0,.45); opacity:0; pointer-events:none;
+    transition:opacity .18s, transform .18s; max-width:80vw;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  #toast.show { opacity:1; transform:translate(-50%,0); }
+  #toast b { color:var(--cer); font-weight:700; }
 </style>
 </head>
 <body>
 <header>
-  <h1>OBS Setup Previewer</h1>
-  <div class="sub">Color-coded view of your scene collections. Colors come straight from OBS (<code>private_settings.color</code>).</div>
-  <div class="legend" id="legend"></div>
+  <div class="hrow">
+    <h1><span class="paw">&#128062;</span>OBS Setup Previewer</h1>
+    <div class="tabs" id="tabs"></div>
+    <div class="legend" id="legend"></div>
+  </div>
+  <div class="sub">
+    Click any <b>name</b>, <b>file chip</b>, or <b>&#x2398;</b> to copy it — build your scenes in OBS straight from this page.
+    Folders (<b>&#9654;</b>) open to show what's inside, like OBS groups. Colors come from OBS.
+  </div>
 </header>
 <main>
   <div id="drop">
@@ -89,6 +193,7 @@
   </div>
   <div id="out"></div>
 </main>
+<div id="toast"></div>
 
 <script>
 // Category legend — mirror of PALETTE in scripts/gen_scene_collection.py
@@ -97,11 +202,12 @@ const LEGEND = [
   ["#388BFD","Now Playing"], ["#BB8009","Screen"],
   ["#DA3633","Standby video"], ["#8B949E","Audio"], ["#6E7681","Background"],
 ];
-const DEVICES = ["macbook-pro","mac-mini"]; // add slugs here if you add a Mac
+const DEVICES = ["mac-mini","macbook-pro"]; // first = default tab; add slugs here if you add a Mac
 
 const TYPES = {
   scene:["Scene","▦"], browser_source:["Browser","◈"],
   av_capture_input:["Camera","●"], "macos-avcapture":["Camera","●"],
+  ndi_source:["NDI","◎"], "syphon-input":["Syphon","○"],
   screen_capture:["Screen","▣"], text_ft2_source:["Text","T"],
   coreaudio_input_capture:["Mic","♪"], coreaudio_output_capture:["Audio","♪"],
   sck_audio_capture:["App Audio","♪"],
@@ -116,32 +222,80 @@ function abgrToCss(v){
   const b=(u>>>16)&255, g=(u>>>8)&255, r=u&255;
   return `rgb(${r},${g},${b})`;
 }
-
-// OBS built-in "Color" swatches. Live rigs colour via these (private_settings
-// .color-preset = index, color = "") rather than a custom int, so decode them
-// too or preset-coloured collections show up blank. Index: 0 none, 1 custom,
-// 2-9 = the 8 swatches. Source: obs-studio OBSBasic_SceneItems.cpp bgColor map.
+// OBS built-in "Color" swatches (private_settings["color-preset"] index).
 const OBS_PRESET = {
   2:"#FF4444", 3:"#FFFF44", 4:"#44FF44", 5:"#44FFFF",
   6:"#4444FF", 7:"#FF44FF", 8:"#888888", 9:"#DDDDDD",
 };
-// Scene-item colour: a custom int wins, else the preset swatch, else null.
 function itemColor(ps){
   if(!ps) return null;
   return abgrToCss(ps.color) || OBS_PRESET[ps["color-preset"]] || null;
 }
-
 function typeInfo(id){ return TYPES[id] || TYPES[(id||"").replace(/_v\d+$/,"")] || [id||"?","•"]; }
-
-function renderLegend(){
-  document.getElementById("legend").innerHTML = LEGEND.map(([hex,label]) =>
-    `<span class="key"><span class="dot" style="background:${hex}"></span>${label}</span>`).join("");
-}
-
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;"); }
 function isDivider(name){ return /^[\s─—–\-]*(src)?[\s─—–\-]*$/i.test(name.replace(/\[|\]/g,"")); }
 
-// Render one scene collection object into a container element.
-function renderCollection(coll, host, title){
+// --- copy-to-clipboard with toast --------------------------------------------
+let toastT;
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.innerHTML = `<b>Copied</b> &nbsp;${esc(msg)}`;
+  t.classList.add("show");
+  clearTimeout(toastT); toastT = setTimeout(()=>t.classList.remove("show"), 1600);
+}
+async function copy(text){
+  try { await navigator.clipboard.writeText(text); }
+  catch(e){ // file:// / older engines fallback
+    const ta = document.createElement("textarea");
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    document.execCommand("copy"); ta.remove();
+  }
+  toast(text);
+}
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-copy]");
+  if(el) copy(el.getAttribute("data-copy"));
+});
+
+// col ("rgb(..)" or "#hex") -> translucent tint for OBS-style colored rows.
+function tint(col, a){
+  if(!col || col.startsWith("var")) return "transparent";
+  if(col.startsWith("#")){
+    const r=parseInt(col.slice(1,3),16), g=parseInt(col.slice(3,5),16), b=parseInt(col.slice(5,7),16);
+    return `rgba(${r},${g},${b},${a})`;
+  }
+  return col.replace("rgb(","rgba(").replace(")",`,${a})`);
+}
+
+// One source row, OBS Sources-panel style. Wrapper scenes ([src] blocks the
+// scene pulls in) render as expandable FOLDERS showing their contents, like
+// OBS groups; everything is click-to-copy.
+function rowHtml(it, byName){
+  const ref = byName[it.name];
+  const isFolder = ref && ref.id === "scene";
+  const [tlabel,ticon] = isFolder ? ["Group","▤"] : typeInfo(ref ? ref.id : "");
+  const col = itemColor(it.private_settings) || "var(--line2)";
+  const bg = tint(col, .13);
+  let chip = it.visible === false ? `<span class="chip hid" title="starts hidden">hidden</span>` : "";
+  const path = ref && ref.settings && (ref.settings.local_file || ref.settings.file);
+  const pchip = path ? `<span class="chip" data-copy="${esc(path)}" title="${esc(path)} — click to copy full path">${esc(path.split("/").pop())}</span>` : "";
+  const core = `<span style="color:${col};flex:none">${ticon}</span>
+    <span class="nm" data-copy="${esc(it.name)}" style="cursor:pointer" title="click to copy name">${esc(it.name)}</span>
+    ${chip}${pchip}
+    <span class="type">${tlabel}</span>
+    <button class="cbtn" data-copy="${esc(it.name)}" title="copy source name">⎘</button>`;
+  if(isFolder){
+    const kids = ((ref.settings && ref.settings.items) || []).slice().reverse()
+      .map(k => rowHtml(k, byName)).join("");
+    return `<li class="item folder" style="border-left-color:${col};background:${bg}">
+      <details open><summary><span class="arrow">▶</span>${core}</summary>
+      <ul>${kids}</ul></details></li>`;
+  }
+  return `<li class="item" style="border-left-color:${col};background:${bg}">${core}</li>`;
+}
+
+// --- render one scene collection ---------------------------------------------
+function renderCollection(coll, host, title, slug){
   const byName = {};
   (coll.sources||[]).forEach(s => byName[s.name] = s);
   const order = (coll.scene_order||[]).map(o => o.name);
@@ -151,37 +305,63 @@ function renderCollection(coll, host, title){
 
   const wrap = document.createElement("div");
   wrap.className = "device";
-  wrap.innerHTML = `<h2>${title} <span class="count">— ${mains.length} scenes, ${srcs.length} building blocks</span></h2>`;
+  wrap.dataset.slug = slug || "dropped";
+  wrap.innerHTML = `<h2><span class="dev">${esc(slug ? slug.replace("-"," ") : "dropped file")}</span>
+    ${esc(title)} <span class="count">— ${mains.length} scenes, ${srcs.length} building blocks</span></h2>`;
 
   let grid = null;
   order.forEach(name => {
     const s = byName[name];
     if(!s || s.id !== "scene") return;
     if(isDivider(name)){
-      wrap.insertAdjacentHTML("beforeend", `<div class="divider">${name || "———"}</div>`);
+      wrap.insertAdjacentHTML("beforeend", `<div class="divider">building blocks</div>`);
       grid = null; return;
     }
     if(!grid){ grid = document.createElement("div"); grid.className = "grid"; wrap.appendChild(grid); }
-    // OBS stores scene items bottom -> top (array first = bottom layer);
-    // show them top -> bottom like the OBS Sources panel.
+    // OBS stores scene items bottom -> top; show top -> bottom like the panel.
     const items = ((s.settings && s.settings.items) || []).slice().reverse();
     const isSrc = name.startsWith("[src]");
-    const rows = items.length ? items.map(it => {
-      const ref = byName[it.name];
-      const [tlabel,ticon] = typeInfo(ref ? ref.id : "");
-      const col = itemColor(it.private_settings) || "var(--line)";
-      return `<li class="item" style="border-left-color:${col}">
-        <span style="color:${col}">${ticon}</span>${it.name}
-        <span class="type">${tlabel}</span></li>`;
-    }).join("") : `<div class="empty">empty</div>`;
+    const rows = items.length ? items.map(it => rowHtml(it, byName)).join("") : "";
     grid.insertAdjacentHTML("beforeend", `
       <div class="scene ${isSrc?"src":""}">
-        <h3>${name} ${isSrc?'<span class="badge">src</span>':""}</h3>
-        <div class="meta">${items.length} source${items.length===1?"":"s"}</div>
-        <ul class="items">${rows}</ul>
+        <div class="titlebar">
+          <span class="winDots"><i style="background:var(--dot-r)"></i><i style="background:var(--dot-a)"></i><i style="background:var(--dot-g)"></i></span>
+          <h3 data-copy="${esc(name)}" style="cursor:pointer" title="click to copy scene name">${esc(name)}</h3>
+          ${isSrc?'<span class="badge">src</span>':""}
+          <span class="n">${items.length} source${items.length===1?"":"s"}</span>
+          <button class="cbtn" data-copy="${esc(name)}" title="copy scene name">⎘</button>
+        </div>
+        ${items.length ? `<ul class="items">${rows}</ul>` : `<div class="empty">empty</div>`}
       </div>`);
   });
   host.appendChild(wrap);
+  renderTabs();
+}
+
+// --- device tabs --------------------------------------------------------------
+function renderTabs(){
+  const slugs = [...new Set([...document.querySelectorAll(".device")].map(d => d.dataset.slug))];
+  const cur = localStorage.getItem("obs-prev-tab");
+  const tabs = document.getElementById("tabs");
+  const NAMES = {"dropped":"Dropped","macbook-pro":"MacBook Pro","mac-mini":"Mac Mini"};
+  const label = s => NAMES[s] || s.split("-").map(w => w[0].toUpperCase()+w.slice(1)).join(" ");
+  tabs.innerHTML = slugs.map(s =>
+    `<button data-tab="${s}">${label(s)}</button>`).join("");
+  applyTab(slugs.includes(cur) ? cur : slugs[0]);   // DEVICES[0] = default
+}
+function applyTab(tab){
+  if(!tab) return;
+  localStorage.setItem("obs-prev-tab", tab);
+  document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
+  document.querySelectorAll(".device").forEach(d => d.hidden = (d.dataset.slug !== tab));
+}
+document.getElementById("tabs").addEventListener("click", e => {
+  const b = e.target.closest("button"); if(b) applyTab(b.dataset.tab);
+});
+
+function renderLegend(){
+  document.getElementById("legend").innerHTML = LEGEND.map(([hex,label]) =>
+    `<span class="key"><span class="dot" style="background:${hex}"></span>${label}</span>`).join("");
 }
 
 async function autoLoad(){
@@ -192,7 +372,7 @@ async function autoLoad(){
       const idx = await (await fetch(`devices/${slug}/index.json`, {cache:"no-store"})).json();
       for(const rel of (idx.scenes||[])){
         const coll = await (await fetch(`devices/${slug}/${rel}`, {cache:"no-store"})).json();
-        renderCollection(coll, out, `${idx.label||slug} — ${coll.name||rel}`);
+        renderCollection(coll, out, coll.name || rel, slug);
         loadedAny = true;
       }
     } catch(e){ /* device not saved yet, or file:// — ignore */ }
@@ -206,7 +386,7 @@ const drop = document.getElementById("drop");
 ["dragleave","drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("hover"); }));
 drop.addEventListener("drop", async e => {
   for(const f of e.dataTransfer.files){
-    try { renderCollection(JSON.parse(await f.text()), document.getElementById("out"), f.name); }
+    try { renderCollection(JSON.parse(await f.text()), document.getElementById("out"), f.name, "dropped"); }
     catch(err){ alert(`${f.name}: not a valid OBS scene JSON`); }
   }
 });
