@@ -74,7 +74,15 @@ wiped to `""` before anything reaches git:
 Only the Downloads `.zip` keeps them. Do not weaken this in `sanitize.py`.
 
 ### 3. Previewer (`index.html`, repo root)
-Self-contained (inline CSS+JS, no build). Also the GitHub Pages site — Pages
+Self-contained (inline CSS+JS, no build; the only external ref is a Google
+Fonts link that degrades to system fonts offline). Device tabs (Mac Mini
+default / MacBook Pro, plus Dropped for drag-dropped files; persisted in
+localStorage), click-to-copy on every
+scene/source name + media path chip (toast feedback), and OBS-Sources-panel
+styling: color-tinted rows, and `[src]` wrapper references render as
+expandable folders (native `<details>`) showing their contents inline, like
+OBS groups. NO layout/position preview — deliberately sources-and-folders
+only, per user. Also the GitHub Pages site — Pages
 serves the repo root, so the previewer `fetch()`es `devices/<slug>/index.json`
 and the scene files by relative path. A drag-drop fallback handles `file://`
 (where fetch is blocked). Renders scenes in `scene_order`, coloring each item
