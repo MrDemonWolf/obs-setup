@@ -76,6 +76,8 @@ Full docs live in [`docs/`](docs/):
 - [Color coding](docs/color-coding.md) - the palette and what each
   color means.
 - [Audio levels](docs/audio-levels.md) - target levels per source.
+- [Stinger transition setup](docs/stinger-setup.md) - configure the
+  branded scene-cut wipe from zero on each Mac.
 - [OBS JSON reference](docs/obs-json-reference.md) - file format and
   the color field.
 - [Mask install steps](masks/README.md) - apply the rounded webcam

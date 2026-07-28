@@ -6,13 +6,16 @@
       "name": "Starting Soon"
     },
     {
-      "name": "Be Right Back"
-    },
-    {
       "name": "Live"
     },
     {
       "name": "Co-Working"
+    },
+    {
+      "name": "Be Right Back"
+    },
+    {
+      "name": "Ending"
     },
     {
       "name": "──────"
@@ -21,10 +24,13 @@
       "name": "[src] Alerts"
     },
     {
-      "name": "[src] Wolfathon"
+      "name": "[src] Audio"
     },
     {
-      "name": "[src] Audio"
+      "name": "[src] Wolfathon · Live"
+    },
+    {
+      "name": "[src] Wolfathon · Co-Working"
     }
   ],
   "name": "MBP Streaming",
@@ -32,10 +38,38 @@
     {
       "name": "Webcam",
       "uuid": "c42399d7-6f5b-57f2-a7e9-0858915333ec",
-      "id": "av_capture_input",
-      "versioned_id": "av_capture_input",
+      "id": "macos-avcapture",
+      "versioned_id": "macos-avcapture",
       "settings": {},
       "mixers": 255,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
+      "name": "Chat Overlay",
+      "uuid": "f5ba9a01-efbd-5bf0-ab20-5f89de358f61",
+      "id": "browser_source",
+      "versioned_id": "browser_source",
+      "settings": {
+        "url": "",
+        "width": 1920,
+        "height": 1080
+      },
+      "mixers": 0,
       "sync": 0,
       "flags": 0,
       "volume": 1.0,
@@ -61,9 +95,10 @@
       "settings": {
         "url": "",
         "width": 1920,
-        "height": 1080
+        "height": 1080,
+        "reroute_audio": true
       },
-      "mixers": 0,
+      "mixers": 255,
       "sync": 0,
       "flags": 0,
       "volume": 1.0,
@@ -77,7 +112,7 @@
       "hotkeys": {},
       "deinterlace_mode": 0,
       "deinterlace_field_order": 0,
-      "monitoring_type": 0,
+      "monitoring_type": 2,
       "private_settings": {},
       "filters": []
     },
@@ -89,9 +124,10 @@
       "settings": {
         "url": "",
         "width": 1920,
-        "height": 1080
+        "height": 1080,
+        "reroute_audio": true
       },
-      "mixers": 0,
+      "mixers": 255,
       "sync": 0,
       "flags": 0,
       "volume": 1.0,
@@ -105,7 +141,7 @@
       "hotkeys": {},
       "deinterlace_mode": 0,
       "deinterlace_field_order": 0,
-      "monitoring_type": 0,
+      "monitoring_type": 2,
       "private_settings": {},
       "filters": []
     },
@@ -166,8 +202,92 @@
       "filters": []
     },
     {
+      "name": "Rewards - Right",
+      "uuid": "525963a0-c9f8-5034-aacf-7877bd2085a9",
+      "id": "browser_source",
+      "versioned_id": "browser_source",
+      "settings": {
+        "url": "",
+        "width": 1920,
+        "height": 1080
+      },
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
       "name": "Timer",
       "uuid": "de313b39-f340-577f-a7d1-2b33ee9da250",
+      "id": "browser_source",
+      "versioned_id": "browser_source",
+      "settings": {
+        "url": "",
+        "width": 1920,
+        "height": 1080
+      },
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
+      "name": "Co-Working Timer Widget",
+      "uuid": "bdfd8a84-c892-5d80-a83a-d34172f27139",
+      "id": "browser_source",
+      "versioned_id": "browser_source",
+      "settings": {
+        "url": "",
+        "width": 1920,
+        "height": 1080
+      },
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
+      "name": "Co-Working Tasklist Widget",
+      "uuid": "0ce4dfc7-1227-5871-892d-9a7c89606579",
       "id": "browser_source",
       "versioned_id": "browser_source",
       "settings": {
@@ -255,7 +375,7 @@
       "settings": {
         "application": "com.google.Chrome"
       },
-      "mixers": 255,
+      "mixers": 253,
       "sync": 0,
       "flags": 0,
       "volume": 1.0,
@@ -281,7 +401,7 @@
       "settings": {
         "application": "com.apple.Music"
       },
-      "mixers": 255,
+      "mixers": 253,
       "sync": 0,
       "flags": 0,
       "volume": 1.0,
@@ -305,7 +425,7 @@
       "id": "ffmpeg_source",
       "versioned_id": "ffmpeg_source",
       "settings": {
-        "local_file": "/Users/nathanialhenniges/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/MultiMedia Projects/Social Media/Twitch/Scenes Images/",
+        "local_file": "/Users/nathanialhenniges/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/MultiMedia Projects/Social Media/Twitch/Overlays/01-starting-soon.mp4",
         "looping": true
       },
       "mixers": 255,
@@ -332,7 +452,7 @@
       "id": "ffmpeg_source",
       "versioned_id": "ffmpeg_source",
       "settings": {
-        "local_file": "/Users/nathanialhenniges/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/MultiMedia Projects/Social Media/Twitch/Scenes Images/",
+        "local_file": "/Users/nathanialhenniges/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/MultiMedia Projects/Social Media/Twitch/Overlays/06-be-right-back.mp4",
         "looping": true
       },
       "mixers": 255,
@@ -354,14 +474,69 @@
       "filters": []
     },
     {
-      "name": "Background",
-      "uuid": "b8a202ab-8394-51c2-85b6-9f960c6dc9df",
-      "id": "image_source",
-      "versioned_id": "image_source",
+      "name": "Ending Video",
+      "uuid": "a7e90b12-960d-5dfd-8cc4-3f3158496d03",
+      "id": "ffmpeg_source",
+      "versioned_id": "ffmpeg_source",
       "settings": {
-        "file": "/Users/nathanialhenniges/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/MultiMedia Projects/Social Media/Twitch/Scenes Images/"
+        "local_file": "/Users/nathanialhenniges/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/MultiMedia Projects/Social Media/Twitch/Overlays/07-ending-stream.mp4",
+        "looping": true
       },
-      "mixers": 0,
+      "mixers": 255,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
+      "name": "Background Video",
+      "uuid": "0dcdea4b-2dd5-56a8-97ed-0bbe1945fe59",
+      "id": "ffmpeg_source",
+      "versioned_id": "ffmpeg_source",
+      "settings": {
+        "local_file": "/Users/nathanialhenniges/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/MultiMedia Projects/Social Media/Twitch/Overlays/background.mp4",
+        "looping": true
+      },
+      "mixers": 255,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
+      "name": "Co-Working Solo Video",
+      "uuid": "ee716ed7-b175-5bfb-86ed-66f3e791da26",
+      "id": "ffmpeg_source",
+      "versioned_id": "ffmpeg_source",
+      "settings": {
+        "local_file": "/Users/nathanialhenniges/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/MultiMedia Projects/Social Media/Twitch/Overlays/04-co-working-solo.mp4",
+        "looping": true
+      },
+      "mixers": 255,
       "sync": 0,
       "flags": 0,
       "volume": 1.0,
@@ -385,7 +560,7 @@
       "id": "scene",
       "versioned_id": "scene",
       "settings": {
-        "id_counter": 2,
+        "id_counter": 3,
         "custom_size": false,
         "items": [
           {
@@ -469,121 +644,10 @@
               "color": -1747063,
               "color-preset": 0
             }
-          }
-        ]
-      },
-      "mixers": 0,
-      "sync": 0,
-      "flags": 0,
-      "volume": 1.0,
-      "balance": 0.5,
-      "enabled": true,
-      "muted": false,
-      "push-to-mute": false,
-      "push-to-mute-delay": 0,
-      "push-to-talk": false,
-      "push-to-talk-delay": 0,
-      "hotkeys": {},
-      "deinterlace_mode": 0,
-      "deinterlace_field_order": 0,
-      "monitoring_type": 0,
-      "private_settings": {},
-      "filters": []
-    },
-    {
-      "name": "[src] Wolfathon",
-      "uuid": "0f7c9363-9a46-543a-8284-700b17b1b65f",
-      "id": "scene",
-      "versioned_id": "scene",
-      "settings": {
-        "id_counter": 3,
-        "custom_size": false,
-        "items": [
-          {
-            "name": "Timer",
-            "source_uuid": "de313b39-f340-577f-a7d1-2b33ee9da250",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 1,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -5857761,
-              "color-preset": 0
-            }
           },
           {
-            "name": "Rewards",
-            "source_uuid": "863fe977-7633-51b4-9e70-35fc344ee32a",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 2,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -5857761,
-              "color-preset": 0
-            }
-          },
-          {
-            "name": "Wheel of Dares",
-            "source_uuid": "88c3ec1d-759c-56b0-aac6-d482013f989b",
+            "name": "Chat Overlay",
+            "source_uuid": "f5ba9a01-efbd-5bf0-ab20-5f89de358f61",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -618,7 +682,7 @@
               "duration": 0
             },
             "private_settings": {
-              "color": -5857761,
+              "color": -1747063,
               "color-preset": 0
             }
           }
@@ -795,17 +859,17 @@
       "filters": []
     },
     {
-      "name": "Starting Soon",
-      "uuid": "3a73de18-ff8a-5728-9bcc-c7eeec26f6e4",
+      "name": "[src] Wolfathon · Live",
+      "uuid": "cc72213f-b5bd-5b6f-82aa-194a1e6b244f",
       "id": "scene",
       "versioned_id": "scene",
       "settings": {
-        "id_counter": 4,
+        "id_counter": 3,
         "custom_size": false,
         "items": [
           {
-            "name": "Background",
-            "source_uuid": "b8a202ab-8394-51c2-85b6-9f960c6dc9df",
+            "name": "Timer",
+            "source_uuid": "de313b39-f340-577f-a7d1-2b33ee9da250",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -840,13 +904,13 @@
               "duration": 0
             },
             "private_settings": {
-              "color": -8292754,
+              "color": -5857761,
               "color-preset": 0
             }
           },
           {
-            "name": "[src] Audio",
-            "source_uuid": "804756b4-cd04-59bf-a168-48be5d5710ec",
+            "name": "Rewards",
+            "source_uuid": "863fe977-7633-51b4-9e70-35fc344ee32a",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -881,13 +945,13 @@
               "duration": 0
             },
             "private_settings": {
-              "color": -6384501,
+              "color": -5857761,
               "color-preset": 0
             }
           },
           {
-            "name": "[src] Alerts",
-            "source_uuid": "efe41f71-b245-59b7-9cd7-d1fbfe668039",
+            "name": "Wheel of Dares",
+            "source_uuid": "88c3ec1d-759c-56b0-aac6-d482013f989b",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -922,10 +986,232 @@
               "duration": 0
             },
             "private_settings": {
-              "color": -1747063,
+              "color": -5857761,
+              "color-preset": 0
+            }
+          }
+        ]
+      },
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
+      "name": "[src] Wolfathon · Co-Working",
+      "uuid": "43b61fdf-d97d-53de-8965-5700881091ad",
+      "id": "scene",
+      "versioned_id": "scene",
+      "settings": {
+        "id_counter": 4,
+        "custom_size": false,
+        "items": [
+          {
+            "name": "Timer",
+            "source_uuid": "de313b39-f340-577f-a7d1-2b33ee9da250",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 1,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -5857761,
               "color-preset": 0
             }
           },
+          {
+            "name": "Rewards - Right",
+            "source_uuid": "525963a0-c9f8-5034-aacf-7877bd2085a9",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 2,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -5857761,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "Rewards",
+            "source_uuid": "863fe977-7633-51b4-9e70-35fc344ee32a",
+            "visible": false,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 3,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -5857761,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "Wheel of Dares",
+            "source_uuid": "88c3ec1d-759c-56b0-aac6-d482013f989b",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 4,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -5857761,
+              "color-preset": 0
+            }
+          }
+        ]
+      },
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
+      "name": "Starting Soon",
+      "uuid": "3a73de18-ff8a-5728-9bcc-c7eeec26f6e4",
+      "id": "scene",
+      "versioned_id": "scene",
+      "settings": {
+        "id_counter": 4,
+        "custom_size": false,
+        "items": [
           {
             "name": "Starting Soon Video",
             "source_uuid": "2d9a5ca2-70a8-5d8d-9f51-8557c2c785af",
@@ -951,76 +1237,6 @@
             "crop_top": 0,
             "crop_right": 0,
             "crop_bottom": 0,
-            "id": 4,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -13420838,
-              "color-preset": 0
-            }
-          }
-        ]
-      },
-      "mixers": 0,
-      "sync": 0,
-      "flags": 0,
-      "volume": 1.0,
-      "balance": 0.5,
-      "enabled": true,
-      "muted": false,
-      "push-to-mute": false,
-      "push-to-mute-delay": 0,
-      "push-to-talk": false,
-      "push-to-talk-delay": 0,
-      "hotkeys": {},
-      "deinterlace_mode": 0,
-      "deinterlace_field_order": 0,
-      "monitoring_type": 0,
-      "private_settings": {},
-      "filters": []
-    },
-    {
-      "name": "Be Right Back",
-      "uuid": "71e5fb5b-1688-5fbe-bd47-f836eae4c050",
-      "id": "scene",
-      "versioned_id": "scene",
-      "settings": {
-        "id_counter": 4,
-        "custom_size": false,
-        "items": [
-          {
-            "name": "Background",
-            "source_uuid": "b8a202ab-8394-51c2-85b6-9f960c6dc9df",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
             "id": 1,
             "group_item_backup": false,
             "scale_filter": "disable",
@@ -1033,7 +1249,7 @@
               "duration": 0
             },
             "private_settings": {
-              "color": -8292754,
+              "color": -13420838,
               "color-preset": 0
             }
           },
@@ -1120,8 +1336,8 @@
             }
           },
           {
-            "name": "Be Right Back Video",
-            "source_uuid": "dd587f79-62ec-552f-aaec-866d7c5705ab",
+            "name": "Now Playing",
+            "source_uuid": "ff0914b7-1b4a-5ccf-9e39-fdaee81c201f",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -1156,7 +1372,7 @@
               "duration": 0
             },
             "private_settings": {
-              "color": -13420838,
+              "color": -160968,
               "color-preset": 0
             }
           }
@@ -1186,12 +1402,12 @@
       "id": "scene",
       "versioned_id": "scene",
       "settings": {
-        "id_counter": 6,
+        "id_counter": 5,
         "custom_size": false,
         "items": [
           {
-            "name": "Background",
-            "source_uuid": "b8a202ab-8394-51c2-85b6-9f960c6dc9df",
+            "name": "Background Video",
+            "source_uuid": "0dcdea4b-2dd5-56a8-97ed-0bbe1945fe59",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -1272,8 +1488,8 @@
             }
           },
           {
-            "name": "[src] Alerts",
-            "source_uuid": "efe41f71-b245-59b7-9cd7-d1fbfe668039",
+            "name": "Webcam",
+            "source_uuid": "c42399d7-6f5b-57f2-a7e9-0858915333ec",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -1286,11 +1502,11 @@
               "y": 1.0
             },
             "align": 5,
-            "bounds_type": 0,
+            "bounds_type": 2,
             "bounds_align": 0,
             "bounds": {
-              "x": 0.0,
-              "y": 0.0
+              "x": 1920.0,
+              "y": 1080.0
             },
             "crop_left": 0,
             "crop_top": 0,
@@ -1308,13 +1524,13 @@
               "duration": 0
             },
             "private_settings": {
-              "color": -1747063,
+              "color": -12345298,
               "color-preset": 0
             }
           },
           {
-            "name": "[src] Wolfathon",
-            "source_uuid": "0f7c9363-9a46-543a-8284-700b17b1b65f",
+            "name": "[src] Alerts",
+            "source_uuid": "efe41f71-b245-59b7-9cd7-d1fbfe668039",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -1349,13 +1565,13 @@
               "duration": 0
             },
             "private_settings": {
-              "color": -5857761,
+              "color": -1747063,
               "color-preset": 0
             }
           },
           {
-            "name": "Now Playing",
-            "source_uuid": "ff0914b7-1b4a-5ccf-9e39-fdaee81c201f",
+            "name": "[src] Wolfathon · Live",
+            "source_uuid": "cc72213f-b5bd-5b6f-82aa-194a1e6b244f",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -1390,48 +1606,7 @@
               "duration": 0
             },
             "private_settings": {
-              "color": -160968,
-              "color-preset": 0
-            }
-          },
-          {
-            "name": "Webcam",
-            "source_uuid": "c42399d7-6f5b-57f2-a7e9-0858915333ec",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 6,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -12345298,
+              "color": -5857761,
               "color-preset": 0
             }
           }
@@ -1461,12 +1636,12 @@
       "id": "scene",
       "versioned_id": "scene",
       "settings": {
-        "id_counter": 6,
+        "id_counter": 8,
         "custom_size": false,
         "items": [
           {
-            "name": "Background",
-            "source_uuid": "b8a202ab-8394-51c2-85b6-9f960c6dc9df",
+            "name": "Co-Working Solo Video",
+            "source_uuid": "ee716ed7-b175-5bfb-86ed-66f3e791da26",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -1502,6 +1677,363 @@
             },
             "private_settings": {
               "color": -8292754,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "[src] Audio",
+            "source_uuid": "804756b4-cd04-59bf-a168-48be5d5710ec",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 2,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -6384501,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "Webcam",
+            "source_uuid": "c42399d7-6f5b-57f2-a7e9-0858915333ec",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 64.0,
+              "y": 136.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 2,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 1400.0,
+              "y": 788.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 3,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -12345298,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "[src] Wolfathon · Co-Working",
+            "source_uuid": "43b61fdf-d97d-53de-8965-5700881091ad",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 4,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -5857761,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "[src] Alerts",
+            "source_uuid": "efe41f71-b245-59b7-9cd7-d1fbfe668039",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 5,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -1747063,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "Now Playing",
+            "source_uuid": "ff0914b7-1b4a-5ccf-9e39-fdaee81c201f",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 6,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -160968,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "Co-Working Tasklist Widget",
+            "source_uuid": "0ce4dfc7-1227-5871-892d-9a7c89606579",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 7,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -5857761,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "Co-Working Timer Widget",
+            "source_uuid": "bdfd8a84-c892-5d80-a83a-d34172f27139",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 8,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -5857761,
+              "color-preset": 0
+            }
+          }
+        ]
+      },
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
+      "name": "Be Right Back",
+      "uuid": "71e5fb5b-1688-5fbe-bd47-f836eae4c050",
+      "id": "scene",
+      "versioned_id": "scene",
+      "settings": {
+        "id_counter": 3,
+        "custom_size": false,
+        "items": [
+          {
+            "name": "Be Right Back Video",
+            "source_uuid": "dd587f79-62ec-552f-aaec-866d7c5705ab",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 1,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -13420838,
               "color-preset": 0
             }
           },
@@ -1586,10 +2118,39 @@
               "color": -1747063,
               "color-preset": 0
             }
-          },
+          }
+        ]
+      },
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
+      "name": "Ending",
+      "uuid": "7407b25f-2247-5dd7-830f-d8d62656b27b",
+      "id": "scene",
+      "versioned_id": "scene",
+      "settings": {
+        "id_counter": 2,
+        "custom_size": false,
+        "items": [
           {
-            "name": "[src] Wolfathon",
-            "source_uuid": "0f7c9363-9a46-543a-8284-700b17b1b65f",
+            "name": "Ending Video",
+            "source_uuid": "a7e90b12-960d-5dfd-8cc4-3f3158496d03",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -1612,7 +2173,7 @@
             "crop_top": 0,
             "crop_right": 0,
             "crop_bottom": 0,
-            "id": 4,
+            "id": 1,
             "group_item_backup": false,
             "scale_filter": "disable",
             "blend_method": "default",
@@ -1624,13 +2185,13 @@
               "duration": 0
             },
             "private_settings": {
-              "color": -5857761,
+              "color": -13420838,
               "color-preset": 0
             }
           },
           {
-            "name": "Now Playing",
-            "source_uuid": "ff0914b7-1b4a-5ccf-9e39-fdaee81c201f",
+            "name": "[src] Audio",
+            "source_uuid": "804756b4-cd04-59bf-a168-48be5d5710ec",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -1653,7 +2214,7 @@
             "crop_top": 0,
             "crop_right": 0,
             "crop_bottom": 0,
-            "id": 5,
+            "id": 2,
             "group_item_backup": false,
             "scale_filter": "disable",
             "blend_method": "default",
@@ -1665,48 +2226,7 @@
               "duration": 0
             },
             "private_settings": {
-              "color": -160968,
-              "color-preset": 0
-            }
-          },
-          {
-            "name": "Webcam",
-            "source_uuid": "c42399d7-6f5b-57f2-a7e9-0858915333ec",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 6,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -12345298,
+              "color": -6384501,
               "color-preset": 0
             }
           }

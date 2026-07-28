@@ -20,7 +20,7 @@ stable color, but on your rig you just click the swatch.
 | **Cyan**    | Wolfathon widgets (Wheel of Dares / Rewards / Timer) | `#1F9EA6` | `0xFFA69E1F` |
 | **Blue**    | Now Playing (WolfWave) | `#388BFD` | `0xFFFD8B38`            |
 | **Yellow**  | Screen / display capture (when added) | `#BB8009` | `0xFF0980BB` |
-| **Red**     | Standby / overlay video (Starting Soon / BRB / Ending / bg) | `#DA3633` | `0xFF3336DA` |
+| **Red**     | Standby videos (Starting Soon / BRB / Ending) | `#DA3633` | `0xFF3336DA` |
 | **White**   | Audio Group (Discord / Google Chrome / Apple Music) | `#8B949E` | `0xFF9E948B` |
 | **Gray**    | Background image / overlay-frame videos | `#6E7681`  | `0xFF81766E` |
 
