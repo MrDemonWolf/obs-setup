@@ -45,11 +45,12 @@ PALETTE = {
     "background": "#6E7681",  # gray (dark) - background / overlay-frame videos
 }
 
-# Google Drive media roots (this user's Macs; not portable).
+# Google Drive media root (this user's Macs; not portable). BOTH devices point
+# at the same rendered overlay bundle — drop a new bundle's Overlays/ into the
+# Drive folder and every scene on every Mac updates at once.
 _DRIVE = ("/Users/nathanialhenniges/Library/CloudStorage/"
           "GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/"
           "MultiMedia Projects/Social Media/Twitch")
-SCENES_IMAGES = _DRIVE + "/Scenes Images"   # MacBook Pro standby/background images
 OVERLAY_VIDEOS = _DRIVE + "/Overlays"       # rendered overlay bundle videos
 
 
@@ -74,6 +75,12 @@ def bs(w=1920, h=1080):
 # exactly that box (16:9 into 16:9 = exact fit) — used to pin cams into the
 # overlay cam frames (coords must match masks/gen_masks.py + the bundle README).
 
+# MacBook Pro (portable rig) — mirrors the Mac Mini's scene flow (same scene
+# names, same wrapper pattern, same overlay videos) so both Macs stream with
+# the same muscle memory, adapted to what travels: ONE webcam (no NDI, no
+# PNG Tuber, no second cam), so Live fronts the webcam and there is a single
+# Co-Working scene (the solo layout). Import does NOT touch a running OBS —
+# it lands as a separate scene collection you switch to.
 MACBOOK_PRO = {
     "slug": "macbook-pro",
     "label": "MacBook Pro",
@@ -82,17 +89,32 @@ MACBOOK_PRO = {
     "current": "Starting Soon",
     # Leaf sources (the real inputs). browser urls empty -> paste in OBS.
     "leaves": [
-        {"name": "Webcam", "id": "av_capture_input", "cat": "camera",
+        # OBS 32 macOS Video Capture id (matches the live MBP rig; the older
+        # av_capture_input id auto-migrates anyway).
+        {"name": "Webcam", "id": "macos-avcapture", "cat": "camera",
          "settings": {}},
+        # Widgets (browser). URLs empty = paste tokens in OBS after import.
+        {"name": "Chat Overlay", "id": "browser_source", "cat": "alerts",
+         "settings": bs()},
+        # Alert widgets carry their own audio: reroute it into the OBS mixer,
+        # all tracks, Monitor & Output (you hear alerts) — like the live rig.
         {"name": "Sound Alerts", "id": "browser_source", "cat": "alerts",
-         "settings": bs()},
+         "settings": {**bs(), "reroute_audio": True},
+         "mixers": 255, "monitoring_type": 2},
         {"name": "Twitch Alerts", "id": "browser_source", "cat": "alerts",
-         "settings": bs()},
+         "settings": {**bs(), "reroute_audio": True},
+         "mixers": 255, "monitoring_type": 2},
         {"name": "Wheel of Dares", "id": "browser_source", "cat": "widgets",
          "settings": bs()},
         {"name": "Rewards", "id": "browser_source", "cat": "widgets",
          "settings": bs()},
+        {"name": "Rewards - Right", "id": "browser_source", "cat": "widgets",
+         "settings": bs()},
         {"name": "Timer", "id": "browser_source", "cat": "widgets",
+         "settings": bs()},
+        {"name": "Co-Working Timer Widget", "id": "browser_source", "cat": "widgets",
+         "settings": bs()},
+        {"name": "Co-Working Tasklist Widget", "id": "browser_source", "cat": "widgets",
          "settings": bs()},
         {"name": "Now Playing", "id": "browser_source", "cat": "nowplaying",
          "settings": bs()},
@@ -101,40 +123,87 @@ MACBOOK_PRO = {
         # in OBS; `application` is the app bundle id.
         {"name": "Discord", "id": "sck_audio_capture", "cat": "audio",
          "settings": {"application": "com.hnc.Discord"}},
+        # mixers 253 = track 2 excluded, keeping music/browser audio off the
+        # VOD track (matches the live rig's routing).
         {"name": "Google Chrome", "id": "sck_audio_capture", "cat": "audio",
-         "settings": {"application": "com.google.Chrome"}},
+         "settings": {"application": "com.google.Chrome"}, "mixers": 253},
         {"name": "Apple Music", "id": "sck_audio_capture", "cat": "audio",
-         "settings": {"application": "com.apple.Music"}},
+         "settings": {"application": "com.apple.Music"}, "mixers": 253},
+        # Overlay videos from the rendered bundle, synced to Google Drive —
+        # the SAME files the Mini plays (one bundle serves both Macs).
         {"name": "Starting Soon Video", "id": "ffmpeg_source", "cat": "standby",
-         "settings": {"local_file": SCENES_IMAGES + "/", "looping": True}},
+         "settings": {"local_file": OVERLAY_VIDEOS + "/01-starting-soon.mp4", "looping": True}},
         {"name": "Be Right Back Video", "id": "ffmpeg_source", "cat": "standby",
-         "settings": {"local_file": SCENES_IMAGES + "/", "looping": True}},
-        {"name": "Background", "id": "image_source", "cat": "background",
-         "settings": {"file": SCENES_IMAGES + "/"}},
+         "settings": {"local_file": OVERLAY_VIDEOS + "/06-be-right-back.mp4", "looping": True}},
+        {"name": "Ending Video", "id": "ffmpeg_source", "cat": "standby",
+         "settings": {"local_file": OVERLAY_VIDEOS + "/07-ending-stream.mp4", "looping": True}},
+        {"name": "Background Video", "id": "ffmpeg_source", "cat": "background",
+         "settings": {"local_file": OVERLAY_VIDEOS + "/background.mp4", "looping": True}},
+        {"name": "Co-Working Solo Video", "id": "ffmpeg_source", "cat": "background",
+         "settings": {"local_file": OVERLAY_VIDEOS + "/04-co-working-solo.mp4", "looping": True}},
     ],
     # [src] wrapper scenes: reusable building blocks (mirror OBS Groups on the
     # live rig, but per-scene-editable where they need to be).
     "src_scenes": [
-        {"name": "[src] Alerts", "items": [("Sound Alerts", "alerts"), ("Twitch Alerts", "alerts")]},
-        {"name": "[src] Wolfathon", "items": [("Wheel of Dares", "widgets"), ("Rewards", "widgets"), ("Timer", "widgets")]},
-        {"name": "[src] Audio", "items": [("Discord", "audio"), ("Google Chrome", "audio"), ("Apple Music", "audio")]},
+        {"name": "[src] Alerts", "items": [("Chat Overlay", "alerts"), ("Sound Alerts", "alerts"),
+                                           ("Twitch Alerts", "alerts")]},
+        {"name": "[src] Audio", "items": [("Discord", "audio"), ("Google Chrome", "audio"),
+                                          ("Apple Music", "audio")]},
+        # Per-scene Wolfathon wrappers (same pattern as the Mini — a wrapper's
+        # internal layout is global, so each scene gets its own). Co-Working
+        # ships Rewards hidden / Rewards - Right visible, matching the Mini.
+        {"name": "[src] Wolfathon · Live", "items": [("Wheel of Dares", "widgets"),
+                                                     ("Rewards", "widgets"), ("Timer", "widgets")]},
+        {"name": "[src] Wolfathon · Co-Working", "items": [
+            ("Wheel of Dares", "widgets"),
+            {"name": "Rewards", "cat": "widgets", "visible": False},
+            ("Rewards - Right", "widgets"),
+            ("Timer", "widgets")]},
     ],
-    # Main scenes, items TOP -> BOTTOM (like the OBS Sources panel).
+    # Main scenes, items TOP -> BOTTOM (like the OBS Sources panel). OPAQUE
+    # full-frame media (standby videos, the webcam) always sits BELOW the
+    # widget/alert overlays — on top it would hide them (the live rig stacks
+    # standby video at the bottom with alerts/now-playing over it).
     "main_scenes": [
-        {"name": "Starting Soon", "items": [("Starting Soon Video", "standby"), ("[src] Alerts", "alerts"),
-                                            ("[src] Audio", "audio"), ("Background", "background")]},
-        {"name": "Be Right Back", "items": [("Be Right Back Video", "standby"), ("[src] Alerts", "alerts"),
-                                            ("[src] Audio", "audio"), ("Background", "background")]},
-        {"name": "Live", "items": [("Webcam", "camera"), ("Now Playing", "nowplaying"),
-                                   ("[src] Wolfathon", "widgets"), ("[src] Alerts", "alerts"),
-                                   ("[src] Audio", "audio"), ("Background", "background")]},
-        {"name": "Co-Working", "items": [("Webcam", "camera"), ("Now Playing", "nowplaying"),
-                                         ("[src] Wolfathon", "widgets"), ("[src] Alerts", "alerts"),
-                                         ("[src] Audio", "audio"), ("Background", "background")]},
+        {"name": "Starting Soon", "items": [
+            ("Now Playing", "nowplaying"),
+            ("[src] Alerts", "alerts"),
+            ("[src] Audio", "audio"),
+            ("Starting Soon Video", "standby"),
+        ]},
+        {"name": "Live", "items": [
+            ("[src] Wolfathon · Live", "widgets"),
+            ("[src] Alerts", "alerts"),
+            {"name": "Webcam", "cat": "camera", "pos": (0, 0), "bounds": (1920, 1080)},
+            ("[src] Audio", "audio"),
+            ("Background Video", "background"),
+        ]},
+        # Cam box = the solo overlay cam-frame coords (masks/gen_masks.py:
+        # co-working-solo.png is the matching rounded-corner mask).
+        {"name": "Co-Working", "items": [
+            ("Co-Working Timer Widget", "widgets"),
+            ("Co-Working Tasklist Widget", "widgets"),
+            ("Now Playing", "nowplaying"),
+            ("[src] Alerts", "alerts"),
+            ("[src] Wolfathon · Co-Working", "widgets"),
+            {"name": "Webcam", "cat": "camera", "pos": (64, 136), "bounds": (1400, 788)},
+            ("[src] Audio", "audio"),
+            ("Co-Working Solo Video", "background"),
+        ]},
+        {"name": "Be Right Back", "items": [
+            ("[src] Alerts", "alerts"),
+            ("[src] Audio", "audio"),
+            ("Be Right Back Video", "standby"),
+        ]},
+        {"name": "Ending", "items": [
+            ("[src] Audio", "audio"),
+            ("Ending Video", "standby"),
+        ]},
     ],
     "dividers": ["──────"],
-    "scene_order": ["Starting Soon", "Be Right Back", "Live", "Co-Working", "──────",
-                    "[src] Alerts", "[src] Wolfathon", "[src] Audio"],
+    "scene_order": ["Starting Soon", "Live", "Co-Working", "Be Right Back", "Ending",
+                    "──────", "[src] Alerts", "[src] Audio",
+                    "[src] Wolfathon · Live", "[src] Wolfathon · Co-Working"],
 }
 
 # Mac Mini (main home rig, OBS 32) — realigned to the live 2026-07 export with
@@ -165,10 +234,14 @@ MAC_MINI = {
         # Widgets (browser). URLs empty = paste tokens in OBS after import.
         {"name": "Chat Overlay", "id": "browser_source", "cat": "alerts",
          "settings": bs()},
+        # Alert widgets carry their own audio: reroute it into the OBS mixer,
+        # all tracks, Monitor & Output (you hear alerts) — like the live rig.
         {"name": "Sound Alerts", "id": "browser_source", "cat": "alerts",
-         "settings": bs()},
+         "settings": {**bs(), "reroute_audio": True},
+         "mixers": 255, "monitoring_type": 2},
         {"name": "Twitch Alerts", "id": "browser_source", "cat": "alerts",
-         "settings": bs()},
+         "settings": {**bs(), "reroute_audio": True},
+         "mixers": 255, "monitoring_type": 2},
         {"name": "Wheel of Dares", "id": "browser_source", "cat": "widgets",
          "settings": bs()},
         {"name": "Rewards", "id": "browser_source", "cat": "widgets",
@@ -177,15 +250,23 @@ MAC_MINI = {
          "settings": bs()},
         {"name": "Timer", "id": "browser_source", "cat": "widgets",
          "settings": bs()},
+        # Co-working session widgets (hunt timer + task list), seen on the
+        # live rig in both co-working scenes.
+        {"name": "Co-Working Timer Widget", "id": "browser_source", "cat": "widgets",
+         "settings": bs()},
+        {"name": "Co-Working Tasklist Widget", "id": "browser_source", "cat": "widgets",
+         "settings": bs()},
         {"name": "Now Playing", "id": "browser_source", "cat": "nowplaying",
          "settings": bs()},
         # Per-app audio (macOS Audio Capture / ScreenCaptureKit).
         {"name": "Discord", "id": "sck_audio_capture", "cat": "audio",
          "settings": {"application": "com.hnc.Discord"}},
+        # mixers 253 = track 2 excluded, keeping music/browser audio off the
+        # VOD track (matches the live rig's routing).
         {"name": "Google Chrome", "id": "sck_audio_capture", "cat": "audio",
-         "settings": {"application": "com.google.Chrome"}},
+         "settings": {"application": "com.google.Chrome"}, "mixers": 253},
         {"name": "Apple Music", "id": "sck_audio_capture", "cat": "audio",
-         "settings": {"application": "com.apple.Music"}},
+         "settings": {"application": "com.apple.Music"}, "mixers": 253},
         # Overlay videos from the rendered bundle, synced to Google Drive.
         {"name": "Starting Soon Video", "id": "ffmpeg_source", "cat": "standby",
          "settings": {"local_file": OVERLAY_VIDEOS + "/01-starting-soon.mp4", "looping": True}},
@@ -221,46 +302,53 @@ MAC_MINI = {
                                                                 ("Rewards", "widgets"), ("Timer", "widgets")]},
     ],
     # Cam boxes = the overlay cam-frame coords (masks/gen_masks.py + bundle README).
+    # Items TOP -> BOTTOM. Opaque feeds (standby videos, cams, NDI) sit BELOW
+    # the widget/alert overlays, matching the live export — an opaque layer on
+    # top would blank chat/alerts the moment it shows.
     "main_scenes": [
         {"name": "Starting Soon", "items": [
-            ("Starting Soon Video", "standby"),
             ("Now Playing", "nowplaying"),
             ("[src] Alerts", "alerts"),
             ("[src] Audio", "audio"),
+            ("Starting Soon Video", "standby"),
         ]},
         {"name": "Live", "items": [
-            {"name": "PNG Tuber", "cat": "camera", "pos": (0, 0), "bounds": (1920, 1080)},
-            {"name": "NDI Source", "cat": "camera", "pos": (0, 0), "bounds": (1920, 1080), "visible": False},
             ("[src] Wolfathon · Live", "widgets"),
             ("[src] Alerts", "alerts"),
+            {"name": "PNG Tuber", "cat": "camera", "pos": (0, 0), "bounds": (1920, 1080)},
+            {"name": "NDI Source", "cat": "camera", "pos": (0, 0), "bounds": (1920, 1080), "visible": False},
             ("[src] Audio", "audio"),
             ("Background Video", "background"),
         ]},
         {"name": "Co-Working [Solo]", "items": [
-            {"name": "Main Cam", "cat": "camera", "pos": (64, 136), "bounds": (1400, 788)},
+            ("Co-Working Timer Widget", "widgets"),
+            ("Co-Working Tasklist Widget", "widgets"),
             ("Now Playing", "nowplaying"),
-            ("[src] Wolfathon · Co-Working Solo", "widgets"),
             ("[src] Alerts", "alerts"),
+            ("[src] Wolfathon · Co-Working Solo", "widgets"),
+            {"name": "Main Cam", "cat": "camera", "pos": (64, 136), "bounds": (1400, 788)},
             ("[src] Audio", "audio"),
             ("Co-Working Solo Video", "background"),
         ]},
         {"name": "Co-Working [Multi]", "items": [
+            ("Co-Working Timer Widget", "widgets"),
+            ("Co-Working Tasklist Widget", "widgets"),
+            ("Now Playing", "nowplaying"),
+            ("[src] Alerts", "alerts"),
+            ("[src] Wolfathon · Co-Working Dual", "widgets"),
             {"name": "Main Cam", "cat": "camera", "pos": (64, 136), "bounds": (1152, 648)},
             {"name": "Second Cam", "cat": "camera", "pos": (1280, 628), "bounds": (576, 324)},
-            ("Now Playing", "nowplaying"),
-            ("[src] Wolfathon · Co-Working Dual", "widgets"),
-            ("[src] Alerts", "alerts"),
             ("[src] Audio", "audio"),
             ("Co-Working Dual Video", "background"),
         ]},
         {"name": "Be Right Back", "items": [
-            ("Be Right Back Video", "standby"),
             ("[src] Alerts", "alerts"),
             ("[src] Audio", "audio"),
+            ("Be Right Back Video", "standby"),
         ]},
         {"name": "Ending", "items": [
-            ("Ending Video", "standby"),
             ("[src] Audio", "audio"),
+            ("Ending Video", "standby"),
         ]},
     ],
     "dividers": ["──────"],
@@ -276,23 +364,27 @@ DEVICES = [MACBOOK_PRO, MAC_MINI]
 # --- Builders ----------------------------------------------------------------
 # Source ids that can carry audio: their `mixers` (OBS audio-track bitmask)
 # must be non-zero or the imported source is routed to NO tracks — silent on
-# stream/recording until re-ticked in Advanced Audio Properties. 255 = all
-# tracks, matching the live rig's export.
+# stream/recording until re-ticked in Advanced Audio Properties. Default
+# 255 = all tracks; a leaf can override with its own "mixers" where the live
+# rig routes differently (Apple Music / Chrome ship 253 = track 2 excluded,
+# keeping copyrighted music off the VOD track, matching the live export).
 AUDIO_IDS = {"sck_audio_capture", "ffmpeg_source", "ndi_source",
              "macos-avcapture", "av_capture_input"}
 
 
-def base_source(suid, name, sid, settings, vid=None):
+def base_source(suid, name, sid, settings, vid=None, mixers=None, monitoring=0):
+    if mixers is None:
+        mixers = 255 if sid in AUDIO_IDS else 0
     return {
         "name": name, "uuid": suid(name), "id": sid,
         "versioned_id": vid or sid, "settings": settings,
-        "mixers": 255 if sid in AUDIO_IDS else 0,
+        "mixers": mixers,
         "sync": 0, "flags": 0, "volume": 1.0, "balance": 0.5,
         "enabled": True, "muted": False,
         "push-to-mute": False, "push-to-mute-delay": 0,
         "push-to-talk": False, "push-to-talk-delay": 0,
         "hotkeys": {}, "deinterlace_mode": 0, "deinterlace_field_order": 0,
-        "monitoring_type": 0, "private_settings": {}, "filters": [],
+        "monitoring_type": monitoring, "private_settings": {}, "filters": [],
     }
 
 
@@ -347,7 +439,9 @@ def build(dev):
 
     sources = []
     for lf in dev["leaves"]:
-        sources.append(base_source(suid, lf["name"], lf["id"], lf["settings"]))
+        sources.append(base_source(suid, lf["name"], lf["id"], lf["settings"],
+                                   mixers=lf.get("mixers"),
+                                   monitoring=lf.get("monitoring_type", 0)))
     for sc in dev["src_scenes"] + dev["main_scenes"]:
         sources.append(scene_source(suid, sc["name"], sc["items"]))
     for d in dev["dividers"]:
