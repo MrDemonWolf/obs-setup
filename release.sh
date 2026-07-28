@@ -115,9 +115,9 @@ Stinger/    1 OBS stinger transition (HEVC-alpha .mov) + its baked SFX (.wav)
 
 1. Scene Transitions (bottom-right) → **+** → **Stinger**.
 2. **Video File** = `Stinger/stinger-hevc.mov`.
-3. **Transition Point Type** = **Time**, **Transition Point** = **2000 ms** — the
-   middle of the fully-covered hold (covered ~1360–2640 ms; OBS swaps the scene
-   here, unseen). Adjust if you swap in a longer/shorter clip.
+3. **Transition Point Type** = **Time**, **Transition Point** = **2000 ms** —
+   safely inside the fully-covered hold (covered ~1360–2890 ms; OBS swaps the
+   scene here, unseen). Adjust if you swap in a longer/shorter clip.
 4. **Audio Fade Style** = **Crossfade** (the whoosh is baked into the file).
 5. OK. Every scene cut now plays the wipe once; OBS swaps scenes behind the cover.
 

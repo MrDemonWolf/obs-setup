@@ -173,9 +173,10 @@
       "settings": {
         "url": "",
         "width": 1920,
-        "height": 1080
+        "height": 1080,
+        "reroute_audio": true
       },
-      "mixers": 0,
+      "mixers": 255,
       "sync": 0,
       "flags": 0,
       "volume": 1.0,
@@ -189,7 +190,7 @@
       "hotkeys": {},
       "deinterlace_mode": 0,
       "deinterlace_field_order": 0,
-      "monitoring_type": 0,
+      "monitoring_type": 2,
       "private_settings": {},
       "filters": []
     },
@@ -201,9 +202,10 @@
       "settings": {
         "url": "",
         "width": 1920,
-        "height": 1080
+        "height": 1080,
+        "reroute_audio": true
       },
-      "mixers": 0,
+      "mixers": 255,
       "sync": 0,
       "flags": 0,
       "volume": 1.0,
@@ -217,7 +219,7 @@
       "hotkeys": {},
       "deinterlace_mode": 0,
       "deinterlace_field_order": 0,
-      "monitoring_type": 0,
+      "monitoring_type": 2,
       "private_settings": {},
       "filters": []
     },
@@ -334,6 +336,62 @@
       "filters": []
     },
     {
+      "name": "Co-Working Timer Widget",
+      "uuid": "0eb9cd39-21a8-55c4-b1ed-9eaca2432f96",
+      "id": "browser_source",
+      "versioned_id": "browser_source",
+      "settings": {
+        "url": "",
+        "width": 1920,
+        "height": 1080
+      },
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
+      "name": "Co-Working Tasklist Widget",
+      "uuid": "545d391b-7136-5fb3-b2af-6bd6bd48d96d",
+      "id": "browser_source",
+      "versioned_id": "browser_source",
+      "settings": {
+        "url": "",
+        "width": 1920,
+        "height": 1080
+      },
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-mute-delay": 0,
+      "push-to-talk": false,
+      "push-to-talk-delay": 0,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {},
+      "filters": []
+    },
+    {
       "name": "Now Playing",
       "uuid": "a287aed9-3828-51fb-ba78-2efb90411917",
       "id": "browser_source",
@@ -395,7 +453,7 @@
       "settings": {
         "application": "com.google.Chrome"
       },
-      "mixers": 255,
+      "mixers": 253,
       "sync": 0,
       "flags": 0,
       "volume": 1.0,
@@ -421,7 +479,7 @@
       "settings": {
         "application": "com.apple.Music"
       },
-      "mixers": 255,
+      "mixers": 253,
       "sync": 0,
       "flags": 0,
       "volume": 1.0,
@@ -1412,6 +1470,47 @@
         "custom_size": false,
         "items": [
           {
+            "name": "Starting Soon Video",
+            "source_uuid": "40a8c5cb-8e7b-5d33-b824-3cad6faad306",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 1,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -13420838,
+              "color-preset": 0
+            }
+          },
+          {
             "name": "[src] Audio",
             "source_uuid": "2167002d-9afa-5e11-bff9-9e9eef3887f8",
             "visible": true,
@@ -1436,7 +1535,7 @@
             "crop_top": 0,
             "crop_right": 0,
             "crop_bottom": 0,
-            "id": 1,
+            "id": 2,
             "group_item_backup": false,
             "scale_filter": "disable",
             "blend_method": "default",
@@ -1477,7 +1576,7 @@
             "crop_top": 0,
             "crop_right": 0,
             "crop_bottom": 0,
-            "id": 2,
+            "id": 3,
             "group_item_backup": false,
             "scale_filter": "disable",
             "blend_method": "default",
@@ -1518,47 +1617,6 @@
             "crop_top": 0,
             "crop_right": 0,
             "crop_bottom": 0,
-            "id": 3,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -160968,
-              "color-preset": 0
-            }
-          },
-          {
-            "name": "Starting Soon Video",
-            "source_uuid": "40a8c5cb-8e7b-5d33-b824-3cad6faad306",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
             "id": 4,
             "group_item_backup": false,
             "scale_filter": "disable",
@@ -1571,7 +1629,7 @@
               "duration": 0
             },
             "private_settings": {
-              "color": -13420838,
+              "color": -160968,
               "color-preset": 0
             }
           }
@@ -1687,88 +1745,6 @@
             }
           },
           {
-            "name": "[src] Alerts",
-            "source_uuid": "c3bbfa48-5858-5872-b424-54d124ec77c1",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 3,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -1747063,
-              "color-preset": 0
-            }
-          },
-          {
-            "name": "[src] Wolfathon · Live",
-            "source_uuid": "df23e0f2-ef97-5b76-9884-fae396897d7e",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 4,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -5857761,
-              "color-preset": 0
-            }
-          },
-          {
             "name": "NDI Source",
             "source_uuid": "81034e98-866e-5027-b705-1dd8fc4eeee3",
             "visible": false,
@@ -1793,7 +1769,7 @@
             "crop_top": 0,
             "crop_right": 0,
             "crop_bottom": 0,
-            "id": 5,
+            "id": 3,
             "group_item_backup": false,
             "scale_filter": "disable",
             "blend_method": "default",
@@ -1834,7 +1810,7 @@
             "crop_top": 0,
             "crop_right": 0,
             "crop_bottom": 0,
-            "id": 6,
+            "id": 4,
             "group_item_backup": false,
             "scale_filter": "disable",
             "blend_method": "default",
@@ -1847,6 +1823,88 @@
             },
             "private_settings": {
               "color": -12345298,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "[src] Alerts",
+            "source_uuid": "c3bbfa48-5858-5872-b424-54d124ec77c1",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 5,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -1747063,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "[src] Wolfathon · Live",
+            "source_uuid": "df23e0f2-ef97-5b76-9884-fae396897d7e",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 6,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -5857761,
               "color-preset": 0
             }
           }
@@ -1876,7 +1934,7 @@
       "id": "scene",
       "versioned_id": "scene",
       "settings": {
-        "id_counter": 6,
+        "id_counter": 8,
         "custom_size": false,
         "items": [
           {
@@ -1962,25 +2020,25 @@
             }
           },
           {
-            "name": "[src] Alerts",
-            "source_uuid": "c3bbfa48-5858-5872-b424-54d124ec77c1",
+            "name": "Main Cam",
+            "source_uuid": "a3352921-7910-5ecb-8185-e368b2a8b366",
             "visible": true,
             "locked": false,
             "rot": 0.0,
             "pos": {
-              "x": 0.0,
-              "y": 0.0
+              "x": 64.0,
+              "y": 136.0
             },
             "scale": {
               "x": 1.0,
               "y": 1.0
             },
             "align": 5,
-            "bounds_type": 0,
+            "bounds_type": 2,
             "bounds_align": 0,
             "bounds": {
-              "x": 0.0,
-              "y": 0.0
+              "x": 1400.0,
+              "y": 788.0
             },
             "crop_left": 0,
             "crop_top": 0,
@@ -1998,7 +2056,7 @@
               "duration": 0
             },
             "private_settings": {
-              "color": -1747063,
+              "color": -12345298,
               "color-preset": 0
             }
           },
@@ -2044,8 +2102,8 @@
             }
           },
           {
-            "name": "Now Playing",
-            "source_uuid": "a287aed9-3828-51fb-ba78-2efb90411917",
+            "name": "[src] Alerts",
+            "source_uuid": "c3bbfa48-5858-5872-b424-54d124ec77c1",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -2080,30 +2138,30 @@
               "duration": 0
             },
             "private_settings": {
-              "color": -160968,
+              "color": -1747063,
               "color-preset": 0
             }
           },
           {
-            "name": "Main Cam",
-            "source_uuid": "a3352921-7910-5ecb-8185-e368b2a8b366",
+            "name": "Now Playing",
+            "source_uuid": "a287aed9-3828-51fb-ba78-2efb90411917",
             "visible": true,
             "locked": false,
             "rot": 0.0,
             "pos": {
-              "x": 64.0,
-              "y": 136.0
+              "x": 0.0,
+              "y": 0.0
             },
             "scale": {
               "x": 1.0,
               "y": 1.0
             },
             "align": 5,
-            "bounds_type": 2,
+            "bounds_type": 0,
             "bounds_align": 0,
             "bounds": {
-              "x": 1400.0,
-              "y": 788.0
+              "x": 0.0,
+              "y": 0.0
             },
             "crop_left": 0,
             "crop_top": 0,
@@ -2121,7 +2179,89 @@
               "duration": 0
             },
             "private_settings": {
-              "color": -12345298,
+              "color": -160968,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "Co-Working Tasklist Widget",
+            "source_uuid": "545d391b-7136-5fb3-b2af-6bd6bd48d96d",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 7,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -5857761,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "Co-Working Timer Widget",
+            "source_uuid": "0eb9cd39-21a8-55c4-b1ed-9eaca2432f96",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 8,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -5857761,
               "color-preset": 0
             }
           }
@@ -2151,7 +2291,7 @@
       "id": "scene",
       "versioned_id": "scene",
       "settings": {
-        "id_counter": 7,
+        "id_counter": 9,
         "custom_size": false,
         "items": [
           {
@@ -2237,129 +2377,6 @@
             }
           },
           {
-            "name": "[src] Alerts",
-            "source_uuid": "c3bbfa48-5858-5872-b424-54d124ec77c1",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 3,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -1747063,
-              "color-preset": 0
-            }
-          },
-          {
-            "name": "[src] Wolfathon · Co-Working Dual",
-            "source_uuid": "b71be393-44e9-5220-bf7e-216c37f43fb6",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 4,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -5857761,
-              "color-preset": 0
-            }
-          },
-          {
-            "name": "Now Playing",
-            "source_uuid": "a287aed9-3828-51fb-ba78-2efb90411917",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
-            "id": 5,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -160968,
-              "color-preset": 0
-            }
-          },
-          {
             "name": "Second Cam",
             "source_uuid": "9776e740-2091-5973-af1c-88caa56e3522",
             "visible": true,
@@ -2384,7 +2401,7 @@
             "crop_top": 0,
             "crop_right": 0,
             "crop_bottom": 0,
-            "id": 6,
+            "id": 3,
             "group_item_backup": false,
             "scale_filter": "disable",
             "blend_method": "default",
@@ -2425,7 +2442,7 @@
             "crop_top": 0,
             "crop_right": 0,
             "crop_bottom": 0,
-            "id": 7,
+            "id": 4,
             "group_item_backup": false,
             "scale_filter": "disable",
             "blend_method": "default",
@@ -2438,6 +2455,211 @@
             },
             "private_settings": {
               "color": -12345298,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "[src] Wolfathon · Co-Working Dual",
+            "source_uuid": "b71be393-44e9-5220-bf7e-216c37f43fb6",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 5,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -5857761,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "[src] Alerts",
+            "source_uuid": "c3bbfa48-5858-5872-b424-54d124ec77c1",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 6,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -1747063,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "Now Playing",
+            "source_uuid": "a287aed9-3828-51fb-ba78-2efb90411917",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 7,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -160968,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "Co-Working Tasklist Widget",
+            "source_uuid": "545d391b-7136-5fb3-b2af-6bd6bd48d96d",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 8,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -5857761,
+              "color-preset": 0
+            }
+          },
+          {
+            "name": "Co-Working Timer Widget",
+            "source_uuid": "0eb9cd39-21a8-55c4-b1ed-9eaca2432f96",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 9,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -5857761,
               "color-preset": 0
             }
           }
@@ -2471,6 +2693,47 @@
         "custom_size": false,
         "items": [
           {
+            "name": "Be Right Back Video",
+            "source_uuid": "3cd82116-ada6-526d-a11e-6720a0f1a7a0",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "align": 5,
+            "bounds_type": 0,
+            "bounds_align": 0,
+            "bounds": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 1,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {
+              "color": -13420838,
+              "color-preset": 0
+            }
+          },
+          {
             "name": "[src] Audio",
             "source_uuid": "2167002d-9afa-5e11-bff9-9e9eef3887f8",
             "visible": true,
@@ -2495,7 +2758,7 @@
             "crop_top": 0,
             "crop_right": 0,
             "crop_bottom": 0,
-            "id": 1,
+            "id": 2,
             "group_item_backup": false,
             "scale_filter": "disable",
             "blend_method": "default",
@@ -2536,47 +2799,6 @@
             "crop_top": 0,
             "crop_right": 0,
             "crop_bottom": 0,
-            "id": 2,
-            "group_item_backup": false,
-            "scale_filter": "disable",
-            "blend_method": "default",
-            "blend_type": "normal",
-            "show_transition": {
-              "duration": 0
-            },
-            "hide_transition": {
-              "duration": 0
-            },
-            "private_settings": {
-              "color": -1747063,
-              "color-preset": 0
-            }
-          },
-          {
-            "name": "Be Right Back Video",
-            "source_uuid": "3cd82116-ada6-526d-a11e-6720a0f1a7a0",
-            "visible": true,
-            "locked": false,
-            "rot": 0.0,
-            "pos": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "scale": {
-              "x": 1.0,
-              "y": 1.0
-            },
-            "align": 5,
-            "bounds_type": 0,
-            "bounds_align": 0,
-            "bounds": {
-              "x": 0.0,
-              "y": 0.0
-            },
-            "crop_left": 0,
-            "crop_top": 0,
-            "crop_right": 0,
-            "crop_bottom": 0,
             "id": 3,
             "group_item_backup": false,
             "scale_filter": "disable",
@@ -2589,7 +2811,7 @@
               "duration": 0
             },
             "private_settings": {
-              "color": -13420838,
+              "color": -1747063,
               "color-preset": 0
             }
           }
@@ -2623,8 +2845,8 @@
         "custom_size": false,
         "items": [
           {
-            "name": "[src] Audio",
-            "source_uuid": "2167002d-9afa-5e11-bff9-9e9eef3887f8",
+            "name": "Ending Video",
+            "source_uuid": "bec0c5c8-abd3-5f30-8e2a-418839932ed7",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -2659,13 +2881,13 @@
               "duration": 0
             },
             "private_settings": {
-              "color": -6384501,
+              "color": -13420838,
               "color-preset": 0
             }
           },
           {
-            "name": "Ending Video",
-            "source_uuid": "bec0c5c8-abd3-5f30-8e2a-418839932ed7",
+            "name": "[src] Audio",
+            "source_uuid": "2167002d-9afa-5e11-bff9-9e9eef3887f8",
             "visible": true,
             "locked": false,
             "rot": 0.0,
@@ -2700,7 +2922,7 @@
               "duration": 0
             },
             "private_settings": {
-              "color": -13420838,
+              "color": -6384501,
               "color-preset": 0
             }
           }
