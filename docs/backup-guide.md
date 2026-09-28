@@ -19,8 +19,9 @@ If you already cloned this repo, skip the `git clone` line. You can also run
 `bash scripts/backup.sh setup` without installing through Homebrew.
 
 Accept the suggested Google Drive and repo paths, or enter different folders.
-Setup saves those paths in macOS preferences. The Homebrew install puts the
-command on your `PATH`.
+Setup saves them in `~/.config/obs-backup/config`. The Homebrew install puts
+the command on your `PATH`; on a Mac with the previous version, setup migrates
+the saved macOS preferences into this file.
 
 Without Homebrew, setup links the command at `~/.local/bin/obs-backup`. If your
 shell cannot find it, add this to `~/.zshrc`:

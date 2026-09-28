@@ -19,21 +19,41 @@ DEFAULT_REPO="$HOME/Developer/mrdemonwolf/obs-setup"
 if [ ! -d "$DEFAULT_REPO/.git" ]; then DEFAULT_REPO="$SCRIPT_REPO"; fi
 DEFAULT_BACKUP_DIR="$HOME/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/Backups/OBS"
 PREFS="com.mrdemonwolf.obs-backup"
+CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/obs-backup"
+CONFIG_FILE="$CONFIG_DIR/config"
+config_value() {
+  [ -f "$CONFIG_FILE" ] || return 1
+  local value
+  value="$(awk -v wanted="$1" 'index($0, "=") { split_at = index($0, "="); if (substr($0, 1, split_at - 1) == wanted) { print substr($0, split_at + 1); exit } }' "$CONFIG_FILE")"
+  [ -n "$value" ] || return 1
+  printf '%s\n' "$value"
+}
+SAVED_BACKUP_DIR="$(config_value backup_dir || defaults read "$PREFS" BackupDirectory 2>/dev/null || true)"
+SAVED_REPO="$(config_value repo_dir || defaults read "$PREFS" RepoDirectory 2>/dev/null || true)"
 if [ "${1:-}" = setup ]; then
-  read -r -p "Backup folder [$DEFAULT_BACKUP_DIR]: " chosen_dir
-  chosen_dir="${chosen_dir:-$DEFAULT_BACKUP_DIR}"
+  saved_backup_dir="${SAVED_BACKUP_DIR:-$DEFAULT_BACKUP_DIR}"
+  saved_repo="${SAVED_REPO:-$DEFAULT_REPO}"
+  read -r -p "Backup folder [$saved_backup_dir]: " chosen_dir
+  chosen_dir="${chosen_dir:-$saved_backup_dir}"
   if [ ! -d "$chosen_dir" ]; then
     echo "Folder not found: $chosen_dir" >&2
     exit 1
   fi
-  read -r -p "Repo folder [$DEFAULT_REPO]: " chosen_repo
-  chosen_repo="${chosen_repo:-$DEFAULT_REPO}"
+  read -r -p "Repo folder [$saved_repo]: " chosen_repo
+  chosen_repo="${chosen_repo:-$saved_repo}"
   if [ ! -f "$SANITIZER" ] || [ ! -d "$chosen_repo/.git" ]; then
     echo "OBS setup repo not found: $chosen_repo" >&2
     exit 1
   fi
-  defaults write "$PREFS" BackupDirectory "$chosen_dir"
-  defaults write "$PREFS" RepoDirectory "$chosen_repo"
+  mkdir -p "$CONFIG_DIR"
+  umask 077
+  config_tmp="$(mktemp "$CONFIG_DIR/.config.XXXXXX")"
+  trap 'rm -f "$config_tmp"' EXIT
+  printf 'backup_dir=%s\nrepo_dir=%s\n' "$chosen_dir" "$chosen_repo" > "$config_tmp"
+  mv "$config_tmp" "$CONFIG_FILE"
+  trap - EXIT
+  defaults delete "$PREFS" BackupDirectory >/dev/null 2>&1 || true
+  defaults delete "$PREFS" RepoDirectory >/dev/null 2>&1 || true
   if ! command -v obs-backup >/dev/null 2>&1; then
     mkdir -p "$HOME/.local/bin"
     if [ -e "$HOME/.local/bin/obs-backup" ] && [ ! -L "$HOME/.local/bin/obs-backup" ]; then
@@ -43,16 +63,17 @@ if [ "${1:-}" = setup ]; then
     ln -sfn "$SCRIPT_PATH" "$HOME/.local/bin/obs-backup"
     echo "Installed at ~/.local/bin/obs-backup. Add ~/.local/bin to PATH if needed."
   fi
-  echo "Saved. Run obs-backup anytime."
+  echo "Saved: $CONFIG_FILE"
+  echo "Run obs-backup anytime."
   exit 0
 fi
 if [ "${1:-}" != "" ]; then
   echo "Usage: obs-backup [setup]" >&2
   exit 1
 fi
-REPO="${OBS_REPO_DIR:-$(defaults read "$PREFS" RepoDirectory 2>/dev/null || echo "$SCRIPT_REPO")}"
+REPO="${OBS_REPO_DIR:-${SAVED_REPO:-$SCRIPT_REPO}}"
 SRC="${OBS_EXPORT_DIR:-$HOME/Library/Application Support/obs-studio/basic}"
-BACKUP_DIR="${OBS_BACKUP_DIR:-$(defaults read "$PREFS" BackupDirectory 2>/dev/null || echo "$DEFAULT_BACKUP_DIR")}"
+BACKUP_DIR="${OBS_BACKUP_DIR:-${SAVED_BACKUP_DIR:-$DEFAULT_BACKUP_DIR}}"
 STAMP="$(date +%F-%H%M%S)"
 
 # --- which device? -----------------------------------------------------------

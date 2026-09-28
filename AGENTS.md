@@ -32,8 +32,8 @@ make          # list targets
   `devices/testdev/`.
 - **Force a device** when `make backup` mis-detects:
   `DEVICE=mac-mini make backup`. Override the OBS data folder with
-  `OBS_EXPORT_DIR=... make backup`. Run `obs-backup setup` once to configure
-  the backup destination. Homebrew installs the standalone command.
+  `OBS_EXPORT_DIR=... make backup`. Run `obs-backup setup` once to write
+  `~/.config/obs-backup/config`. Homebrew installs the standalone command.
 
 ## Architecture
 
