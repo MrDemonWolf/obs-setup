@@ -1,101 +1,73 @@
-# Backup Guide
+# Backup guide (macOS)
 
-Short version: **export from OBS into `~/Downloads/OBS`, then run `make backup`.**
+OBS keeps live scenes and profiles in `~/Library/Application Support/obs-studio/basic`.
+No export step is needed. The command takes a local snapshot, saves a full ZIP to
+Google Drive, and copies a scrubbed version into this repo.
 
----
+## One-time setup
 
-## Back up (every time)
-
-### 1. Export from OBS into one folder
-
-Put everything into `~/Downloads/OBS` (create it if it isn't there):
-
-- **Scenes:** OBS menu bar -> `Scene Collection` -> `Export` -> save into
-  `~/Downloads/OBS`.
-- **Profiles:** OBS menu bar -> `Profile` -> `Export` -> save into
-  `~/Downloads/OBS`. Do this for each profile you care about
-  (Streaming, Recording, Recording_Vertical).
-
-You can export as many scene collections and profiles as you like. The
-backup command sorts them out.
-
-### 2. Run the backup
+Install the command from Homebrew Den:
 
 ```bash
-make backup
+brew tap mrdemonwolf/den
+brew install obs-backup
+git clone https://github.com/MrDemonWolf/obs-setup.git ~/Developer/mrdemonwolf/obs-setup
+obs-backup setup
 ```
 
-That does three things:
+If you already cloned this repo, skip the `git clone` line. You can also run
+`bash scripts/backup.sh setup` without installing through Homebrew.
 
-1. **Zips the full raw export** to
-   `~/Downloads/OBS-backups/<Device>-<date>.zip`. This copy keeps your real
-   widget URLs and stream key - **upload it to Google Drive.** It is never
-   committed to git.
-2. **Copies a scrubbed version into the repo** under `devices/<device>/`,
-   with browser source URLs and stream keys wiped to empty strings.
-3. **Updates `devices/<device>/index.json`** so the previewer picks up the
-   new scenes.
+Accept the suggested Google Drive and repo paths, or enter different folders.
+Setup saves those paths in macOS preferences. The Homebrew install puts the
+command on your `PATH`.
 
-### 3. Commit
+Without Homebrew, setup links the command at `~/.local/bin/obs-backup`. If your
+shell cannot find it, add this to `~/.zshrc`:
 
 ```bash
-git status
-git add devices/<device> && git commit -m "backup(<device>): <date>"
+export PATH="$HOME/.local/bin:$PATH"
 ```
 
----
+Open a new terminal after changing `PATH`.
 
-## Which device am I?
-
-The script reads your Mac's name (`scutil --get ComputerName`) and maps it:
-
-| Computer Name              | Folder                 |
-| -------------------------- | ---------------------- |
-| contains `MacBook`         | `devices/macbook-pro/` |
-| contains `Mini`            | `devices/mac-mini/`    |
-
-If detection is ever wrong, force it:
+## Back up
 
 ```bash
-DEVICE=mac-mini make backup      # or DEVICE=macbook-pro
+obs-backup
 ```
 
-Using a different export folder? Set `OBS_EXPORT_DIR`:
+`make backup` works from the repo too. The command detects MacBook Pro or Mac
+Mini from the macOS Computer Name. It copies the live `basic` directory once,
+then stores `<Device>-<timestamp>.zip` in the configured backup folder. That
+ZIP includes OBS secrets and must stay private. The supported scene collections
+and profile files go to `devices/<device>/` with URLs, keys, passwords, and
+tokens removed. The command prints Git review and commit commands; it does not
+commit automatically.
+
+If OBS is open, close it first for the most consistent snapshot. This command
+does not back up external media assets referenced by OBS paths.
+
+## Overrides
 
 ```bash
-OBS_EXPORT_DIR=~/Desktop/obs-dump make backup
+DEVICE=mac-mini obs-backup
+OBS_BACKUP_DIR="$HOME/Desktop/OBS Backups" obs-backup
+OBS_EXPORT_DIR="$HOME/Desktop/OBS export" obs-backup
 ```
 
----
+`OBS_REPO_DIR` overrides the configured repo location. `obs-backup setup`
+changes the saved paths.
 
-## Restore onto a Mac
+## Restore
 
-1. **Scenes:** OBS -> `Scene Collection` -> `Import` ->
-   `devices/<device>/scenes/<name>.json`.
-2. **Profiles:** OBS -> `Profile` -> `Import` ->
-   `devices/<device>/profiles/<name>/`.
-3. **Re-select hardware** OBS can't guess: your camera device
-   (`[src] Camera`) and your display (`[src] Screen Capture`).
-4. **Paste the URLs that were wiped** into each browser source
-   (`[src] Alerts`, `[src] Cowork Widgets`, `[src] Cowork Alerts`,
-   `VTuber Avatar`). Grab them from your alert provider, or from the full zip
-   on Google Drive.
-5. **Re-enter your stream key** in `Settings -> Stream` (it was wiped too).
+1. For the complete live setup, quit OBS, unzip a private raw backup, and
+   restore its contents into `~/Library/Application Support/obs-studio/basic`.
+   Keep the current directory elsewhere until the restored setup works.
+2. For a Git copy, import `devices/<device>/scenes/<name>.json` in OBS via
+   **Scene Collection → Import**, and import profile folders via **Profile →
+   Import**. Re-enter widget URLs, stream keys, and connected accounts.
+3. Re-select cameras, displays, and media paths as needed.
 
-> Note: OBS exports do not include image or video **asset files**, only
-> paths. Keep large assets in a synced folder (Google Drive / iCloud) or copy
-> them over separately.
-
----
-
-## What is and isn't kept in git
-
-| Item                          | In git?               | Why                         |
-| ----------------------------- | --------------------- | --------------------------- |
-| Scene layout + colors         | Yes                   | The whole point             |
-| Profile video/audio settings  | Yes                   | Encoder, resolution, etc.   |
-| Browser source URLs           | No (wiped to `""`)    | Carry secret widget tokens  |
-| Twitch stream key             | No (wiped to `""`)    | Secret                      |
-| Full un-wiped export (`.zip`) | No (Downloads only)   | Contains the above secrets  |
-
-See [obs-json-reference.md](obs-json-reference.md) for the exact fields.
+The Git copy is for review and recovery of layout/settings. The private ZIP
+is the full OBS settings backup.

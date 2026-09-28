@@ -27,8 +27,8 @@ same overlay videos) adapted to what travels: ONE webcam — no NDI, no PNG
 Tuber, no second cam — so Live fronts the webcam and there is a single
 Co-Working scene (the solo layout).
 
-The repo never writes into OBS. Sync goes ONE way, OBS -> repo: export your
-collection, run `make backup`, done (see
+The repo never writes into OBS. Sync goes ONE way, OBS -> repo: run
+`obs-backup`, done (see
 [backup-guide.md](backup-guide.md)). The generated
 `devices/macbook-pro/scenes/MBP-Streaming.json` exists only as an optional
 reference / spare copy of this layout — ignore it if you're building by
@@ -108,8 +108,8 @@ on every device updates at once.
 
 - Browser widget URLs ship empty (they hold secret tokens). Paste yours after
   adding. `make backup` scrubs them before git; the full copy stays in the
-  `~/Downloads` zip only.
-- Sync the repo to your real OBS: export from OBS, then `make backup`. That
+  Google Drive backup zip only.
+- Sync the repo to your real OBS: run `obs-backup` (or `make backup`). That
   captures the live setup (scrubbed), so the previewer and `devices/` match what
   you actually run. The generator (`make gen`) is just the starting seed.
 - Yellow (Screen) is reserved for when you add a Display Capture source.

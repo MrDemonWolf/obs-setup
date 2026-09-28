@@ -5,7 +5,7 @@
 help: ## Show this help
 	@grep -E '^[a-z]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*## /\t/' | expand -t18
 
-backup: ## Zip the ~/Downloads/OBS export + copy a scrubbed version into the repo
+backup: ## Zip live OBS settings + copy a scrubbed version into the repo
 	@bash scripts/backup.sh
 
 preview: ## Serve the HTML previewer at http://localhost:8000

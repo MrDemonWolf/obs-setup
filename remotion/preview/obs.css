@@ -102,13 +102,3 @@ body {
   color: #fff;
   box-shadow: 0 8px 22px rgba(46, 151, 214, 0.4);
 }
-
-.hint code {
-  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 13px;
-  color: var(--dim);
-  background: var(--panel);
-  border: 1px solid var(--border);
-  padding: 8px 14px;
-  border-radius: 8px;
-}

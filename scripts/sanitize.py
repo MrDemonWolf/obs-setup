@@ -1,24 +1,39 @@
 #!/usr/bin/env python3
-"""Copy an OBS export into the repo, stripping secrets.
+"""Copy OBS settings into the repo, stripping secrets.
 
 Usage:  sanitize.py <src_dir> <device_slug> <label>
 
-- Scene collection .json  -> devices/<slug>/scenes/<name>.json  (browser
-  source URLs wiped to "" because they carry secret widget tokens).
+- Scene collection .json  -> devices/<slug>/scenes/<name>.json (URLs and
+  credential fields wiped).
 - Profile files (a folder holding basic.ini) -> devices/<slug>/profiles/<folder>/
-  with service.json's stream key wiped to "".
-- Anything else          -> devices/<slug>/other/<relpath>  (copied as-is).
+  with service.json's stream key and basic.ini account tokens wiped.
+- Anything else          -> raw Google Drive backup only (not copied to git).
 
-The un-wiped full export stays in your ~/Downloads zip; only the scrubbed
+The raw OBS settings stay in your Google Drive backup zip; only the scrubbed
 copy lands in git. See docs/backup-guide.md.
 """
 import json
 import os
-import shutil
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-REPO = os.path.dirname(HERE)
+REPO = os.environ.get("OBS_REPO_DIR", os.path.dirname(HERE))
+
+
+def secret_key(key):
+    key = key.lower()
+    return key in {"url", "cookieid"} or key.endswith("key") or any(
+        word in key for word in ("token", "secret", "password", "credential", "auth")
+    )
+
+
+def scrub(data):
+    if isinstance(data, dict):
+        return {key: "" if secret_key(key) else scrub(value)
+                for key, value in data.items()}
+    if isinstance(data, list):
+        return [scrub(value) for value in data]
+    return data
 
 
 def is_scene_collection(path):
@@ -35,17 +50,11 @@ def is_scene_collection(path):
 def wipe_scene_urls(path, dest):
     with open(path) as f:
         d = json.load(f)
-    wiped = 0
-    for src in d.get("sources", []):
-        sid = src.get("versioned_id") or src.get("id") or ""
-        if sid.startswith("browser_source"):
-            s = src.get("settings", {})
-            if s.get("url"):
-                s["url"] = ""
-                wiped += 1
+    wiped = sum(1 for src in d.get("sources", [])
+                 if isinstance(src.get("settings"), dict) and src["settings"].get("url"))
     os.makedirs(os.path.dirname(dest), exist_ok=True)
     with open(dest, "w") as f:
-        json.dump(d, f, indent=2, ensure_ascii=False)
+        json.dump(scrub(d), f, indent=2, ensure_ascii=False)
         f.write("\n")
     return wiped
 
@@ -55,14 +64,24 @@ def wipe_service_key(path, dest):
         d = json.load(f)
     hit = False
     settings = d.get("settings", {})
-    if settings.get("key"):
+    if isinstance(settings, dict) and settings.get("key"):
         settings["key"] = ""
         hit = True
     os.makedirs(os.path.dirname(dest), exist_ok=True)
     with open(dest, "w") as f:
-        json.dump(d, f, indent=2, ensure_ascii=False)
+        json.dump(scrub(d), f, indent=2, ensure_ascii=False)
         f.write("\n")
     return hit
+
+
+def wipe_ini(path, dest):
+    os.makedirs(os.path.dirname(dest), exist_ok=True)
+    with open(path) as src, open(dest, "w") as out:
+        for line in src:
+            if "=" in line and secret_key(line.split("=", 1)[0].strip()):
+                out.write(line.split("=", 1)[0] + "=\n")
+            else:
+                out.write(line)
 
 
 def main():
@@ -79,29 +98,35 @@ def main():
         for root, _, files in os.walk(src_dir) if "basic.ini" in files
     }
 
-    scenes, keys_wiped, urls_wiped = [], 0, 0
+    scenes, keys_wiped, urls_wiped, copied, skipped = [], 0, 0, 0, []
     for root, _, files in os.walk(src_dir):
         for name in files:
             if name == ".DS_Store" or name.endswith(".zip"):
                 continue
             full = os.path.join(root, name)
+            rel = os.path.relpath(full, src_dir)
+            if os.path.islink(full):
+                skipped.append(rel)
+                continue
             if is_scene_collection(full):
                 dest = os.path.join(dest_root, "scenes", name)
                 urls_wiped += wipe_scene_urls(full, dest)
                 scenes.append(f"scenes/{name}")
-            elif root in profile_dirs:
+                copied += 1
+            elif root in profile_dirs and name in ("basic.ini", "service.json"):
                 prof = os.path.basename(root)
                 dest = os.path.join(dest_root, "profiles", prof, name)
                 if name == "service.json":
                     keys_wiped += 1 if wipe_service_key(full, dest) else 0
                 else:
                     os.makedirs(os.path.dirname(dest), exist_ok=True)
-                    shutil.copy2(full, dest)
+                    wipe_ini(full, dest)
+                copied += 1
             else:
-                rel = os.path.relpath(full, src_dir)
-                dest = os.path.join(dest_root, "other", rel)
-                os.makedirs(os.path.dirname(dest), exist_ok=True)
-                shutil.copy2(full, dest)
+                skipped.append(rel)
+
+    if not copied:
+        sys.exit("No supported OBS scene collections or profile files found")
 
     # index lists EVERYTHING in scenes/ (not just this walk), so a generated
     # collection (gen_scene_collection.py) and this backup coexist. Keep in
@@ -118,6 +143,10 @@ def main():
     print(f"device: {label} ({slug})")
     print(f"scene collections: {len(scenes)}  (browser URLs wiped: {urls_wiped})")
     print(f"stream keys wiped: {keys_wiped}")
+    if skipped:
+        print("kept only in the raw backup (not copied to git):")
+        for rel in skipped:
+            print(f"  {rel}")
 
 
 if __name__ == "__main__":

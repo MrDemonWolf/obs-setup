@@ -102,4 +102,4 @@ See [`ASSETS.md`](ASSETS.md) for the full scene + asset reference.
 - Animate with `useCurrentFrame()` + `interpolate()` only — CSS transitions /
   animations don't render in Remotion. All motion is periodic over the clip so
   the loop point is invisible.
-- `npm run lint` runs ESLint + `tsc` on `src`.
+- `npm run lint` runs ESLint + `tsc` on `src` and `preview`.

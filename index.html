@@ -276,7 +276,7 @@ function tint(col, a){
 // OBS groups; everything is click-to-copy.
 function rowHtml(it, byName){
   const ref = byName[it.name];
-  const isFolder = ref && ref.id === "scene";
+  const isFolder = ref && (ref.id === "scene" || ref.id === "group");
   const [tlabel,ticon] = isFolder ? ["Group","▤"] : typeInfo(ref ? ref.id : "");
   const col = itemColor(it.private_settings) || "var(--line2)";
   const bg = tint(col, .13);
@@ -300,8 +300,8 @@ function rowHtml(it, byName){
 
 // --- render one scene collection ---------------------------------------------
 function renderCollection(coll, host, title, slug){
-  const byName = {};
-  (coll.sources||[]).forEach(s => byName[s.name] = s);
+  const byName = Object.create(null);
+  [...(coll.sources||[]), ...(coll.groups||[])].forEach(s => byName[s.name] = s);
   const order = (coll.scene_order||[]).map(o => o.name);
   const scenes = order.filter(n => byName[n] && byName[n].id === "scene");
   const mains = scenes.filter(n => !n.startsWith("[src]") && !isDivider(n));

@@ -32,11 +32,11 @@ One command to back up. One download to restock OBS. No lost scenes.
 
 ## Features
 
-- **Per-device backups.** One command scrubs secrets and files your
-  OBS export into the repo under the right device automatically.
-- **Secret-safe by default.** Browser widget URLs and Twitch stream
-  keys are wiped before anything reaches git. The full un-wiped copy
-  is zipped to your Downloads folder for Google Drive.
+- **Per-device backups.** One command reads live macOS OBS settings, saves a
+  full private ZIP, and files a scrubbed copy under the right device.
+- **Known secrets scrubbed.** Source URLs and stream keys are wiped from
+  the Git copy; unsupported files stay in the raw ZIP. Review the staged
+  diff before committing. The full scenes/profiles snapshot goes to Google Drive.
 - **Import-ready scenes.** Generated OBS scene collections for both
   Macs with every source color-coded, cams pre-pinned to the overlay
   frames, and per-scene Wolfathon widget wrappers (Mac Mini).
@@ -70,7 +70,7 @@ One command to back up. One download to restock OBS. No lost scenes.
 
 Full docs live in [`docs/`](docs/):
 
-- [Backup guide](docs/backup-guide.md) - export, back up, and restore.
+- [Backup guide](docs/backup-guide.md) - configure, back up, and restore.
 - [ADHD setup guide](docs/adhd-setup-guide.md) - the full scene /
   group / source table with the color for each item.
 - [Color coding](docs/color-coding.md) - the palette and what each
@@ -108,7 +108,7 @@ Everything runs through `make`:
 
 | Command        | What it does                                                                                          |
 | -------------- | ----------------------------------------------------------------------------------------------------- |
-| `make backup`  | Zips your `~/Downloads/OBS` export, then files a scrubbed copy into the repo for the current device.  |
+| `make backup`  | Zips live macOS OBS settings, then files a scrubbed copy into the repo for the current device.  |
 | `make release` | Renders every overlay, regenerates masks, and zips a dated OBS bundle into `~/Downloads`.             |
 | `make preview` | Serves the color-coded previewer at <http://localhost:8000>.                                          |
 | `make gen`     | Regenerates both device scene collections (MacBook Pro + Mac Mini).                                   |
@@ -117,13 +117,15 @@ Everything runs through `make`:
 
 ### Back up a Mac
 
-1. In OBS: `Scene Collection -> Export` and `Profile -> Export` into
-   `~/Downloads/OBS`.
-2. Run `make backup`. It detects the Mac by its name, writes
-   `~/Downloads/OBS-backups/<Device>-<date>.zip` (upload that to
-   Google Drive), and copies a secret-free version into
+1. Install with `brew tap mrdemonwolf/den && brew install obs-backup`, clone
+   this repo, then run `obs-backup setup` once to choose the Google Drive folder.
+   Or run `bash scripts/backup.sh setup` for a local command install.
+2. Run `obs-backup` (or `make backup` from this repo). It reads OBS's live
+   macOS settings, detects the Mac by its name, writes
+   `~/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/Backups/OBS/<Device>-<timestamp>.zip`,
+   and copies a scrubbed version into
    `devices/<device>/`.
-3. Review `git status` and commit.
+3. Review `git status` and the staged diff before committing.
 
 Force the device when auto-detect is wrong:
 
@@ -224,8 +226,9 @@ git clone git@github.com:MrDemonWolf/obs-setup.git
 cd obs-setup
 ```
 
-The backup, generator, and previewer need no install step - the
-scripts use only the Python standard library. For the overlays:
+The backup, generator, and previewer need no package install - the
+scripts use macOS tools and the Python standard library. For a global backup
+command, run `bash scripts/backup.sh setup`. For the overlays:
 
 ```bash
 cd remotion
@@ -237,11 +240,11 @@ npm install
 - `scripts/gen_scene_collection.py` - builds both device scene
   collections (MacBook Pro + Mac Mini) from the per-device layouts
   defined at the top of the file. Run with `make gen`.
-- `scripts/sanitize.py` - copies an OBS export into
-  `devices/<slug>/`, wiping browser URLs and stream keys. Called by
+- `scripts/sanitize.py` - copies live OBS settings into
+  `devices/<slug>/`, wiping URLs, keys, and tokens. Called by
   the backup script.
-- `scripts/backup.sh` - detects the device, zips the raw export, runs
-  the sanitizer. Run with `make backup`.
+- `scripts/backup.sh` - detects the device, zips a raw snapshot, runs
+  the sanitizer. Run with `obs-backup` or `make backup`.
 - `release.sh` - the full bundle pipeline. Run with `make release`.
 - `masks/gen_masks.py` - regenerates the webcam masks. Run with
   `make masks`.

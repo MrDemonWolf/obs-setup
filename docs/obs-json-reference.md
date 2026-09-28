@@ -69,16 +69,17 @@ it in `abgrToCss()`. The palette is in [color-coding.md](color-coding.md).
 
 ## Secrets - do not commit these
 
-Exports are **not** scrubbed by OBS. Two fields carry secrets:
+Exports are **not** scrubbed by OBS. These known fields carry secrets:
 
 | File            | Field              | What it is           |
 | --------------- | ------------------ | -------------------- |
 | Scene JSON      | browser source `settings.url` | Alert/widget URLs often embed a private token |
 | `service.json`  | `settings.key`     | Your Twitch stream key |
+| `basic.ini`     | `Token`, `RefreshToken` | OBS account connection tokens |
 
-`scripts/sanitize.py` blanks both before anything lands in git. The full,
-un-scrubbed copy only exists in the Google Drive zip. Source type id for
-browser sources is `browser_source`.
+`scripts/sanitize.py` blanks URL, key, token, password, and cookie fields in
+the Git copy. Unsupported settings files stay only in the raw Google Drive ZIP.
+Review the staged Git diff before committing; plugins may use other fields.
 
 ## macOS source type ids
 

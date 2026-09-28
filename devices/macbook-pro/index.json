@@ -2,6 +2,8 @@
   "device": "macbook-pro",
   "label": "MacBook Pro",
   "scenes": [
-    "scenes/MBP-Streaming.json"
+    "scenes/MBP-Streaming.json",
+    "scenes/Streaming.json",
+    "scenes/Untitled.json"
   ]
 }

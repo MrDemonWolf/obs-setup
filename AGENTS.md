@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for agents working in this repository.
 
 ## What this repo is
 
@@ -18,7 +18,7 @@ only. No package manager, no build step, no test framework.
 make gen      # regenerate BOTH device scene collections (+ index.json each):
               #   devices/macbook-pro/scenes/MBP-Streaming.json
               #   devices/mac-mini/scenes/Mini-Streaming.json
-make backup   # zip ~/Downloads/OBS export, then file a scrubbed copy into devices/<slug>/
+make backup   # zip live macOS OBS settings, then file a scrubbed copy into devices/<slug>/
 make preview  # serve the previewer at http://localhost:8000 (python3 -m http.server)
 make release  # render all overlays + package a dated OBS bundle .zip in ~/Downloads
 make          # list targets
@@ -31,8 +31,9 @@ make          # list targets
   `python3 scripts/sanitize.py <export_dir> testdev "Test Dev"` then delete
   `devices/testdev/`.
 - **Force a device** when `make backup` mis-detects:
-  `DEVICE=mac-mini make backup`. Change the export folder with
-  `OBS_EXPORT_DIR=... make backup`.
+  `DEVICE=mac-mini make backup`. Override the OBS data folder with
+  `OBS_EXPORT_DIR=... make backup`. Run `obs-backup setup` once to configure
+  the backup destination. Homebrew installs the standalone command.
 
 ## Architecture
 
@@ -60,18 +61,21 @@ three widget sources inside each).
 
 ### 2. Backup pipeline (`scripts/backup.sh` → `scripts/sanitize.py`)
 `backup.sh` detects the device from `scutil --get ComputerName` (substring
-`MacBook`/`Mini`), zips the **full raw** export to
-`~/Downloads/OBS-backups/<Label>-<date>.zip` (for Google Drive — keeps
-secrets, never git), then calls `sanitize.py` to mirror the export into
+`MacBook`/`Mini`), snapshots OBS's live macOS `basic` directory, then zips
+the **full raw** snapshot to
+`~/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/Backups/OBS/<Label>-<timestamp>.zip` (keeps
+secrets, never git), then calls `sanitize.py` to mirror the snapshot into
 `devices/<slug>/` and write that device's `index.json` (built from everything
 in `scenes/`, so generated + backed-up collections coexist — keep in sync with
 `write_index()` in the generator).
 
-**Secret boundary — the critical invariant:** two fields are secrets and are
-wiped to `""` before anything reaches git:
-- browser source `settings.url` in scene collections (widget tokens), and
-- `settings.key` in a profile's `service.json` (Twitch stream key).
-Only the Downloads `.zip` keeps them. Do not weaken this in `sanitize.py`.
+The git copy includes scene collections and profile `basic.ini`/`service.json`.
+Other export files remain in the raw ZIP and are reported as skipped.
+
+**Secret boundary — the critical invariant:** URL, key, token, password, and
+cookie fields are wiped before anything reaches git. This includes browser
+source URLs, `service.json` stream keys, and profile `basic.ini` OAuth tokens.
+Only the Google Drive backup `.zip` keeps them. Do not weaken this in `sanitize.py`.
 
 ### 3. Previewer (`index.html`, repo root)
 Self-contained (inline CSS+JS, no build; the only external ref is a Google
@@ -115,7 +119,7 @@ to video for OBS media sources. Run everything from inside `remotion/`:
 npm install
 npm run obs         # macOS-style previewer at http://localhost:5178 (Vite + @remotion/player)
 npm run dev         # Remotion Studio
-npm run lint        # eslint src + tsc
+npm run lint        # eslint + tsc for src and preview
 npm run render:all  # render every scene into out/ (see render-all.mjs)
 # one at a time (comp ids):
 npx remotion render <CompId> out/<name>.mp4

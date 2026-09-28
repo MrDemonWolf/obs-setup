@@ -77,11 +77,11 @@ export const ObsPreview: React.FC = () => {
             ref={playerRef}
             component={StageComp}
             durationInFrames={scene.durationInFrames ?? VIDEO.durationInFrames}
-            fps={VIDEO.fps}
+            fps={scene.fps ?? VIDEO.fps}
             compositionWidth={VIDEO.width}
             compositionHeight={VIDEO.height}
             style={{ width: "100%", height: "100%" }}
-            loop
+            loop={scene.id !== "Countdown" && scene.id !== "Stinger"}
             autoPlay
             initiallyMuted
             controls={false}
@@ -95,6 +95,7 @@ export const ObsPreview: React.FC = () => {
           <button
             key={s.id}
             className={s.id === sceneId ? "scene-btn active" : "scene-btn"}
+            aria-pressed={s.id === sceneId}
             onClick={() => setSceneId(s.id)}
           >
             {s.label}
@@ -102,9 +103,6 @@ export const ObsPreview: React.FC = () => {
         ))}
       </div>
 
-      <div className="hint">
-        <code>npx remotion render {sceneId} out/{sceneId}.mp4</code>
-      </div>
     </div>
   );
 };
