@@ -3,6 +3,7 @@
   "label": "Mac Mini",
   "scenes": [
     "scenes/Mini-Streaming.json",
-    "scenes/Streaming.json"
+    "scenes/Streaming.json",
+    "scenes/Untitled.json"
   ]
 }
