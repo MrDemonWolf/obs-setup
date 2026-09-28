@@ -40,7 +40,9 @@ obs-backup
 
 `make backup` works from the repo too. The command detects MacBook Pro or Mac
 Mini from the macOS Computer Name. It copies the live `basic` directory once,
-then stores `<Device>-<timestamp>.zip` in the configured backup folder. That
+then creates a folder from macOS `LocalHostName` inside the configured backup
+root and stores `<Device>-<timestamp>.zip` there, for example
+`Backups/OBS/Nathanials-MacBook-Pro/MacBook-Pro-<timestamp>.zip`. That
 ZIP includes OBS secrets and must stay private. The supported scene collections
 and profile files go to `devices/<device>/` with URLs, keys, passwords, and
 tokens removed. The command prints Git review and commit commands; it does not
@@ -53,7 +55,7 @@ does not back up external media assets referenced by OBS paths.
 
 ```bash
 DEVICE=mac-mini obs-backup
-OBS_BACKUP_DIR="$HOME/Desktop/OBS Backups" obs-backup
+OBS_BACKUP_DIR="$HOME/Desktop/OBS Backups" obs-backup # creates a host subfolder
 OBS_EXPORT_DIR="$HOME/Desktop/OBS export" obs-backup
 ```
 

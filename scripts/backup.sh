@@ -33,7 +33,7 @@ SAVED_REPO="$(config_value repo_dir || defaults read "$PREFS" RepoDirectory 2>/d
 if [ "${1:-}" = setup ]; then
   saved_backup_dir="${SAVED_BACKUP_DIR:-$DEFAULT_BACKUP_DIR}"
   saved_repo="${SAVED_REPO:-$DEFAULT_REPO}"
-  read -r -p "Backup folder [$saved_backup_dir]: " chosen_dir
+  read -r -p "Backup root folder [$saved_backup_dir]: " chosen_dir
   chosen_dir="${chosen_dir:-$saved_backup_dir}"
   if [ ! -d "$chosen_dir" ]; then
     echo "Folder not found: $chosen_dir" >&2
@@ -73,7 +73,7 @@ if [ "${1:-}" != "" ]; then
 fi
 REPO="${OBS_REPO_DIR:-${SAVED_REPO:-$SCRIPT_REPO}}"
 SRC="${OBS_EXPORT_DIR:-$HOME/Library/Application Support/obs-studio/basic}"
-BACKUP_DIR="${OBS_BACKUP_DIR:-${SAVED_BACKUP_DIR:-$DEFAULT_BACKUP_DIR}}"
+BACKUP_ROOT="${OBS_BACKUP_DIR:-${SAVED_BACKUP_DIR:-$DEFAULT_BACKUP_DIR}}"
 STAMP="$(date +%F-%H%M%S)"
 
 # --- which device? -----------------------------------------------------------
@@ -85,6 +85,11 @@ case "$name_lower" in
   mac-mini|*mini*)       SLUG="mac-mini";    LABEL="Mac Mini" ;;
   *) echo "Unknown device: '$name'"; echo "Re-run with: DEVICE=macbook-pro make backup"; exit 1 ;;
 esac
+HOST_FOLDER="$(scutil --get LocalHostName)"
+case "$HOST_FOLDER" in
+  ""|*[!A-Za-z0-9-]*) echo "Invalid macOS LocalHostName: '$HOST_FOLDER'" >&2; exit 1 ;;
+esac
+BACKUP_DIR="$BACKUP_ROOT/$HOST_FOLDER"
 
 # --- OBS data must exist ------------------------------------------------------
 if [ ! -d "$SRC" ] || [ -z "$(ls -A "$SRC" 2>/dev/null)" ]; then
@@ -98,10 +103,11 @@ if [ ! -f "$SANITIZER" ] || [ ! -d "$REPO/.git" ]; then
 fi
 
 # --- 1) full raw zip for Google Drive ----------------------------------------
-if [ ! -d "$BACKUP_DIR" ]; then
-  echo "Google Drive backup folder not available: $BACKUP_DIR" >&2
+if [ ! -d "$BACKUP_ROOT" ]; then
+  echo "Google Drive backup root not available: $BACKUP_ROOT" >&2
   exit 1
 fi
+mkdir -p "$BACKUP_DIR"
 ZIP="$BACKUP_DIR/${LABEL// /-}-$STAMP.zip"
 if [ -e "$ZIP" ]; then
   echo "Backup already exists: $ZIP" >&2

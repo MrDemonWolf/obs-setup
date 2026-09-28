@@ -122,7 +122,7 @@ Everything runs through `make`:
    Or run `bash scripts/backup.sh setup` for a local command install.
 2. Run `obs-backup` (or `make backup` from this repo). It reads OBS's live
    macOS settings, detects the Mac by its name, writes
-   `~/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/Backups/OBS/<Device>-<timestamp>.zip`,
+   `~/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/Backups/OBS/<LocalHostName>/<Device>-<timestamp>.zip`,
    and copies a scrubbed version into
    `devices/<device>/`.
 3. Review `git status` and the staged diff before committing.

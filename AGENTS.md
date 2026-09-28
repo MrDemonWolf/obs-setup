@@ -63,7 +63,7 @@ three widget sources inside each).
 `backup.sh` detects the device from `scutil --get ComputerName` (substring
 `MacBook`/`Mini`), snapshots OBS's live macOS `basic` directory, then zips
 the **full raw** snapshot to
-`~/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/Backups/OBS/<Label>-<timestamp>.zip` (keeps
+`~/Library/CloudStorage/GoogleDrive-nathanial.henniges@mrdemonwolf.com/My Drive/Backups/OBS/<LocalHostName>/<Label>-<timestamp>.zip` (keeps
 secrets, never git), then calls `sanitize.py` to mirror the snapshot into
 `devices/<slug>/` and write that device's `index.json` (built from everything
 in `scenes/`, so generated + backed-up collections coexist — keep in sync with
