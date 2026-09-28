@@ -24,12 +24,10 @@ make release  # render all overlays + package a dated OBS bundle .zip in ~/Downl
 make          # list targets
 ```
 
-- **Tests:** there is no test framework. `scripts/gen_scene_collection.py`
-  runs an inline `selfcheck()` (ABGR color math + every scene item references a
-  real source) on each run — `make gen` fails loudly if it breaks. To exercise
-  the sanitizer, point it at a throwaway export dir and a temp slug:
-  `python3 scripts/sanitize.py <export_dir> testdev "Test Dev"` then delete
-  `devices/testdev/`.
+- **Tests:** run `python3 -m unittest discover -s tests -v` for the sanitizer
+  secret-scrubbing check. `scripts/gen_scene_collection.py` also runs an inline
+  `selfcheck()` (ABGR color math + every scene item references a real source)
+  on each run — `make gen` fails loudly if it breaks.
 - **Force a device** when `make backup` mis-detects:
   `DEVICE=mac-mini make backup`. Override the OBS data folder with
   `OBS_EXPORT_DIR=... make backup`. Run `obs-backup setup` once to write

@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Check Bash syntax
+        run: bash -n scripts/backup.sh
+
+      - name: Test secret scrubbing
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Check generated scene files
+        run: |
+          make gen
+          git diff --exit-code -- \
+            devices/macbook-pro/index.json \
+            devices/macbook-pro/scenes/MBP-Streaming.json \
+            devices/mac-mini/index.json \
+            devices/mac-mini/scenes/Mini-Streaming.json
