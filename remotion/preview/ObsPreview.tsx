@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AbsoluteFill } from "remotion";
 import { Player, PlayerRef } from "@remotion/player";
-import { SCENES } from "../src/scenes";
+import { SCENES, type SceneDef } from "../src/scenes";
 import { VIDEO } from "../src/theme";
+import { StingerConceptBoard } from "../src/StingerConcepts";
 
 type PreviewGroup = { title: string; description: string; sceneIds: string[] };
 
@@ -22,9 +23,39 @@ const PREVIEW_GROUPS: PreviewGroup[] = [
     description: "Transparent overlays and the scene change",
     sceneIds: ["Background", "Socials", "Countdown", "Countdown10", "LoadingBarks", "Stinger"],
   },
+  {
+    title: "Stinger concepts",
+    description: "Five visual directions, shown as stills",
+    sceneIds: ["StingerConceptBoard"],
+  },
 ];
 
-const NO_LOOP = new Set(["Countdown", "Countdown10", "Stinger"]);
+const PREVIEW_ONLY_SCENES: SceneDef[] = [
+  {
+    id: "StingerConceptBoard",
+    label: "Stinger concept board",
+    component: StingerConceptBoard,
+    durationInFrames: 1,
+    props: {},
+  },
+];
+const PREVIEW_SCENES = [...SCENES, ...PREVIEW_ONLY_SCENES];
+const GROUPED_SCENE_IDS = new Set(PREVIEW_GROUPS.flatMap((group) => group.sceneIds));
+const UNGROUPED_SCENE_IDS = PREVIEW_SCENES
+  .filter((scene) => !GROUPED_SCENE_IDS.has(scene.id))
+  .map((scene) => scene.id);
+const GROUPS_WITH_FALLBACK: PreviewGroup[] = UNGROUPED_SCENE_IDS.length
+  ? [
+      ...PREVIEW_GROUPS,
+      {
+        title: "Other scenes",
+        description: "Additional compositions available in the preview",
+        sceneIds: UNGROUPED_SCENE_IDS,
+      },
+    ]
+  : PREVIEW_GROUPS;
+
+const NO_LOOP = new Set(["Countdown", "Countdown10", "Stinger", "StingerConceptBoard"]);
 const ALPHA_SCENES = new Set(["Socials", "Countdown", "Countdown10", "LoadingBarks", "Stinger"]);
 type StageBackground = "forest" | "checker" | "midnight";
 
@@ -39,7 +70,7 @@ export const ObsPreview: React.FC = () => {
   const [frame, setFrame] = useState(0);
   const [playing, setPlaying] = useState(true);
   const [stageBackground, setStageBackground] = useState<StageBackground>("forest");
-  const scene = useMemo(() => SCENES.find((candidate) => candidate.id === sceneId)!, [sceneId]);
+  const scene = useMemo(() => PREVIEW_SCENES.find((candidate) => candidate.id === sceneId)!, [sceneId]);
   const playerRef = useRef<PlayerRef>(null);
   const fps = scene.fps ?? VIDEO.fps;
   const duration = scene.durationInFrames ?? VIDEO.durationInFrames;
@@ -190,12 +221,12 @@ export const ObsPreview: React.FC = () => {
             <p className="eyebrow">SCENE LIBRARY</p>
             <h2>Choose a view</h2>
           </div>
-          <span className="scene-count">{SCENES.length} scenes</span>
+          <span className="scene-count">{PREVIEW_SCENES.length} scenes</span>
         </div>
         <div className="library-groups">
-          {PREVIEW_GROUPS.map((group) => {
+          {GROUPS_WITH_FALLBACK.map((group) => {
             const scenes = group.sceneIds
-              .map((id) => SCENES.find((candidate) => candidate.id === id))
+              .map((id) => PREVIEW_SCENES.find((candidate) => candidate.id === id))
               .filter((candidate) => candidate !== undefined);
             return (
               <section className="library-group" key={group.title}>
