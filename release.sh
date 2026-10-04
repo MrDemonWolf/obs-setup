@@ -180,12 +180,13 @@ VTuber = no cam frame (model fullscreen); chat frame is the same box.
 The Howlbox chat panel is at **64, 720 · 704 × 320**. Size and position its
 browser source to match the glass panel in each standby scene.
 
-### Co-Working · Dual widget zones
+### Co-Working · Dual open placement areas
 
-The overlay includes a Chat panel at **1280, 312 · 576 × 288** and a bottom
-widget row at **64, 826 · 1184 × 190**. Place compact Timer, Tasks, and Now
-Playing browser sources over the three labeled slots in the lower row. These
-zones are part of the overlay; they do not need webcam masks.
+The overlay leaves a clear chat or task placement above the second camera at
+**1280, 312 · 576 × 288**, plus an open lower band below the main camera at
+**64, 826 · 1184 × 190** for Timer, Tasks, Now Playing, or other OBS sources.
+These are forest areas with no widget boxes or labels baked into the video, and
+they do not need webcam masks.
 
 ### Apply a mask (rounds the cam corners)
 

@@ -176,21 +176,21 @@ x=64, y=720** on the 1920 × 1080 canvas; set the browser source to that size
 and position. Keep its background transparent if Howlbox supports it.
 
 Live has no permanent Howlbox frame, so use the lower-right only when the game
-leaves that area clear. Co-Working Solo keeps an open right rail; Co-Working
-Multi now has a dedicated chat frame and labeled spaces for the other widgets.
+leaves that area clear. Co-Working Solo keeps an open right rail. Co-Working
+Multi leaves clear forest areas around the cameras for OBS widgets; the video
+does not draw widget boxes or labels there.
 
 | Scene | Suggested Howlbox area | Keep the scene calm by… |
 | ----- | ---------------------- | ----------------------- |
 | Live | Lower-right: **x=1216, y=660, 640 × 360** | Use it only when the game leaves that corner clear. |
 | Co-Working [Solo] | Portrait right rail: **x=1488, y=200, 368 × 700** | Use a matching portrait browser source and replace the task list / right-side Rewards. |
-| Co-Working [Multi] | Upper-right: **x=1280, y=312, 576 × 288** | Use the new glass chat panel; keep the lower-right camera clear. |
+| Co-Working [Multi] | Upper-right forest: **x=1280, y=312, 576 × 288** | Add chat or a task list directly over the clear forest above the small camera. |
 
-Co-Working [Multi] now has labeled spaces for Chat, Timer, Tasks, and Now
-Playing. Put one browser source in each matching space; the lower row is split
-into **Timer 280 × 190 at (64, 826)**, **Tasks 500 × 190 at (364, 826)**, and
-**Now Playing 364 × 190 at (884, 826)**. Keep Rewards and Wheel hidden until
-needed so the cameras and chat stay easy to read. The standby and co-working
-chat placements need browser sources sized to their matching viewport.
+The dual layout also leaves an open lower band at **x=64, y=826, 1184 × 190**
+below the main camera. Place Timer, Tasks, Now Playing, or other OBS browser
+sources directly over the forest there; use only the widgets you need so the
+layout stays calm. Keep Rewards and Wheel hidden until needed. The standby and
+co-working chat placements need browser sources sized to their chosen area.
 
 ### Align OBS sources to the overlay frames
 
