@@ -88,8 +88,19 @@ jobs:
       - name: Encode the transparent HEVC Stinger
         run: ./remotion/to-hevc.sh "$RUNNER_TEMP/stinger.mov"
 
+      - name: Render the transparent cabin desk loop
+        run: >-
+          npx remotion render DeskForeground "$RUNNER_TEMP/desk-foreground.mov"
+          --codec=prores --prores-profile=4444 --image-format=png
+          --pixel-format=yuva444p10le --muted --concurrency=2 --log=error
+        working-directory: remotion
+
+      - name: Encode the transparent cabin desk
+        run: ./remotion/to-hevc.sh "$RUNNER_TEMP/desk-foreground.mov"
+
       - name: Verify frame count and exact embedded WAV timing
         run: >-
           python3 scripts/validate_stinger.py
           --rendered "$RUNNER_TEMP/stinger.mov"
           --encoded "$RUNNER_TEMP/stinger-hevc.mov"
+          --alpha-file "$RUNNER_TEMP/desk-foreground-hevc.mov"
