@@ -16,6 +16,8 @@ const items = [
 // Seeded schedule (computed once, loop-safe): each handle is on screen a random
 // 15–30s. Duration = sum of holds → exported for the composition registration.
 const FPS = VIDEO.fps;
+export const SOCIALS_WIDTH = 720;
+export const SOCIALS_HEIGHT = 140;
 const lcg = (seed: number) => () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
 const rand = lcg(20260630);
 const HOLDS = items.map(() => Math.round((15 + rand() * 15) * FPS)); // frames per handle (15–30s)
@@ -68,8 +70,8 @@ export const SocialsScene: React.FC = () => (
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        width: "88%",
-        height: "62%",
+        width: "92%",
+        height: "86%",
         borderRadius: 16, // macOS window-style corners (30 read too round on a short badge)
         // shared over-gameplay glass panel (dot grid + sheen + dense fill); no drop
         // shadow — keeps a clean GIF alpha edge — just the top bevel

@@ -3,14 +3,13 @@ import { Scene } from "./Scene";
 import { Cowork, COWORK_LAYOUTS } from "./CoworkFrame";
 import { BackdropScene } from "./BackdropScene";
 import { JustChattingScene } from "./JustChattingScene";
-import { SocialsScene, SOCIALS_DURATION } from "./Socials";
+import { SocialsScene, SOCIALS_DURATION, SOCIALS_HEIGHT, SOCIALS_WIDTH } from "./Socials";
 import { Countdown } from "./Countdown";
 import { LoadingBarks, LOADING_BARKS_DURATION, LOADING_BARKS_FPS } from "./LoadingBarks";
 import { Stinger, STINGER_FPS, STINGER_DURATION } from "./Stinger";
 
 // Single source of truth for every scene. `component` picks the layout.
-// `width`/`height` override the
-// default 1920×1080 (e.g. the standalone Socials badge for a GIF).
+// `width`/`height` override the default 1920×1080 for compact alpha widgets.
 // `durationInFrames` overrides the default loop length (Socials runs longer so
 // each handle is on screen ~5s).
 export type SceneDef = {
@@ -36,18 +35,19 @@ export const SCENES: SceneDef[] = [
   { id: "CoworkingDual", label: "Co-Working · Dual", component: Cowork, props: { cams: COWORK_LAYOUTS.dual, moon: { x: 1568 } } },
   { id: "EndingStream", label: "Ending Stream", component: Scene, props: { title: "Until Next Time", subtitle: "Thanks for being here", showMascot: false } },
   { id: "Background", label: "Background", component: BackdropScene, props: {} },
-  { id: "Socials", label: "Socials (GIF)", component: SocialsScene, width: 760, height: 180, durationInFrames: SOCIALS_DURATION, props: {} },
-  // Transparent standalone timer — full-frame (chip centered) so it's a drop-in
-  // OBS overlay with no repositioning + the previewer stage never reshapes.
+  // Transparent widget outputs stay close to the visible glass panels so OBS
+  // source bounds are easy to place; the preview centers them on the 1080p stage.
+  { id: "Socials", label: "Socials (GIF)", component: SocialsScene, width: SOCIALS_WIDTH, height: SOCIALS_HEIGHT, durationInFrames: SOCIALS_DURATION, props: {} },
+  // Countdown panel includes room for its soft glass shadow; place it where wanted.
   // 60fps for smooth motion. durationInFrames = (from + 1) × fps — the +1s is
   // the held 00:00 frame (at from×fps the last frame still reads 00:01).
   // NOT in render:all (heavy).
-  { id: "Countdown", label: "Countdown (5:00)", component: Countdown, fps: 60, durationInFrames: (300 + 1) * 60, props: { from: 300 } },
-  { id: "Countdown10", label: "Countdown (10:00)", component: Countdown, fps: 60, durationInFrames: (600 + 1) * 60, props: { from: 600 } },
-  // Transparent full-frame glass status card with ten wolf-tech joke pairs.
+  { id: "Countdown", label: "Countdown (5:00)", component: Countdown, width: 820, height: 500, fps: 60, durationInFrames: (300 + 1) * 60, props: { from: 300 } },
+  { id: "Countdown10", label: "Countdown (10:00)", component: Countdown, width: 820, height: 500, fps: 60, durationInFrames: (600 + 1) * 60, props: { from: 600 } },
+  // Transparent panel-sized glass status card with ten wolf-tech joke pairs.
   // Seeded schedule (each phrase 20–40s; bar fills to 100%); duration ~4.7 min.
   // 60fps; LOADING_BARKS_DURATION is computed at LOADING_BARKS_FPS so they match.
-  { id: "LoadingBarks", label: "Loading Barks", component: LoadingBarks, fps: LOADING_BARKS_FPS, durationInFrames: LOADING_BARKS_DURATION, props: {} },
+  { id: "LoadingBarks", label: "Loading Barks", component: LoadingBarks, width: 1080, height: 420, fps: LOADING_BARKS_FPS, durationInFrames: LOADING_BARKS_DURATION, props: {} },
   // OBS stinger transition (Paw Swipe). Transparent full-frame, 60fps, plays
   // ONCE (not a loop) — like Countdown, kept out of render:all.
   { id: "Stinger", label: "Stinger", component: Stinger, fps: STINGER_FPS, durationInFrames: STINGER_DURATION, props: {} },

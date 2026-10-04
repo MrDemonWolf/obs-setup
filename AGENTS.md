@@ -134,8 +134,10 @@ Architecture:
 - **`src/scenes.ts` is the single source of truth** for the **13** scenes, each
   with `id`, `label`, `component`, `props`, and optional `width`/`height`.
   `src/Root.tsx` registers a `<Composition>` per scene (applying per-scene
-  `width ?? VIDEO.width` / `height ?? VIDEO.height` — so `Socials` is 760×180,
-  the rest 1920×1080). `preview/ObsPreview.tsx`
+  `width ?? VIDEO.width` / `height ?? VIDEO.height` — transparent widgets use
+  compact panel bounds (`Socials` 720×140, countdowns 820×500, LoadingBarks
+  1080×420); the stream screens and Stinger remain 1920×1080.
+  `preview/ObsPreview.tsx`
   (button-per-scene switcher) imports the same list. Add a scene there once.
 - **`PawLoader`** (`PawLoader.tsx`) = reusable row of paws pulsing in a
   traveling wave (seamless via integer `harmonic`). Used inside `Countdown`
@@ -147,7 +149,8 @@ Architecture:
   (`HOWLING IN` + `M:SS` + `PawLoader`). Counts `from`s → 0 over the comp
   duration then holds at 00:00. **The one intentional non-loop** — render it out
   and set the OBS media source to play ONCE (loop OFF), start on going live.
-  Full-frame 1920×1080 (chip centered) so it drops in without repositioning.
+  Panel-sized 820×500 compositions with room for the glass shadow; position the
+  media source wherever the timer should appear.
   Registered at 5:00 (`from:300`, **18060f**) and 10:00 (`from:600`,
   **36060f**) at 60fps. Each duration includes the extra held 00:00 second; at
   `from`×fps the last frame still reads 00:01. Per-comp
@@ -156,8 +159,8 @@ Architecture:
   **kept out of `render:all`** (too heavy). Render
   manually as `Countdown` → `out/countdown.mov` or `Countdown10` →
   `out/countdown-10m.mov` with ProRes 4444.
-- **`LoadingBarks`** (`LoadingBarks.tsx`) = a transparent full-frame glass
-  status card with ten short wolf-tech jokes. Each phrase has a headline and a
+- **`LoadingBarks`** (`LoadingBarks.tsx`) = a transparent 1080×420 glass status
+  panel (900px card) with ten short wolf-tech jokes. Each phrase has a headline and a
   punchline. A **seeded module-load schedule** (LCG, loop-safe — no per-frame
   random) gives each phrase a random 20–40s hold; within EACH phrase the bar
   fills 0→100% (per-phrase `CURVES`, random uneven spurts) and maxes at 100 right
@@ -241,7 +244,7 @@ Architecture:
 - **`Background`** = `BackdropScene.tsx` → the shared forest photograph, sky
   stars, moon, and soft rightward paw trail; no handle or widget boxes. The most
   flexible overlay.
-- **`Socials`** = `Socials.tsx` `SocialsScene` (760×180, transparent) that fades
+- **`Socials`** = `Socials.tsx` `SocialsScene` (720×140, transparent) that fades
   through brand logos one at a time, in their **real brand colors** (no recolor
   filter; dark marks like x/instagram/tiktok's note are whitened in the SVG files
   themselves). Each handle holds a random **15–30s** (seeded schedule →
@@ -298,8 +301,9 @@ Architecture:
   `render-all.mjs` renders the 8 full-frame ids to MP4, then `Socials` to
   `.mov` + `.gif` and a bonus `Background.gif`, into `out/` (which is
   gitignored). `Socials` is omitted from the 8-id MP4 array; both `Countdown`
-  options (5 and 10 min) + `LoadingBarks` (~4.7 min) are transparent full-frame ProRes 4444
-  (multi-GB, slow) → omitted from `render:all` entirely, rendered manually.
+  options (5 and 10 min) + `LoadingBarks` (~4.7 min) are compact transparent
+  panel ProRes 4444 outputs (multi-GB, slow) → omitted from `render:all`,
+  rendered manually.
 - **`release.sh`** (repo root, `make release`) runs the pipeline end to end:
   `render:all` → render both Countdown options + LoadingBarks ProRes (reused if
   a master already exists, `--force` to re-render) → render the Stinger ProRes → encode

@@ -179,8 +179,9 @@ npm run render:all  # render the standard set into out/
 Composition ids: `StartingSoon`, `BRB`, `JustChatting`,
 `JustChattingVtuber`, `CoworkingSolo`, `CoworkingDual`,
 `EndingStream`, `Background` (full-frame MP4s), plus four
-transparent overlays: `Socials` (760x180 badge), `Countdown` options
-(5:00 and 10:00, play once), and `LoadingBarks` (wolf-tech jokes), plus
+panel-sized transparent overlays: `Socials` (720x140 badge), `Countdown`
+options (5:00 and 10:00, each 820x500 and playing once), and `LoadingBarks`
+(1080x420 status panel with wolf-tech jokes), plus
 the `Stinger` transition (4s alpha wipe, plays once). The heavy
 `Countdown` options and `LoadingBarks` ProRes masters are excluded from
 `render:all`; `make release` (or a manual `npx remotion render`)

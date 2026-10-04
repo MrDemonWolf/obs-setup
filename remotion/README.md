@@ -5,7 +5,8 @@ moonlight, a soft white paw trail, and restrained blue glass. Card scenes keep
 their title and chat panels logo-free; the site label carries the brand. The
 shared visual direction is documented in
 [`../docs/overlay-design-system.md`](../docs/overlay-design-system.md).
-Most scenes are 1920×1080, 8-second loops rendered to video for OBS.
+Full-scene videos are 1920×1080, 8-second loops. Transparent widgets use
+compact panel-sized canvases for easier placement in OBS.
 
 ## Make all the overlays — one command
 
@@ -30,8 +31,8 @@ Numbered by stream flow so they sort in order:
 | `05-be-right-back.mp4` | away / break loop |
 | `06-ending-stream.mp4` | end-of-stream loop |
 | `background.mp4` | universal background (any scene) |
-| `socials-badge.mov` | transparent socials badge (best quality) |
-| `socials-badge.gif` | lighter transparent socials badge |
+| `socials-badge.mov` | transparent socials badge (720×140, best quality) |
+| `socials-badge.gif` | lighter 720×140 transparent socials badge |
 | `background.gif` | GIF copy of the background (heavier — prefer the MP4) |
 
 ## Preview before rendering
@@ -78,7 +79,8 @@ npx remotion render Socials out/socials-badge.gif --codec=gif
 
 Composition ids (left arg): `StartingSoon`, `BRB`, `JustChatting`,
 `JustChattingVtuber`, `CoworkingSolo`, `CoworkingDual`, `EndingStream`,
-`Background`, `Socials`, `Countdown` (5:00), `Countdown10` (10:00), `LoadingBarks`, and the `Stinger`
+`Background`, `Socials` (720×140), `Countdown` (5:00, 820×500),
+`Countdown10` (10:00, 820×500), `LoadingBarks` (1080×420), and the `Stinger`
 transition. The output filename (right arg) is up to you — `render:all` uses the
 numbered names above (Countdown, LoadingBarks, and Stinger render via
 `make release`).

@@ -51,7 +51,7 @@ else
   echo "▶ render:all (8 opaque MP4s + socials + background)…"
   npm run render:all
 
-# Heavy transparent full-frame ProRes 4444 masters — multi-GB and slow, and they
+# Heavy transparent ProRes 4444 panel masters — multi-GB and slow, and they
 # rarely change, so reuse an existing file unless --force.
 # ponytail: existence check, not a content hash; --force when you edited them.
 prores() { # <CompId> <outfile>
@@ -122,7 +122,7 @@ cp "$OUT"/stinger-hevc.mov "$R"/public/stinger.wav "$STINGER_DIR/"
 This package contains the scene overlays and webcam masks.
 
 ```
-Overlays/   12 videos — 8 full-frame MP4s + 4 transparent HEVC-alpha .mov
+Overlays/   12 videos — 8 full-frame MP4s + 4 panel-sized transparent HEVC-alpha .mov
 Masks/      rounded-corner webcam masks (PNG, alpha)
 ```
 
@@ -130,24 +130,25 @@ Masks/      rounded-corner webcam masks (PNG, alpha)
 
 1. Sources → **+** → **Media Source** → **Local File** → pick the file.
 2. **Loop**: ON for everything **except the two countdown files** (play once, start on going live).
-3. Full-frame overlays sit at **0, 0** (they're 1920×1080). `socials-badge` is 760×180 — place it anywhere.
+3. Place the eight full-frame scene MP4s at **0, 0** (1920×1080). The four
+   transparent widgets use compact bounds; position them where you want.
 
 ### Files → scene → loop
 
-| File | Scene | Loop |
-|---|---|---|
-| `01-starting-soon.mp4` | Starting Soon | ON |
-| `02-just-chatting.mp4` | Just Chatting | ON |
-| `03-just-chatting-vtuber.mp4` | Just Chatting · VTuber | ON |
-| `04-co-working-solo.mp4` | Co-Working · Solo | ON |
-| `05-co-working-dual.mp4` | Co-Working · Dual | ON |
-| `06-be-right-back.mp4` | Be Right Back | ON |
-| `07-ending-stream.mp4` | Ending Stream | ON |
-| `background.mp4` | Background (also plain gameplay) | ON |
-| `socials-badge-hevc.mov` | Socials badge (over anything) | ON |
-| `loading-barks-hevc.mov` | Loading overlay (over anything) | ON |
-| `countdown-hevc.mov` | 5:00 countdown | **OFF** — start on going live |
-| `countdown-10m-hevc.mov` | 10:00 countdown | **OFF** — start on going live |
+| File | Scene | Source size | Loop |
+|---|---|---|---|
+| `01-starting-soon.mp4` | Starting Soon | 1920×1080 | ON |
+| `02-just-chatting.mp4` | Just Chatting | 1920×1080 | ON |
+| `03-just-chatting-vtuber.mp4` | Just Chatting · VTuber | 1920×1080 | ON |
+| `04-co-working-solo.mp4` | Co-Working · Solo | 1920×1080 | ON |
+| `05-co-working-dual.mp4` | Co-Working · Dual | 1920×1080 | ON |
+| `06-be-right-back.mp4` | Be Right Back | 1920×1080 | ON |
+| `07-ending-stream.mp4` | Ending Stream | 1920×1080 | ON |
+| `background.mp4` | Background (also plain gameplay) | 1920×1080 | ON |
+| `socials-badge-hevc.mov` | Socials badge (over anything) | 720×140 | ON |
+| `loading-barks-hevc.mov` | Loading Barks panel (over anything) | 1080×420 | ON |
+| `countdown-hevc.mov` | 5:00 countdown panel | 820×500 | **OFF** — start on going live |
+| `countdown-10m-hevc.mov` | 10:00 countdown panel | 820×500 | **OFF** — start on going live |
 
 ## Stinger transition
 

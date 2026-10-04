@@ -42,6 +42,11 @@ Panels use the existing glass fill, bevel, border, and shadow tokens. Keep
 rounded corners consistent with `radius.card` and avoid adding a second frame
 around already-framed content.
 
+Standalone Socials, Countdown, and Loading Barks files should use compact
+composition bounds around their glass panels and shadows instead of a
+1920×1080 transparent canvas. Their current source sizes are 720×140, 820×500,
+and 1080×420 respectively; the 8 scene screens and Stinger remain full-frame.
+
 ## Typography and copy
 
 - **Display:** Montserrat for the main headline.

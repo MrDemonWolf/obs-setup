@@ -11,9 +11,9 @@ the SVGs into `public/` in Finder.
 
 ## Scenes
 
-Defined in `src/scenes.ts` (single source of truth) — 12 scenes. Full-frame
-scenes are 1920×1080 and loop seamlessly; transparent widgets are stacked over
-other content, and the Stinger is a one-shot scene transition.
+Defined in `src/scenes.ts` (single source of truth) — 13 scenes. Full-frame
+scenes are 1920×1080 and loop seamlessly; transparent widgets use compact panel
+bounds, and the Stinger is a one-shot full-frame scene transition.
 
 - **Cards** — `StartingSoon`, `BRB`, `EndingStream`: shared night-forest photo,
   stars, moonlight, right-facing white paw trail, and logo-free glass title
@@ -30,13 +30,13 @@ other content, and the Stinger is a one-shot scene transition.
   rounded webcam masks are in `../masks/`.
 - **Background** — forest, starry sky, moon, and paw trail, nothing on top. The most
   flexible: also the base for a plain gameplay scene.
-- **Socials** — standalone badge (760×180, transparent) fading through your
+- **Socials** — standalone badge (720×140, transparent) fading through your
   platforms one at a time in real brand colors. Edit the list/handles in
   `src/Socials.tsx`.
-- **Countdown** — transparent 5:00 and 10:00 timer chips, full-frame. These
+- **Countdown** — transparent 5:00 and 10:00 timer panels (820×500). These
   are the intentional non-loops: set the OBS media source to play ONCE (Loop
   off), start on going live.
-- **LoadingBarks** — transparent forest-glass status card with ten short
+- **LoadingBarks** — transparent forest-glass status panel (1080×420) with ten short
   wolf-tech jokes and paw-mark progress (~4.7 min loop). Edit `BARKS` in
   `src/LoadingBarks.tsx`.
 

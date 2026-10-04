@@ -76,7 +76,7 @@ export const LoadingBarks: React.FC = () => {
   const level = curveLevel(i, clamp01(local / hold));
   const glow = 14 + 8 * (0.5 + 0.5 * Math.sin(2 * Math.PI * (GLOW_CYCLES * f / LOADING_BARKS_DURATION + 0.5)));
 
-  const barW = 790;
+  const barW = 640;
   const fillW = Math.round(barW * level);
 
   return (
@@ -84,9 +84,9 @@ export const LoadingBarks: React.FC = () => {
       <div
         style={{
           position: "relative",
-          width: 1080,
+          width: 900,
           boxSizing: "border-box",
-          padding: "44px 56px 46px",
+          padding: "34px 40px 36px",
           borderRadius: radius.card,
           // shared over-gameplay glass panel (dot grid + sheen + dense fill)
           background: glassPanel,
@@ -96,15 +96,15 @@ export const LoadingBarks: React.FC = () => {
       >
         {/* Minimal window chrome and a clear widget label keep this readable as a
             small stream status panel, not a second title card. */}
-        <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 28 }}>
-          <WindowDots size={12} gap={8} />
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+          <WindowDots size={10} gap={6} />
           <span
             style={{
               fontFamily: body,
-              fontSize: 17,
+              fontSize: 14,
               fontWeight: 700,
               color: theme.textDim,
-              letterSpacing: 3,
+              letterSpacing: 2.4,
               lineHeight: 1,
               whiteSpace: "nowrap",
             }}
@@ -122,11 +122,11 @@ export const LoadingBarks: React.FC = () => {
         </div>
         {/* Fade the headline, punchline, bar, and percentage together so the
             progress reset stays hidden at every phrase swap and loop seam. */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "stretch", gap: 18, opacity: op }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "stretch", gap: 14, opacity: op }}>
           <span
             style={{
               fontFamily: display,
-              fontSize: 58,
+              fontSize: 44,
               fontWeight: 700,
               color: theme.white,
               letterSpacing: -1.2,
@@ -141,24 +141,24 @@ export const LoadingBarks: React.FC = () => {
           <span
             style={{
               fontFamily: body,
-              fontSize: 26,
+              fontSize: 20,
               fontWeight: 600,
               color: "rgba(255,255,255,0.76)",
               lineHeight: 1.35,
               whiteSpace: "nowrap",
-              marginTop: -8,
+              marginTop: -6,
             }}
           >
             {BARKS[i].detail}
           </span>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 20, marginTop: 8 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 6 }}>
             {/* The three dim paw marks turn bright after the fill reaches them. */}
             <div
               style={{
                 position: "relative",
                 width: barW,
-                height: 18,
+                height: 16,
                 borderRadius: 8,
                 background: "rgba(255,255,255,0.12)",
                 border: "1px solid rgba(255,255,255,0.28)",
@@ -179,21 +179,21 @@ export const LoadingBarks: React.FC = () => {
               />
               {[0.25, 0.5, 0.75].map((mark) => (
                 <div key={mark} style={{ position: "absolute", left: `${mark * 100}%`, top: -5, zIndex: 1 }}>
-                  <Paw size={26} color={theme.pawWhite} opacity={level >= mark ? 0.94 : 0.3} />
+                  <Paw size={22} color={theme.pawWhite} opacity={level >= mark ? 0.94 : 0.3} />
                 </div>
               ))}
               {/* One bright paw walks at the fill edge. */}
-              <div style={{ position: "absolute", left: fillW - 18, top: -9, zIndex: 2, filter: "drop-shadow(0 0 5px rgba(56,198,245,0.7))" }}>
-                <Paw size={36} color={theme.white} />
+              <div style={{ position: "absolute", left: fillW - 15, top: -8, zIndex: 2, filter: "drop-shadow(0 0 5px rgba(56,198,245,0.7))" }}>
+                <Paw size={30} color={theme.white} />
               </div>
             </div>
             <span
               style={{
                 fontFamily: body,
-                fontSize: 30,
+                fontSize: 24,
                 fontWeight: 700,
                 fontVariantNumeric: "tabular-nums",
-                width: 96,
+                width: 78,
                 textAlign: "right",
                 color: theme.blueBright,
               }}
