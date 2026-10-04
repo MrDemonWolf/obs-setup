@@ -2,7 +2,7 @@ import { AbsoluteFill } from "remotion";
 import { Background } from "./Background";
 import { CamFrame } from "./CamFrame";
 
-// Co-Working overlays: animated `glow` background + baked 16:9 cam frame(s).
+// Co-Working overlays: animated forest background + baked 16:9 cam frame(s).
 // No bar, no widget boxes — the open space in each layout is where your OBS
 // widget sources (timer / tasks / chat / now-playing) go. `moon` repositions
 // the background moon into clear sky (the default sits inside the cam frames).
@@ -10,7 +10,7 @@ type Cam = { x: number; y: number; w: number; h: number };
 
 export const Cowork: React.FC<{ cams: Cam[]; moon?: { x?: number; y?: number; r?: number } }> = ({ cams, moon }) => (
   <AbsoluteFill>
-    <Background variant="glow" moon={moon} />
+    <Background variant="forest" moon={moon} />
     {cams.map((c, i) => (
       // staggered glow phases — identical phases pulse in lockstep (metronome)
       <CamFrame key={i} {...c} phase={0.4 + i * 0.33} />

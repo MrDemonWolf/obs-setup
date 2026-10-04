@@ -26,15 +26,15 @@ export type SceneDef = {
 };
 
 export const SCENES: SceneDef[] = [
-  { id: "StartingSoon", label: "Starting Soon", component: Scene, props: { title: "The Pack Gathers", subtitle: "howling soon…", showMascot: true, mascotSrc: "logo-main.svg" } },
-  { id: "BRB", label: "Be Right Back", component: Scene, props: { title: "Off Hunting", subtitle: "brb · back on the trail", showMascot: true, mascotSrc: "logo-mouth-closed.svg" } },
+  { id: "StartingSoon", label: "Starting Soon", component: Scene, props: { title: "The Pack Gathers", subtitle: "We’ll be live in a moment.", showMascot: false, showChatBox: true } },
+  { id: "BRB", label: "Be Right Back", component: Scene, props: { title: "A Short Trail Break", subtitle: "Stay cozy — I’ll be back soon.", showMascot: false, showChatBox: true } },
   { id: "JustChatting", label: "Just Chatting", component: JustChattingScene, props: {} },
   { id: "JustChattingVtuber", label: "Just Chatting · VTuber", component: JustChattingScene, props: { hideCam: true } },
   // moon parked RIGHT (only x passed; shared MOON_Y/MOON_R) — at the default
   // x=300 it sits inside/behind the cam frames, where the live feed clips it.
   { id: "CoworkingSolo", label: "Co-Working · Solo", component: Cowork, props: { cams: COWORK_LAYOUTS.solo, moon: { x: 1568 } } },
   { id: "CoworkingDual", label: "Co-Working · Dual", component: Cowork, props: { cams: COWORK_LAYOUTS.dual, moon: { x: 1568 } } },
-  { id: "EndingStream", label: "Ending Stream", component: Scene, props: { title: "Until Next Howl", subtitle: "thanks for running with the pack", showMascot: true, mascotSrc: "logo-mouth-closed.svg" } },
+  { id: "EndingStream", label: "Ending Stream", component: Scene, props: { title: "Until Next Time", subtitle: "Thanks for being here", showMascot: false } },
   { id: "Background", label: "Background", component: BackdropScene, props: {} },
   { id: "Socials", label: "Socials (GIF)", component: SocialsScene, width: 760, height: 180, durationInFrames: SOCIALS_DURATION, props: {} },
   // Transparent standalone timer — full-frame (chip centered) so it's a drop-in

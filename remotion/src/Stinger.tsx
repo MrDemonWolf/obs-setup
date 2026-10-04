@@ -14,12 +14,10 @@ import { Paw } from "./Paw";
 // OBS "stinger" transition — Paw Swipe. A short full-frame alpha video that wipes
 // across the screen during a scene cut. Structure: sweep IN (from the LEFT) ->
 // HOLD fully covered -> sweep OUT (to the RIGHT). OBS swaps the underlying scene
-// during the HOLD (around STINGER_COVER), so the cut is invisible. As the navy
-// panel (bright cerulean leading edge, echoing the original stinger) wipes
-// across left->right, paw prints STAMP in along a diagonal trail in lockstep with
-// the wipe front; the wolf HEAD punches to center during the hold. The real SFX
-// (reference/Stringer.wav -> public/stinger.wav) is delayed so its impact lands
-// on the cover.
+// during the HOLD (around STINGER_COVER), so the cut is invisible. A dark forest
+// glass panel with a cerulean edge sweeps left-to-right while white paw prints
+// walk across it. The SFX is delayed so the WAV's strongest impact lands on the
+// cover point.
 //
 // Plays ONCE per cut — like Countdown, NOT a seamless loop, so motion is plain
 // interpolate (no loop* helper).
@@ -35,14 +33,19 @@ export const STINGER_COVER = 0.5; // transition point = middle of the covered ho
 // OBS Stinger "Transition Point" (ms) — a frame inside the fully-covered window.
 export const STINGER_POINT_MS = Math.round(STINGER_COVER * STINGER_SECONDS * 1000);
 
-// Where the whoosh impact sits inside Stringer.wav (~0.85s of its 2.16s) — used
-// to delay the audio so the impact lands on the cover point.
-const SFX_PEAK_S = 0.85;
+// Measured from the checked-in stereo PCM WAV: its largest channel sample is
+// at sample frame 8,160 (170.000 ms at 48 kHz, 16-bit). Keep the Remotion
+// timeline tied to that asset; the delay rounds to 110 video frames at 60 fps.
+export const STINGER_SFX_PEAK_MS = 170;
+export const STINGER_SFX_DELAY_FRAMES = Math.max(
+  0,
+  Math.round(((STINGER_POINT_MS - STINGER_SFX_PEAK_MS) * STINGER_FPS) / 1000),
+);
 
 // Navy-dominant cover panel (matches the original: solid navy, cerulean only on
 // the leading edge). Dot grid + sheen sit over an OPAQUE navy gradient, so the
 // panel fully blocks the screen at the hold.
-const brandFill = `${dotGridLayer}, ${glassSheen}, linear-gradient(120deg, ${theme.navyDeep} 0%, ${theme.navyTop} 55%, ${theme.navyDeep} 100%)`;
+const brandFill = `${dotGridLayer}, ${glassSheen}, linear-gradient(120deg, rgba(4, 13, 35, 0.72) 0%, rgba(9, 21, 51, 0.8) 55%, rgba(4, 13, 35, 0.72) 100%), url("${staticFile("forest-night-base.png")}") center / cover no-repeat`;
 
 // Even in-out sweep so the bright leading edge visibly crosses; ease-IN to
 // accelerate the panel away on exit.
@@ -127,7 +130,7 @@ const PawWalk: React.FC<{ p: number }> = ({ p }) => (
             filter: "drop-shadow(0 6px 14px rgba(0,0,0,0.35))",
           }}
         >
-          <Paw size={210} color={theme.blueBright} />
+          <Paw size={210} color={theme.white} />
         </div>
       );
     })}
@@ -136,8 +139,7 @@ const PawWalk: React.FC<{ p: number }> = ({ p }) => (
 
 export const Stinger: React.FC = () => {
   const { p, x } = usePanelX();
-  const { fps, width } = useVideoConfig();
-  const sfxDelay = Math.max(0, Math.round((STINGER_COVER * STINGER_SECONDS - SFX_PEAK_S) * fps));
+  const { width } = useVideoConfig();
   return (
     <AbsoluteFill style={{ overflow: "hidden" }}>
       {/* cover panel — sized in COMPOSITION pixels (never vw/vh: in the Player
@@ -182,7 +184,7 @@ export const Stinger: React.FC = () => {
         <PawWalk p={p} />
       </div>
       {/* real SFX, delayed so its impact lands on the cover point */}
-      <Sequence from={sfxDelay}>
+      <Sequence from={STINGER_SFX_DELAY_FRAMES}>
         <Audio src={staticFile("stinger.wav")} />
       </Sequence>
     </AbsoluteFill>

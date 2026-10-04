@@ -1,26 +1,20 @@
 import { useCurrentFrame } from "remotion";
-import { theme, radius, loopSin, loopBreathe } from "./theme";
+import { theme, radius, loopSin } from "./theme";
 import { display, body } from "./fonts";
 import { WindowTitleBar } from "./WindowChrome";
 
 // Fixed chip width so StartingSoon / BRB / EndingStream are all the SAME size
-// (text left-aligned inside). Sized to fit the widest title ("The Pack Gathers")
-// at 108px with the L/R padding below. If you add a longer title, bump this and
-// re-check the mascot overlap (right-anchored wolf must clear the chip's right edge).
+// (text left-aligned inside). Sized for the longest standby title at 108px with
+// the L/R padding below. If you add a longer title, bump this and re-check it
+// in the preview.
 const CHIP_WIDTH = 1160;
 
-// Frosted macOS-glass panel: window dots + rounded title + one status line,
-// ending in a blinking terminal cursor.
+// Frosted macOS-glass panel: window dots + rounded title + one clear status line.
 export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, status }) => {
   const frame = useCurrentFrame();
-  // The chip does NOT translate — it stays put. It just breathes: rests at its
-  // base size, grows ~0.7% and eases back (loopBreathe: eased in AND out).
-  // harmonic 2 → two 4s breaths per loop, matching the mascot's cadence; amp
-  // 0.007 keeps the edge travel ~8px, UNDER the mascot's breathe so the panel
-  // never out-breathes the wolf. transformOrigin left-center pins the left edge.
-  const scale = 1 + 0.007 * loopBreathe(frame, 2);
+  // One slow, restrained edge pulse; the title and status stay still.
   const glow = 14 + 8 * (0.5 + 0.5 * loopSin(frame, 0.5));
-  const cursor = Math.floor(frame / 15) % 2 === 0; // blink ~every 0.5s @30fps
+  const titleSize = title.length > 20 ? 80 : title.length > 17 ? 96 : 108;
 
   return (
     <div
@@ -30,8 +24,6 @@ export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, 
         top: "34%",
         width: CHIP_WIDTH, // fixed → all three card scenes are the same size
         boxSizing: "border-box",
-        transform: `scale(${scale})`,
-        transformOrigin: "left center",
         // roomy, even inner padding; text is left-aligned (block default)
         padding: "44px 64px 48px",
         borderRadius: radius.card,
@@ -53,7 +45,7 @@ export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, 
         style={{
           fontFamily: display,
           fontWeight: 800,
-          fontSize: 108,
+          fontSize: titleSize,
           lineHeight: 1,
           whiteSpace: "nowrap",
           color: theme.white,
@@ -75,12 +67,7 @@ export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, 
           color: theme.blueBright,
         }}
       >
-        {/* one metaphor only: terminal prompt + cursor. (The old pulsing green
-            LED stacked a second signifier on the line AND reused the window-dot
-            green for a different meaning.) Cursor in the text's own accent so it
-            reads as part of the prompt, not a third color. */}
         <span>{status}</span>
-        <span style={{ opacity: cursor ? 1 : 0 }}>▊</span>
       </div>
     </div>
   );

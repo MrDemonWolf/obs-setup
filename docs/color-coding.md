@@ -16,7 +16,7 @@ stable color, but on your rig you just click the swatch.
 | OBS swatch to click | Meaning              | Source hex | OBS stored value (ABGR) |
 | ------------------- | -------------------- | ---------- | ----------------------- |
 | **Green**   | Cam feeds (Main / Second / NDI / PNG Tuber) | `#2EA043`  | `0xFF43A02E`  |
-| **Magenta** | Alerts (Chat Overlay + Sound Alerts + Twitch Alerts) | `#8957E5` | `0xFFE55789` |
+| **Magenta** | Alerts (Chat Overlay + Howlbox Chat + Sound Alerts + Twitch Alerts) | `#8957E5` | `0xFFE55789` |
 | **Cyan**    | Wolfathon widgets (Wheel of Dares / Rewards / Timer) | `#1F9EA6` | `0xFFA69E1F` |
 | **Blue**    | Now Playing (WolfWave) | `#388BFD` | `0xFFFD8B38`            |
 | **Yellow**  | Screen / display capture (when added) | `#BB8009` | `0xFF0980BB` |

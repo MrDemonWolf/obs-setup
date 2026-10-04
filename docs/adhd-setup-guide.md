@@ -168,6 +168,29 @@ Right, Timer.
 `[src] Alerts` on the Mini = Chat Overlay + Sound Alerts + Twitch Alerts
 (purple). Audio is the same three per-app captures as the MacBook Pro.
 
+### Howlbox chat on standby cards
+
+Add a `Howlbox Chat` browser source manually in OBS for Starting Soon and Be
+Right Back. The overlay videos now have a quiet glass frame at **640 × 300,
+x=64, y=720** on the 1920 × 1080 canvas; set the browser source to that size
+and position. Keep its background transparent if Howlbox supports it.
+
+Live and Co-Working are intentionally not assigned a permanent Howlbox position
+in this layout. The screenshots show why: co-working already has a timer, task
+list, rewards, music, and two camera views. Try these placements one at a time:
+
+| Scene | Suggested Howlbox area | Keep the scene calm by… |
+| ----- | ---------------------- | ----------------------- |
+| Live | Lower-right: **x=1216, y=660, 640 × 360** | Use it only when the game leaves that corner clear. |
+| Co-Working [Solo] | Portrait right rail: **x=1488, y=200, 368 × 700** | Use a matching portrait browser source and replace the task list / right-side Rewards. |
+| Co-Working [Multi] | Upper-right: **x=1280, y=200, 576 × 400** | Use a matching browser source, replace the task list, and keep the lower-right camera clear. |
+
+Treat Howlbox and the task list as alternatives in Co-Working. Keep Rewards and
+Wheel hidden until needed; that gives the cameras and the active work/chat room
+the visual priority.
+The two tall Co-Working placements need a separate browser source with matching
+viewport dimensions; the standby-card browser source can stay 640 × 300.
+
 ### Cams are pre-pinned to the overlay frames
 
 The import already places cams exactly inside the overlay cam frames

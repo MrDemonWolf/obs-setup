@@ -3,7 +3,7 @@
 Drop these into `public/` (placeholders render without them):
 
 - `logo-main.svg` (open mouth) + `logo-mouth-closed.svg` (closed) = the mascot
-  used on the card scenes.
+  artwork for scenes where it has room. Standby cards are currently logo-free.
 - `brands/*.svg` = real brand logos for the Socials badge.
 
 macOS blocks reading the Google Drive folder directly (privacy/TCC), so drag
@@ -11,16 +11,15 @@ the SVGs into `public/` in Finder.
 
 ## Scenes
 
-Defined in `src/scenes.ts` (single source of truth) — 11 scenes. Full-frame
-scenes are 1920×1080 and loop seamlessly; the three transparent overlays
-(Socials, Countdown, LoadingBarks) are widgets you stack over anything.
+Defined in `src/scenes.ts` (single source of truth) — 12 scenes. Full-frame
+scenes are 1920×1080 and loop seamlessly; transparent widgets are stacked over
+other content, and the Stinger is a one-shot scene transition.
 
-- **Cards** — `StartingSoon`, `BRB`, `EndingStream`: shared wolf night
-  background + walking paw trail + glass title chip (macOS window style) +
-  mascot. Edit titles / status text in `src/scenes.ts`; the mascot mouth is
-  the scene's `mascotSrc` (`logo-main.svg` open / `logo-mouth-closed.svg`
-  closed).
-- **Just Chatting** — `JustChatting`: glow background + a 16:9 cam frame
+- **Cards** — `StartingSoon`, `BRB`, `EndingStream`: shared night-forest photo,
+  stars, moonlight, right-facing white paw trail, and logo-free glass title
+  chip. Starting Soon and BRB also have a matching chat frame for an OBS browser
+  source. Edit titles / status text in `src/scenes.ts`.
+- **Just Chatting** — `JustChatting`: forest background + a 16:9 cam frame
   (1216×684 at 64,198) + a tall chat frame (512×684 at 1344,198). Drop your
   real cam + chat sources over the frames. `JustChattingVtuber` is the same
   scene minus the cam frame (VTuber model goes full-screen, chat frame stays).
@@ -29,7 +28,7 @@ scenes are 1920×1080 and loop seamlessly; the three transparent overlays
   The open space is for timer / tasks / chat / now-playing OBS sources.
   Layouts live in `src/CoworkFrame.tsx` (`COWORK_LAYOUTS`); the matching
   rounded webcam masks are in `../masks/`.
-- **Background** — plain wolf night background, nothing on top. The most
+- **Background** — forest, starry sky, moon, and paw trail, nothing on top. The most
   flexible: also the base for a plain gameplay scene.
 - **Socials** — standalone badge (760×180, transparent) fading through your
   platforms one at a time in real brand colors. Edit the list/handles in
@@ -40,8 +39,10 @@ scenes are 1920×1080 and loop seamlessly; the three transparent overlays
 - **LoadingBarks** — transparent fake loading bar cycling wolf puns (~6.1 min
   loop). Edit `BARKS` in `src/LoadingBarks.tsx`.
 
-The wolf night ambience (full moon, stars, drifting embers) lives in
-`src/wolf/` + `src/Background.tsx`.
+The forest photo, sky stars, moon, and white paw trail live in `public/` and
+`src/wolf/` + `src/Background.tsx`. See
+[`../docs/overlay-design-system.md`](../docs/overlay-design-system.md) for the
+shared visual direction.
 
 **Fonts:** Montserrat (headings) + Open Sans (body) via `src/fonts.ts` —
 matching mrdemonwolf.com.

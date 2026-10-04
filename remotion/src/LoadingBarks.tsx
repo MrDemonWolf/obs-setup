@@ -5,19 +5,15 @@ import { Paw } from "./Paw";
 import { WindowDots } from "./WindowChrome";
 
 const BARKS = [
-  "Loading barks…",
-  "Gathering the moons…",
+  "Getting the den ready…",
+  "Checking the stream…",
   "Warming up the howl…",
-  "Marking every tree…",
-  "Wolfing down packets…",
-  "Barking up the right tree…",
-  "Sniffing out the signal…",
-  "Howl-ding, please…",
-  "Pawsing to buffer…",
-  "Chasing my tail and the packets…",
-  "Fur real, almost there…",
-  "Awoo-most ready…",
-  "Nearly un-leashed…",
+  "Gathering the pack…",
+  "Tuning the signal…",
+  "Setting the scene…",
+  "One last setup check…",
+  "Bringing the stream online…",
+  "Almost ready to go live…",
 ];
 
 // Deterministic seeded schedule, computed ONCE at module load (loop-safe — no

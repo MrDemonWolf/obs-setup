@@ -1,10 +1,10 @@
 import { AbsoluteFill } from "remotion";
 import { Background } from "./Background";
 
-// Just the animated wolf night background — the most flexible overlay. Drop
+// Just the animated moonlit forest background — the most flexible overlay. Drop
 // your webcam / screen / widgets on top however you like.
 export const BackdropScene: React.FC = () => (
   <AbsoluteFill>
-    <Background />
+    <Background variant="forest" />
   </AbsoluteFill>
 );

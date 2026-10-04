@@ -14,7 +14,7 @@ import { WindowDots } from "./WindowChrome";
 // second is the held 00:00 frame (at exactly from×fps the last frame still
 // reads 00:01). Re-render with --props='{"from":600}' AND a matching longer
 // comp for other lengths.
-export const Countdown: React.FC<{ from?: number; label?: string }> = ({ from = 300, label = "HOWLING IN" }) => {
+export const Countdown: React.FC<{ from?: number; label?: string }> = ({ from = 300, label = "STREAM STARTS IN" }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const rem = Math.max(0, from - Math.floor(frame / fps));

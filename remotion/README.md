@@ -1,8 +1,11 @@
 # MrDemonWolf Stream Overlays (Remotion)
 
-Animated, seamless-looping OBS overlays — a wolf night theme with a full moon,
-starfield, drifting embers, and a padding paw trail. Every scene is a 1920×1080,
-8-second seamless loop rendered to a plain video file you drop into OBS.
+Animated, seamless-looping OBS overlays — a quiet night forest, starry sky,
+moonlight, a soft white paw trail, and restrained blue glass. Card scenes keep
+their title and chat panels logo-free; the site label carries the brand. The
+shared visual direction is documented in
+[`../docs/overlay-design-system.md`](../docs/overlay-design-system.md).
+Most scenes are 1920×1080, 8-second loops rendered to video for OBS.
 
 ## Make all the overlays — one command
 
