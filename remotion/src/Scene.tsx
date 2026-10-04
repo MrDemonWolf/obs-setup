@@ -25,7 +25,11 @@ export const Scene: React.FC<SceneProps> = ({
   mascotSrc,
 }) => (
   <AbsoluteFill style={{ backgroundColor: theme.navyDeep }}>
-    {showBackground && <Background variant="forest" />}
+    {showBackground && <Background variant="forest" moon={{ x: 1568 }} />}
+    <AbsoluteFill style={{
+      background: "linear-gradient(90deg, rgba(3,12,24,0.62) 0%, rgba(3,12,24,0.34) 45%, transparent 66%)",
+      pointerEvents: "none",
+    }} />
     {showChatBox && <ChatBoxFrame />}
     {showTitle && <TitleChip title={title} status={subtitle} />}
     {showMascot && <Mascot src={mascotSrc} />}

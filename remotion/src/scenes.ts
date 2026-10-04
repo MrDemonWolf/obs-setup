@@ -25,15 +25,15 @@ export type SceneDef = {
 };
 
 export const SCENES: SceneDef[] = [
-  { id: "StartingSoon", label: "Starting Soon", component: Scene, props: { title: "The Pack Gathers", subtitle: "Settle in. We’ll begin shortly.", showMascot: false, showChatBox: true } },
-  { id: "BRB", label: "Be Right Back", component: Scene, props: { title: "Trail Break", subtitle: "Stepping away for a moment. I’ll be back soon.", showMascot: false, showChatBox: true } },
+  { id: "StartingSoon", label: "Starting Soon", component: Scene, props: { title: "The Den Opens Soon", subtitle: "Grab a drink. The pack will be live shortly.", showMascot: false, showChatBox: true } },
+  { id: "BRB", label: "Be Right Back", component: Scene, props: { title: "A Moment Off the Trail", subtitle: "Stretch your paws. I’ll be right back.", showMascot: false, showChatBox: true } },
   { id: "JustChatting", label: "Just Chatting", component: JustChattingScene, props: {} },
   { id: "JustChattingVtuber", label: "Just Chatting · VTuber", component: JustChattingScene, props: { hideCam: true } },
   // moon parked RIGHT (only x passed; shared MOON_Y/MOON_R) — at the default
   // x=300 it sits inside/behind the cam frames, where the live feed clips it.
   { id: "CoworkingSolo", label: "Co-Working · Solo", component: Cowork, props: { cams: COWORK_LAYOUTS.solo, moon: { x: 1568 } } },
   { id: "CoworkingDual", label: "Co-Working · Dual", component: Cowork, props: { cams: COWORK_LAYOUTS.dual, moon: { x: 1568 } } },
-  { id: "EndingStream", label: "Ending Stream", component: Scene, props: { title: "Until Next Time", subtitle: "Thanks for sharing the trail.", showMascot: false } },
+  { id: "EndingStream", label: "Ending Stream", component: Scene, props: { title: "Until the Next Howl", subtitle: "Thanks for spending time with the pack.", showMascot: false, showChatBox: true } },
   { id: "Background", label: "Background", component: BackdropScene, props: {} },
   // Transparent widget outputs stay close to the visible glass panels so OBS
   // source bounds are easy to place; the preview centers them on the 1080p stage.

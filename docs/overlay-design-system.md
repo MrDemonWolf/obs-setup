@@ -66,9 +66,9 @@ Current scene-card copy:
 
 | Scene | Headline | Status |
 | --- | --- | --- |
-| Starting Soon | The Pack Gathers | Settle in. We’ll begin shortly. |
-| Be Right Back | Trail Break | Stepping away for a moment. I’ll be back soon. |
-| Ending | Until Next Time | Thanks for sharing the trail. |
+| Starting Soon | The Den Opens Soon | Grab a drink. The pack will be live shortly. |
+| Be Right Back | A Moment Off the Trail | Stretch your paws. I’ll be right back. |
+| Ending | Until the Next Howl | Thanks for spending time with the pack. |
 
 Keep scene labels and widget labels literal (`Starting Soon`, `Be Right Back`,
 `Chat`). Put the forest-and-pack voice in one headline or status line instead
@@ -78,10 +78,12 @@ playful wolf-tech jokes.
 
 ## Scene patterns
 
-- **Starting Soon / BRB / Ending:** forest background, glass title card,
-  and a matching chat panel when chat is useful. Keep the title card logo-free:
-  the small site label in its glass title bar is enough brand signature, and
-  the open space keeps attention on the message and forest.
+- **Starting Soon / BRB / Ending — Forest Lounge:** open headline at
+  `(96,330)` over a gentle left-side dark fade; no title box, window dots,
+  website label, or logo. Glass chat panel at `(1216,280)`, sized `608×656`.
+  Place the real chat source inside `(1238,340)`, sized `564×574`.
+  Reserve the lower-left area `(96,700)` through `(1096,936)` for separately
+  added countdown, loading barks, or socials sources. No baked widget outlines.
 - **Just Chatting:** forest sky with a large camera area and a separate chat
   rail. Keep text and decoration out of the camera and chat openings.
 - **Co-Working:** forest sky with clean camera frames and open space for OBS
@@ -107,8 +109,7 @@ playful wolf-tech jokes.
 ## Fursona use
 
 Keep the title and chat cards free of the round logo badge; it reads like a
-separate app icon in this forest-and-glass system. The site label provides a
-quiet brand cue. Save larger fursona artwork for a scene with deliberate open
+separate app icon in this forest-and-glass system. Save larger fursona artwork for a scene with deliberate open
 space rather than squeezing it into these panels.
 
 ## Implementation map
