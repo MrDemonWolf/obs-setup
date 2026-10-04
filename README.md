@@ -230,6 +230,10 @@ The heavy
 `render:all`; `make release` (or a manual `npx remotion render`)
 handles them and the stinger.
 
+Local exports default to two Remotion workers to leave room for OBS and the
+preview browser. Set `OBS_RENDER_CONCURRENCY=1` on memory-constrained runs;
+increase it only when the machine has spare resources.
+
 ### Rounded webcam masks
 
 The Just Chatting and Co-Working overlays draw rounded cam frames. To

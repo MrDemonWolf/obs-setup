@@ -23,6 +23,11 @@ OVERLAY_NAME="OBS-overlays-$DATE"
 STINGER_NAME="OBS-stinger-$DATE"
 FORCE=""
 PACKAGE_ONLY=0
+RENDER_CONCURRENCY="${OBS_RENDER_CONCURRENCY:-2}"
+case "$RENDER_CONCURRENCY" in
+  ""|*[!0-9]*) echo "OBS_RENDER_CONCURRENCY must be a positive integer" >&2; exit 2 ;;
+esac
+[ "$RENDER_CONCURRENCY" -gt 0 ] || { echo "OBS_RENDER_CONCURRENCY must be positive" >&2; exit 2; }
 case "${1:-}" in
   "") ;;
   --force) FORCE="--force" ;;
@@ -58,7 +63,7 @@ prores() { # <CompId> <outfile>
   if [ "$FORCE" = "--force" ] || [ ! -f "out/$2" ]; then
     echo "▶ render $1 (ProRes 4444, heavy)…"
     npx remotion render "$1" "out/$2" --codec=prores --prores-profile=4444 \
-      --image-format=png --pixel-format=yuva444p10le --log=error
+      --image-format=png --pixel-format=yuva444p10le --concurrency="$RENDER_CONCURRENCY" --log=error
   else
     echo "• reuse out/$2 (exists — pass --force to re-render)"
   fi
@@ -71,7 +76,7 @@ prores LoadingBarks loading-barks.mov
 # in via <Audio>, so the ProRes master carries an audio track.
 echo "▶ render Stinger (ProRes 4444)…"
 npx remotion render Stinger out/stinger.mov --codec=prores --prores-profile=4444 \
-  --image-format=png --pixel-format=yuva444p10le --log=error
+  --image-format=png --pixel-format=yuva444p10le --concurrency="$RENDER_CONCURRENCY" --log=error
 
 # Stinger joins the HEVC-alpha transcode. WebM-alpha is the "ideal" portable
 # stinger format, but Homebrew ffmpeg (local + the CI macOS runner) isn't built
