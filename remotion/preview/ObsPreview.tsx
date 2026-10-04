@@ -5,6 +5,8 @@ import { SCENES, type SceneDef } from "../src/scenes";
 import { VIDEO } from "../src/theme";
 import { StingerConceptBoard } from "../src/StingerConcepts";
 import { DeskForeground } from "../src/DeskForeground";
+import { FullMoonStinger } from "../src/FullMoonStinger";
+import { STINGER_DURATION, STINGER_FPS } from "../src/Stinger";
 
 type PreviewGroup = { title: string; description: string; sceneIds: string[] };
 
@@ -32,11 +34,12 @@ const PREVIEW_GROUPS: PreviewGroup[] = [
   {
     title: "Stinger concepts",
     description: "Five visual directions, shown as stills",
-    sceneIds: ["StingerConceptBoard"],
+    sceneIds: ["FullMoonStinger", "StingerConceptBoard"],
   },
 ];
 
 const PREVIEW_ONLY_SCENES: SceneDef[] = [
+  { id: "FullMoonStinger", label: "Full Moon Stinger · Motion Preview", component: FullMoonStinger, fps: STINGER_FPS, durationInFrames: STINGER_DURATION, props: {} },
   {
     id: "StingerConceptBoard",
     label: "Stinger concept board",
@@ -61,8 +64,8 @@ const GROUPS_WITH_FALLBACK: PreviewGroup[] = UNGROUPED_SCENE_IDS.length
     ]
   : PREVIEW_GROUPS;
 
-const NO_LOOP = new Set(["Countdown", "Countdown10", "Stinger", "StingerConceptBoard"]);
-const ALPHA_SCENES = new Set(["Socials", "Countdown", "Countdown10", "LoadingBarks", "Stinger", "DeskForeground"]);
+const NO_LOOP = new Set(["Countdown", "Countdown10", "Stinger", "FullMoonStinger", "StingerConceptBoard"]);
+const ALPHA_SCENES = new Set(["Socials", "Countdown", "Countdown10", "LoadingBarks", "Stinger", "FullMoonStinger", "DeskForeground"]);
 type StageBackground = "forest" | "checker" | "midnight";
 
 const formatTime = (frame: number, fps: number) => {

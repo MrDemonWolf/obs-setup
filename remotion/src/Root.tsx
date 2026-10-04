@@ -2,6 +2,8 @@ import "./index.css";
 import { Composition } from "remotion";
 import { SCENES } from "./scenes";
 import { VIDEO } from "./theme";
+import { FullMoonStinger } from "./FullMoonStinger";
+import { STINGER_DURATION, STINGER_FPS } from "./Stinger";
 import { StingerConceptBoard, StingerConceptStill, STINGER_CONCEPTS, StingerConceptId } from "./StingerConcepts";
 
 const CONCEPT_STILLS: Record<StingerConceptId, React.FC> = {
@@ -14,6 +16,7 @@ const CONCEPT_STILLS: Record<StingerConceptId, React.FC> = {
 
 export const RemotionRoot: React.FC = () => (
   <>
+    <Composition id="FullMoonStinger" component={FullMoonStinger} durationInFrames={STINGER_DURATION} fps={STINGER_FPS} width={VIDEO.width} height={VIDEO.height} />
     {SCENES.map((s) => (
       <Composition
         key={s.id}
