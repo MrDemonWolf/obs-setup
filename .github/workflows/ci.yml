@@ -23,10 +23,30 @@ jobs:
           persist-credentials: false
 
       - name: Check Bash syntax
-        run: bash -n scripts/backup.sh
+        run: |
+          for script in scripts/backup.sh release.sh remotion/to-hevc.sh; do
+            bash -n "$script"
+          done
 
-      - name: Test secret scrubbing
+      - name: Run Python checks
         run: python3 -m unittest discover -s tests -v
+
+      - name: Set up Node.js for Remotion
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: remotion/package-lock.json
+
+      # Keep npm install consistent with release.yml; npm ci rejects bundled
+      # wasm dependency metadata in this lockfile under newer npm versions.
+      - name: Install Remotion dependencies
+        run: npm install --no-audit --no-fund
+        working-directory: remotion
+
+      - name: Lint and type-check Remotion
+        run: npm run lint
+        working-directory: remotion
 
       - name: Check generated scene files
         run: |
@@ -36,3 +56,40 @@ jobs:
             devices/macbook-pro/scenes/MBP-Streaming.json \
             devices/mac-mini/index.json \
             devices/mac-mini/scenes/Mini-Streaming.json
+
+  stinger-render:
+    runs-on: macos-14
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: remotion/package-lock.json
+
+      - name: Install Remotion dependencies
+        run: npm install --no-audit --no-fund
+        working-directory: remotion
+
+      - name: Ensure ffmpeg is available
+        run: ffmpeg -version >/dev/null 2>&1 || brew install ffmpeg
+
+      - name: Render the four-second stinger with Remotion
+        run: >-
+          npx remotion render Stinger "$RUNNER_TEMP/stinger.mov"
+          --codec=prores --prores-profile=4444 --image-format=png
+          --pixel-format=yuva444p10le --log=error
+        working-directory: remotion
+
+      - name: Encode the transparent HEVC Stinger
+        run: ./remotion/to-hevc.sh "$RUNNER_TEMP/stinger.mov"
+
+      - name: Verify frame count and exact embedded WAV timing
+        run: >-
+          python3 scripts/validate_stinger.py
+          --rendered "$RUNNER_TEMP/stinger.mov"
+          --encoded "$RUNNER_TEMP/stinger-hevc.mov"

@@ -1,29 +1,55 @@
 #!/usr/bin/env bash
 # Render every overlay, transcode the transparent ones to HEVC-alpha, regenerate
-# the webcam masks, and package a dated OBS drop-in bundle (videos + masks +
-# README) as a .zip in ~/Downloads — ready to copy to Google Drive.
+# the webcam masks, and package separate dated overlay and stinger ZIPs in
+# ~/Downloads — ready to copy to Google Drive.
 #
 # Usage:
 #   ./release.sh            # reuse the heavy Countdown/LoadingBarks ProRes
 #                           # masters if they already exist (they rarely change)
 #   ./release.sh --force    # re-render those two heavy overlays too
+#   ./release.sh --package-only # package and validate the existing renders
 #
 # Needs: node_modules installed in remotion/ (npm install), ffmpeg (to-hevc.sh),
 # and Pillow for mask regen (pip install pillow — optional; falls back to the
-# committed masks if missing).
+# committed masks if missing). Set OBS_RELEASE_OUTPUT_DIR to choose the output.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 R="$ROOT/remotion"
 OUT="$R/out"
-DATE="$(date +%F)"
-BUNDLE="$HOME/Downloads/OBS-overlays-$DATE"
-FORCE="${1:-}"
+DATE="${OBS_RELEASE_DATE:-$(date +%F)}"
+DOWNLOADS_DIR="${OBS_RELEASE_OUTPUT_DIR:-$HOME/Downloads}"
+OVERLAY_NAME="OBS-overlays-$DATE"
+STINGER_NAME="OBS-stinger-$DATE"
+FORCE=""
+PACKAGE_ONLY=0
+case "${1:-}" in
+  "") ;;
+  --force) FORCE="--force" ;;
+  --package-only) PACKAGE_ONLY=1 ;;
+  *) echo "usage: $0 [--force|--package-only]" >&2; exit 2 ;;
+esac
 
 cd "$R"
 
-echo "▶ render:all (8 opaque MP4s + socials + background)…"
-npm run render:all
+if [ "$PACKAGE_ONLY" -eq 1 ]; then
+  echo "▶ package existing Remotion renders…"
+  required_outputs=(
+    01-starting-soon.mp4 02-just-chatting.mp4 03-just-chatting-vtuber.mp4
+    04-co-working-solo.mp4 05-co-working-dual.mp4 06-be-right-back.mp4
+    07-ending-stream.mp4 background.mp4
+    socials-badge.mov countdown.mov loading-barks.mov stinger.mov
+    socials-badge-hevc.mov countdown-hevc.mov loading-barks-hevc.mov stinger-hevc.mov
+  )
+  for file in "${required_outputs[@]}"; do
+    if [ ! -s "out/$file" ]; then
+      echo "missing rendered file: out/$file (run ./release.sh first)" >&2
+      exit 1
+    fi
+  done
+else
+  echo "▶ render:all (8 opaque MP4s + socials + background)…"
+  npm run render:all
 
 # Heavy transparent full-frame ProRes 4444 masters — multi-GB and slow, and they
 # rarely change, so reuse an existing file unless --force.
@@ -53,38 +79,49 @@ npx remotion render Stinger out/stinger.mov --codec=prores --prores-profile=4444
 # macOS reads it natively (both target Macs). See README note.
 echo "▶ transcode transparent masters → HEVC-alpha (hvc1)…"
 ./to-hevc.sh out/socials-badge.mov out/countdown.mov out/loading-barks.mov out/stinger.mov
+fi
+
+echo "▶ validate stinger timing and encoded streams…"
+python3 "$ROOT/scripts/validate_stinger.py" \
+  --rendered "$OUT/stinger.mov" --encoded "$OUT/stinger-hevc.mov" \
+  --alpha-file "$OUT/socials-badge-hevc.mov" \
+  --alpha-file "$OUT/countdown-hevc.mov" \
+  --alpha-file "$OUT/loading-barks-hevc.mov"
 
 echo "▶ regenerate webcam masks…"
 python3 "$ROOT/masks/gen_masks.py" \
   || echo "⚠ mask regen skipped (need: pip install pillow) — using committed masks"
 
-echo "▶ assemble bundle → $BUNDLE"
-# Flat layout by request: ALL videos in one Overlays/ folder (no opaque/
-# transparent split), masks in Masks/, README.md at the zip root. Nothing else.
-VID="Overlays"   # top-level video folder name inside the bundle
-MSK="Masks"      # top-level mask folder name inside the bundle
-STG="Stinger"    # OBS stinger-transition folder (its own folder, by request)
-rm -rf "$BUNDLE"
-mkdir -p "$BUNDLE/$VID" "$BUNDLE/$MSK" "$BUNDLE/$STG"
+# Keep the scene/overlay download independent from the separately encoded
+# stinger. Build archives in a fresh temporary directory; only the two ZIPs go
+# to the requested download folder.
+WORK="$(mktemp -d "${TMPDIR:-/tmp}/obs-release-$DATE.XXXXXX")"
+trap 'rm -rf "$WORK"' EXIT
+OVERLAY_DIR="$WORK/$OVERLAY_NAME"
+STINGER_DIR="$WORK/$STINGER_NAME"
+OVERLAY_ZIP="$WORK/$OVERLAY_NAME.zip"
+STINGER_ZIP="$WORK/$STINGER_NAME.zip"
+
+echo "▶ assemble separate overlay and stinger archives…"
+mkdir -p "$OVERLAY_DIR/Overlays" "$OVERLAY_DIR/Masks" "$STINGER_DIR"
 cp "$OUT"/0*.mp4 "$OUT"/background.mp4 \
    "$OUT"/socials-badge-hevc.mov "$OUT"/loading-barks-hevc.mov \
-   "$OUT"/countdown-hevc.mov "$BUNDLE/$VID/"
-cp "$ROOT"/masks/*.png "$BUNDLE/$MSK/"
-cp "$OUT"/stinger-hevc.mov "$R"/public/stinger.wav "$BUNDLE/$STG/"
+   "$OUT"/countdown-hevc.mov "$OVERLAY_DIR/Overlays/"
+cp "$ROOT"/masks/*.png "$OVERLAY_DIR/Masks/"
+cp "$OUT"/stinger-hevc.mov "$R"/public/stinger.wav "$STINGER_DIR/"
 
-# README — quoted heredoc so markdown backticks stay literal; date prepended.
+# Overlay package README — the scene transition has its own download.
 {
-  echo "# MrDemonWolf Stream Overlays — OBS drop-in bundle"
+  echo "# MrDemonWolf Stream Overlays — OBS bundle"
   echo
-  echo "_Rendered $DATE._"
+  echo "_Rendered $DATE. The Stinger transition is packaged separately._"
   echo
   cat <<'EOF'
-Everything OBS needs is in this folder.
+This package contains the scene overlays and webcam masks.
 
 ```
 Overlays/   11 videos — 8 full-frame MP4s + 3 transparent HEVC-alpha .mov
-Masks/      5 rounded-corner webcam masks (PNG, alpha)
-Stinger/    1 OBS stinger transition (HEVC-alpha .mov) + its baked SFX (.wav)
+Masks/      rounded-corner webcam masks (PNG, alpha)
 ```
 
 ## Add each as a Media Source
@@ -109,26 +146,11 @@ Stinger/    1 OBS stinger transition (HEVC-alpha .mov) + its baked SFX (.wav)
 | `loading-barks-hevc.mov` | Loading overlay (over anything) | ON |
 | `countdown-hevc.mov` | 5:00 countdown | **OFF** — start on going live |
 
-## Stinger transition (scene-cut wipe)
+## Stinger transition
 
-`Stinger/stinger-hevc.mov` is a **transition**, not a Media Source. Set it up once:
-
-1. Scene Transitions (bottom-right) → **+** → **Stinger**.
-2. **Video File** = `Stinger/stinger-hevc.mov`.
-3. **Transition Point Type** = **Time**, **Transition Point** = **2000 ms** —
-   safely inside the fully-covered hold (covered ~1360–2890 ms; OBS swaps the
-   scene here, unseen). Adjust if you swap in a longer/shorter clip.
-4. **Audio Fade Style** = **Crossfade** (the whoosh is baked into the file).
-5. OK. Every scene cut now plays the wipe once; OBS swaps scenes behind the cover.
-
-**Format note:** WebM-alpha (VP9/VP8) is the portable/cross-platform stinger
-format, but it needs an ffmpeg built with libvpx alpha — Homebrew's build (used
-here and on the CI runner) drops the alpha. So the bundle ships **HEVC-alpha
-`.mov`**, which keeps transparency and OBS reads natively on macOS (your setup).
-On Windows OBS, re-encode the ProRes master to VP9-alpha webm with an
-alpha-capable ffmpeg.
-
-`Stinger/stinger.wav` is the raw SFX (already baked into the .mov) — kept for reference.
+The Stinger is a separate download because it has its own HEVC-alpha video and
+embedded audio. Download `OBS-stinger-<date>.zip` from the same release, then
+follow the included setup README or [`docs/stinger-setup.md`](https://github.com/MrDemonWolf/obs-setup/blob/main/docs/stinger-setup.md).
 
 ## Webcam placement (Co-Working + Just Chatting)
 
@@ -155,11 +177,44 @@ VTuber = no cam frame (model fullscreen); chat frame is the same box.
 2. Effect Filters → **+** → **Image Mask/Blend**.
 3. Type = **Alpha Mask (Alpha Channel)**, Path = the matching PNG above.
 EOF
-} > "$BUNDLE/README.md"
+} > "$OVERLAY_DIR/README.md"
 
-echo "▶ zip…"
-( cd "$HOME/Downloads" && rm -f "OBS-overlays-$DATE.zip" \
-  && zip -rq "OBS-overlays-$DATE.zip" "OBS-overlays-$DATE" )
+# Self-contained transition setup. The WAV is the source used by Remotion;
+# its sound is already baked into the video and must not be added twice in OBS.
+cat > "$STINGER_DIR/README.md" <<'EOF'
+# MrDemonWolf Stinger — OBS scene transition
 
-echo "✓ done → $HOME/Downloads/OBS-overlays-$DATE.zip"
-echo "  (unzipped copy at $BUNDLE)"
+This standalone transition package contains the encoded video, its original
+source WAV, and the OBS settings needed to install it.
+
+## Install in OBS
+
+1. Copy `stinger-hevc.mov` somewhere permanent on this Mac.
+2. In OBS, open **Scene Transitions** and select **+ → Stinger**.
+3. Set **Video File** to `stinger-hevc.mov`.
+4. Set **Transition Point Type** to **Time** and **Transition Point** to
+   **2000 ms**. The scene changes while the screen is covered.
+5. Set **Audio Fade Style** to **Crossfade**, then save.
+
+The whoosh is already embedded in `stinger-hevc.mov`. Do not add `stinger.wav`
+as another OBS audio source. It is included as the original audio source and
+for future renders. The clip is 4 seconds at 60 fps and is encoded as HEVC
+with alpha for OBS on macOS.
+EOF
+
+mkdir -p "$DOWNLOADS_DIR"
+FINAL_OVERLAY_ZIP="$DOWNLOADS_DIR/$OVERLAY_NAME.zip"
+FINAL_STINGER_ZIP="$DOWNLOADS_DIR/$STINGER_NAME.zip"
+echo "▶ zip overlay bundle…"
+( cd "$WORK" && zip -rq "$OVERLAY_ZIP" "$OVERLAY_NAME" )
+echo "▶ zip stinger bundle…"
+( cd "$WORK" && zip -rq "$STINGER_ZIP" "$STINGER_NAME" )
+
+echo "▶ validate archive contents…"
+python3 "$ROOT/scripts/validate_release_packages.py" \
+  "$OVERLAY_ZIP" "$STINGER_ZIP" --masks-dir "$ROOT/masks"
+
+mv -f "$OVERLAY_ZIP" "$FINAL_OVERLAY_ZIP"
+mv -f "$STINGER_ZIP" "$FINAL_STINGER_ZIP"
+echo "✓ overlay download → $FINAL_OVERLAY_ZIP"
+echo "✓ stinger download → $FINAL_STINGER_ZIP"

@@ -1,66 +1,53 @@
-# Stinger transition setup (from zero)
+# Stinger transition setup
 
-Right now both rigs cut scenes with the plain **Fade 300 ms** — the branded
-Stinger (navy paw-print wipe with the whoosh) is rendered and ready but not
-configured anywhere. This sets it up. ~5 minutes per Mac, do it while **NOT
-live** (changing transitions mid-stream shows on stream).
+The Stinger is an OBS **scene transition**, not a Media Source. It plays over
+scene changes and swaps scenes while the frame is covered.
 
-A stinger is a **transition**, not a Media Source — it plays once over every
-scene cut, and OBS swaps the scene behind it while the screen is covered.
+## Download
 
-## Components you need
+Download `OBS-stinger-<date>.zip` from the
+[GitHub Releases page](https://github.com/MrDemonWolf/obs-setup/releases).
+The separate archive contains:
 
-| # | Thing | Where it comes from |
-| - | ----- | ------------------- |
-| 1 | OBS Studio 30+ on macOS (both rigs run 32 — fine) | already installed |
-| 2 | `stinger-hevc.mov` — the wipe video, HEVC-with-alpha, whoosh SFX **baked in** | release bundle `Stinger/` folder |
-| 3 | `stinger.wav` — the bare whoosh (reference copy; NOT needed in OBS, the .mov already carries it) | release bundle `Stinger/` folder |
+- `stinger-hevc.mov` — the HEVC-with-alpha transition video with the whoosh
+  already embedded.
+- `stinger.wav` — the original audio source used to render the embedded whoosh.
+- `README.md` — a copy of these install steps.
 
-Getting the bundle (any one of these):
+The overlay and webcam-mask files are in the separate `OBS-overlays-<date>.zip`.
+To render both archives locally on macOS, run `make release`; the files appear
+in `~/Downloads/` (or in the folder set by `OBS_RELEASE_OUTPUT_DIR`).
 
-- **Google Drive** (easiest): the `Stinger/` folder inside
-  `.../My Drive/MultiMedia Projects/Social Media/Twitch/` next to `Overlays/`
-  — if it's there, you're done collecting.
-- **Build it**: `make release` in this repo (macOS only) →
-  `~/Downloads/OBS-overlays-<date>.zip` → unzip → `Stinger/`.
-- **CI**: any published GitHub Release of this repo has the zip attached as an
-  asset.
+## Install in OBS
 
-Use the HEVC `.mov`, not a ProRes master — HEVC-alpha hardware-decodes on
-every Apple Silicon chip; WebM-alpha isn't shippable here (our ffmpeg builds
-drop VP8/VP9 alpha).
+Repeat these steps for each OBS scene collection. Transitions are stored per
+collection.
 
-## Setup steps (repeat on EACH Mac — transitions live per scene collection)
+1. Copy `stinger-hevc.mov` somewhere permanent on the Mac.
+2. Open the **Scene Transitions** dock. If it is hidden, use **View → Docks →
+   Scene Transitions**.
+3. Select **+ → Stinger** and name it `Stinger`.
+4. Set **Video File** to `stinger-hevc.mov`.
+5. Set **Transition Point Type** to **Time** and **Transition Point** to
+   **2000 ms**. This places the scene cut in the covered part of the clip.
+6. Set **Audio Fade Style** to **Crossfade**, save, and select `Stinger` in the
+   Scene Transitions dropdown.
+7. Cut between scenes to check the wipe and embedded whoosh.
 
-1. Copy `stinger-hevc.mov` somewhere permanent on that Mac (the Drive
-   `Stinger/` folder is fine — OBS just needs a stable path).
-2. In OBS, find the **Scene Transitions** dock (bottom middle; View → Docks →
-   Scene Transitions if hidden).
-3. Click **+** → **Stinger**. Name it `Stinger`.
-4. **Video File** → browse to `stinger-hevc.mov`.
-5. **Transition Point Type** = **Time**.
-6. **Transition Point** = **2000 ms**. The screen is fully covered
-   ~1360–2890 ms, so at 2000 ms OBS swaps scenes while nothing shows. The
-   value is `STINGER_POINT_MS` in `remotion/src/Stinger.tsx` — if the clip is
-   ever re-timed, re-check it.
-7. **Audio Fade Style** = **Crossfade** (the whoosh is in the file; nothing
-   else to wire).
-8. Click OK, then pick **Stinger** in the Scene Transitions dropdown so it's
-   the current transition.
-9. Test: click between two scenes. You should see the paw-print panel sweep
-   in, hold, and sweep out with the whoosh — and the scene changed behind it.
-
-Because transitions are stored **per scene collection**, redo steps 2–8 after
-importing a new generated collection (`MBP-Streaming` / `Mini-Streaming`) —
-the import ships only Cut + Fade.
+Do not add `stinger.wav` as a separate OBS audio source: that would play the
+whoosh twice. The WAV is included for the source record and future renders.
 
 ## Troubleshooting
 
-- **Black box instead of transparency** → you grabbed a file without alpha;
-  use `stinger-hevc.mov` from the bundle's `Stinger/` folder (not an MP4).
-- **Scene visibly swaps too early/late** → Transition Point drifted from
-  2000 ms, or Transition Point Type is on Frame; set Time + 2000.
-- **No sound** → the .mov carries the audio; check the transition's audio
-  isn't muted in Advanced Audio Properties and Audio Fade Style is Crossfade.
-- **Stutter on the base-model Mini** → confirm it's the HEVC file, not a
-  ProRes master (ProRes only hardware-decodes on Pro/Max/Ultra chips).
+- **Black background instead of transparency:** use `stinger-hevc.mov` from the
+  Stinger ZIP, not a ProRes master or an MP4.
+- **Scene visibly switches before the screen is covered:** set the transition
+  type to **Time** and the point to **2000 ms**.
+- **No sound:** confirm the transition's audio is enabled and its fade style is
+  **Crossfade**. The sound is part of the MOV.
+- **Stutter on a base-model Mac:** confirm OBS is using the HEVC `.mov`, not the
+  ProRes render master.
+
+The current render is 4 seconds at 60 fps. CI checks that the source WAV remains
+byte-for-byte in the ProRes render and that its measured peak reaches the
+2000 ms scene-cut point within one video frame.

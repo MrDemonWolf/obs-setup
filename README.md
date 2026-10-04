@@ -9,7 +9,7 @@ code, and a small HTML previewer. It exists so I never lose a scene
 layout again and can rebuild either Mac from a clean install in
 minutes.
 
-One command to back up. One download to restock OBS. No lost scenes.
+One command to back up. Separate downloads for overlays and transitions. No lost scenes.
 
 ## Table of Contents
 
@@ -50,17 +50,15 @@ One command to back up. One download to restock OBS. No lost scenes.
   Socials badge, Countdown, Loading Barks), rendered to video for OBS
   media sources.
 - **Branded stinger transition.** A 4-second alpha wipe (`Stinger`) for
-  OBS scene cuts: a navy panel with a cerulean-and-white leading edge
-  sweeps across, holds fully covered while OBS swaps the scene behind
-  it, and a wolf paw trail walks through. Ships with its baked whoosh
-  SFX in the bundle's own `Stinger/` folder.
-- **One-command release bundle.** `make release` renders every
-  overlay, renders the stinger, transcodes the transparent ones to
-  HEVC-alpha, regenerates the webcam masks, and zips a dated OBS
-  drop-in bundle to `~/Downloads`.
-- **CI-built bundles.** Every published GitHub Release builds the
-  same bundle on a macOS runner and attaches the zip as a release
-  asset, so the newest files are always one download away.
+  OBS scene cuts. Its whoosh is embedded in the video; a timing check
+  aligns the measured WAV peak with the covered scene-swap point.
+- **Separate downloads.** `make release` renders the overlays and stinger
+  with Remotion, encodes the transparent videos, regenerates the webcam
+  masks, then writes two dated ZIPs to `~/Downloads`: one for scene overlays
+  and masks, another for the Stinger video, source WAV, and setup guide.
+- **CI-built release assets.** GitHub Actions lints and type-checks the
+  Remotion project, smoke-renders and checks the stinger timing, then renders
+  both complete downloads on a macOS runner for published GitHub Releases.
 - **Rounded webcam masks.** Ready-made alpha PNGs that clip a live
   cam to match each overlay's rounded frame.
 - **OBS JSON reference.** What the files contain, how source colors
@@ -89,10 +87,9 @@ Quick start:
 
 1. Download `OBS-overlays-<date>.zip` from the newest
    [GitHub Release](https://github.com/MrDemonWolf/obs-setup/releases)
-   - it contains every overlay video, the webcam masks, and a README
-   with the exact OBS media-source and placement settings. No clone
-   needed just to use the overlays. (No releases yet? Build it
-   locally with `make release`.)
+   for scene overlay videos and webcam masks. Download `OBS-stinger-<date>.zip`
+   separately for the scene transition. Each archive includes its setup
+   README. (No releases yet? Build both locally with `make release`.)
 2. To import the scene layout, clone the repo and in OBS use
    `Scene Collection -> Import ->`
    `devices/macbook-pro/scenes/MBP-Streaming.json` (MacBook Pro) or
@@ -109,7 +106,7 @@ Everything runs through `make`:
 | Command        | What it does                                                                                          |
 | -------------- | ----------------------------------------------------------------------------------------------------- |
 | `make backup`  | Zips live macOS OBS settings, then files a scrubbed copy into the repo for the current device.  |
-| `make release` | Renders every overlay, regenerates masks, and zips a dated OBS bundle into `~/Downloads`.             |
+| `make release` | Renders and validates the overlays and stinger, then writes two dated ZIPs to `~/Downloads`.             |
 | `make preview` | Serves the color-coded previewer at <http://localhost:8000>.                                          |
 | `make gen`     | Regenerates both device scene collections (MacBook Pro + Mac Mini).                                   |
 | `make masks`   | Regenerates the rounded webcam masks from the frame geometry.                                         |
@@ -139,15 +136,16 @@ The easiest path is the release bundle - no local rendering needed:
 
 1. Go to the
    [Releases page](https://github.com/MrDemonWolf/obs-setup/releases)
-   and download `OBS-overlays-<date>.zip` from the newest release.
-2. Unzip. Inside: `Overlays/` (all 11 videos — looping MP4s plus
-   HEVC-alpha `.mov` widgets), `Masks/` (webcam masks), `Stinger/`
-   (the transition video `stinger-hevc.mov` + its `stinger.wav`), and
-   a `README.md` with the file-to-scene table, loop settings, exact
-   webcam placement coordinates, and the OBS stinger setup.
-3. Add each video in OBS as a Media Source and follow that README. For
-   the stinger, add it under **Scene Transitions → + → Stinger** (not a
-   Media Source) with Transition Point **2000 ms**.
+   and download `OBS-overlays-<date>.zip` for scene videos and masks. Download
+   `OBS-stinger-<date>.zip` separately for the transition.
+2. Unzip the overlays archive: `Overlays/` has the 11 scene videos and
+   transparent widgets; `Masks/` has the rounded webcam masks. Its README
+   lists the scene mapping, loop settings, and webcam placement coordinates.
+3. Add the overlay videos in OBS as Media Sources. The Stinger archive
+   contains `stinger-hevc.mov`, the original `stinger.wav`, and its own setup
+   guide. Configure the video under **Scene Transitions → + → Stinger** with
+   Transition Point **2000 ms**. Its sound is embedded; do not add the WAV as
+   a second OBS audio source.
 
 To build the same bundle locally:
 
@@ -156,10 +154,14 @@ make release              # reuses the heavy ProRes masters if present
 make release FORCE=--force  # re-render everything (after overlay edits)
 ```
 
-Both paths end with `~/Downloads/OBS-overlays-<date>.zip`, ready to
-copy to Google Drive. On GitHub, `.github/workflows/release.yml` runs
-the identical pipeline on a macOS runner for every published release
-(`workflow_dispatch` builds it as a downloadable artifact instead).
+If all renders are already present and only the ZIP step needs to be retried,
+run `./release.sh --package-only` from the repository root.
+
+Both archives end up in `~/Downloads/`: `OBS-overlays-<date>.zip` and
+`OBS-stinger-<date>.zip`. Set `OBS_RELEASE_OUTPUT_DIR` to choose another
+output folder. On GitHub, `.github/workflows/release.yml` attaches both ZIPs
+to each published release; a manual workflow run uploads them as separate
+artifacts instead.
 
 ### Animated overlays
 
@@ -245,7 +247,12 @@ npm install
   the backup script.
 - `scripts/backup.sh` - detects the device, zips a raw snapshot, runs
   the sanitizer. Run with `obs-backup` or `make backup`.
-- `release.sh` - the full bundle pipeline. Run with `make release`.
+- `release.sh` - the Remotion render, audio validation, encoding, and two-ZIP
+  packaging pipeline. Run with `make release`.
+- `scripts/validate_stinger.py` - checks the measured WAV-to-cover timing and
+  the rendered PCM track.
+- `scripts/validate_release_packages.py` - checks both ZIP manifests and
+  ensures the stinger stays separate from the overlay package.
 - `masks/gen_masks.py` - regenerates the webcam masks. Run with
   `make masks`.
 - In `remotion/`: `npm run obs` (previewer), `npm run dev` (Remotion
@@ -260,6 +267,10 @@ npm install
   anything.
 - `remotion/` is linted with eslint and type-checked with tsc
   (`npm run lint`).
+- Python CI checks verify the checked-in WAV timing, frame delay, and package
+  contents. A macOS job renders the Remotion stinger and confirms its audio is
+  embedded byte-for-byte at the intended frame; release builds repeat the
+  checks after HEVC encoding and before packaging.
 - Every overlay loops seamlessly by construction - all motion is
   periodic over the full composition length.
 
@@ -272,7 +283,8 @@ obs-setup/
 ├── release.sh                # render + transcode + masks + zip, one command
 ├── assets/                   # repo art (MrDemonWolf logo)
 ├── .github/workflows/
-│   └── release.yml           # builds the OBS bundle on every GitHub Release
+│   ├── ci.yml                # Python, Remotion, and stinger render checks
+│   └── release.yml           # builds two downloads for each GitHub Release
 ├── devices/
 │   ├── macbook-pro/          # portable rig
 │   │   ├── index.json        # which scene files exist (read by the previewer)
@@ -284,18 +296,21 @@ obs-setup/
 ├── scripts/
 │   ├── gen_scene_collection.py
 │   ├── sanitize.py
-│   └── backup.sh
+│   ├── backup.sh
+│   ├── validate_stinger.py
+│   └── validate_release_packages.py
 ├── docs/
 │   ├── adhd-setup-guide.md
 │   ├── audio-levels.md
 │   ├── backup-guide.md
 │   ├── color-coding.md
-│   └── obs-json-reference.md
+│   ├── obs-json-reference.md
+│   └── stinger-setup.md
 ├── masks/                    # rounded webcam masks for the cam-frame overlays
 │   ├── *.png                 # one alpha mask per cam (named per overlay)
 │   ├── gen_masks.py          # regenerate from the frame geometry
 │   └── README.md             # OBS Image Mask/Blend steps
-└── remotion/                 # animated overlays (separate Node project)
+├── remotion/                 # animated overlays (separate Node project)
     ├── src/                  # scenes + layers
     │   ├── scenes.ts         # every scene (single source of truth)
     │   ├── Root.tsx          # registers each scene as a composition
@@ -307,6 +322,7 @@ obs-setup/
     ├── render-all.mjs        # render the standard set into out/
     ├── to-hevc.sh            # transcode transparent masters to HEVC-alpha
     └── ASSETS.md             # asset drop-in + render/OBS instructions
+└── tests/                    # Python tests for secret scrubbing and releases
 ```
 
 ## License
