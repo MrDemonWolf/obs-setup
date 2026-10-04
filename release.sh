@@ -167,13 +167,25 @@ Overlay source = full-frame 1920×1080 at **0,0**. Cam source Transform
 | Scene | Source | Position (x, y) | Size (w × h) | Mask |
 |---|---|---|---|---|
 | Co-Working · Solo | Cam | 64, 136 | 1400 × 788 | `co-working-solo.png` |
-| Co-Working · Dual | Main cam | 64, 136 | 1152 × 648 | `co-working-dual-big.png` |
+| Co-Working · Dual | Main cam | 64, 136 | 1184 × 666 | `co-working-dual-big.png` |
 | Co-Working · Dual | 2nd cam | 1280, 628 | 576 × 324 | `co-working-dual-small.png` |
-| Just Chatting | Cam | 64, 198 | 1216 × 684 | `just-chatting-cam.png` |
-| Just Chatting | Chat | 1344, 198 | 512 × 684 | `just-chatting-chat.png` |
-| Just Chatting · VTuber | Chat | 1344, 198 | 512 × 684 | `just-chatting-chat.png` |
+| Just Chatting | Cam | 64, 190 | 1232 × 693 | `just-chatting-cam.png` |
+| Just Chatting | Chat | 1328, 190 | 528 × 693 | `just-chatting-chat.png` |
+| Just Chatting · VTuber | Chat | 1328, 190 | 528 × 693 | `just-chatting-chat.png` |
 
 VTuber = no cam frame (model fullscreen); chat frame is the same box.
+
+## Starting Soon + BRB Chat
+
+The Howlbox chat panel is at **64, 720 · 704 × 320**. Size and position its
+browser source to match the glass panel in each standby scene.
+
+### Co-Working · Dual widget zones
+
+The overlay includes a Chat panel at **1280, 312 · 576 × 288** and a bottom
+widget row at **64, 826 · 1184 × 190**. Place compact Timer, Tasks, and Now
+Playing browser sources over the three labeled slots in the lower row. These
+zones are part of the overlay; they do not need webcam masks.
 
 ### Apply a mask (rounds the cam corners)
 

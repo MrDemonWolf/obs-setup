@@ -32,7 +32,7 @@ export const SCENES: SceneDef[] = [
   // moon parked RIGHT (only x passed; shared MOON_Y/MOON_R) — at the default
   // x=300 it sits inside/behind the cam frames, where the live feed clips it.
   { id: "CoworkingSolo", label: "Co-Working · Solo", component: Cowork, props: { cams: COWORK_LAYOUTS.solo, moon: { x: 1568 } } },
-  { id: "CoworkingDual", label: "Co-Working · Dual", component: Cowork, props: { cams: COWORK_LAYOUTS.dual, moon: { x: 1568 } } },
+  { id: "CoworkingDual", label: "Co-Working · Dual", component: Cowork, props: { cams: COWORK_LAYOUTS.dual, moon: { x: 1568 }, showDualWidgets: true } },
   { id: "EndingStream", label: "Ending Stream", component: Scene, props: { title: "Until Next Time", subtitle: "Thanks for being here", showMascot: false } },
   { id: "Background", label: "Background", component: BackdropScene, props: {} },
   // Transparent widget outputs stay close to the visible glass panels so OBS

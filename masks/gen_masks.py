@@ -23,10 +23,10 @@ RADIUS = 30  # remotion/src/theme.ts radius.card — the CamFrame corner radius
 # x/y are where the frame sits in the 1920x1080 scene, so you can position the
 # cam source to match. See README.md.
 MASKS = {
-    "just-chatting-cam":       (1216, 684, "Just Chatting",            64,  198),
-    "just-chatting-chat":      (512,  684, "Just Chatting / VTuber",  1344, 198),
+    "just-chatting-cam":       (1232, 693, "Just Chatting",            64,  190),
+    "just-chatting-chat":      (528,  693, "Just Chatting / VTuber",  1328, 190),
     "co-working-solo":         (1400, 788, "Co-Working Solo",           64, 136),
-    "co-working-dual-big":     (1152, 648, "Co-Working Dual (big)",     64, 136),
+    "co-working-dual-big":     (1184, 666, "Co-Working Dual (big)",     64, 136),
     "co-working-dual-small":   (576,  324, "Co-Working Dual (small)", 1280, 628),
 }
 

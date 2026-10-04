@@ -1,16 +1,39 @@
 import { AbsoluteFill } from "remotion";
 import { Background } from "./Background";
 import { CamFrame } from "./CamFrame";
+import { ChatPanel } from "./ChatBoxFrame";
+import { WidgetSlot } from "./WidgetSlot";
 
 // Co-Working overlays: animated forest background + baked 16:9 cam frame(s).
-// No bar, no widget boxes — the open space in each layout is where your OBS
-// widget sources (timer / tasks / chat / now-playing) go. `moon` repositions
-// the background moon into clear sky (the default sits inside the cam frames).
+// Dual can also show glass landing zones for the OBS widgets; Solo stays open.
+// `moon` repositions the background moon into clear sky (the default sits
+// inside the cam frames).
 type Cam = { x: number; y: number; w: number; h: number };
 
-export const Cowork: React.FC<{ cams: Cam[]; moon?: { x?: number; y?: number; r?: number } }> = ({ cams, moon }) => (
+export type CoworkProps = {
+  cams: Cam[];
+  moon?: { x?: number; y?: number; r?: number };
+  showDualWidgets?: boolean;
+};
+
+export const COWORK_DUAL_WIDGETS = {
+  chat: { x: 1280, y: 312, w: 576, h: 288 },
+  timer: { x: 64, y: 826, w: 280, h: 190, label: "Timer" },
+  tasks: { x: 364, y: 826, w: 500, h: 190, label: "Tasks" },
+  nowPlaying: { x: 884, y: 826, w: 364, h: 190, label: "Now Playing" },
+} as const;
+
+export const Cowork: React.FC<CoworkProps> = ({ cams, moon, showDualWidgets = false }) => (
   <AbsoluteFill>
     <Background variant="forest" moon={moon} />
+    {showDualWidgets && (
+      <>
+        <ChatPanel {...COWORK_DUAL_WIDGETS.chat} label="Chat" />
+        <WidgetSlot {...COWORK_DUAL_WIDGETS.timer} />
+        <WidgetSlot {...COWORK_DUAL_WIDGETS.tasks} />
+        <WidgetSlot {...COWORK_DUAL_WIDGETS.nowPlaying} />
+      </>
+    )}
     {cams.map((c, i) => (
       // staggered glow phases — identical phases pulse in lockstep (metronome)
       <CamFrame key={i} {...c} phase={0.4 + i * 0.33} />
@@ -28,9 +51,9 @@ export const Cowork: React.FC<{ cams: Cam[]; moon?: { x?: number; y?: number; r?
 const SOLO_HERO: Cam = { x: 64, y: 136, w: 1400, h: 788 };
 // Dual: second cam (576×324) pinned to the RIGHT, nudged up to match the
 // hero's lift (x=1920-64-576=1280, y=628 → 92px above its old bottom-corner
-// spot). Hero shares the solo top-left pin, shrunk so the second cam clears
-// it with a real gap (right edge 1216 → 64px to the second cam).
-const DUAL_HERO: Cam = { x: 64, y: 136, w: 1152, h: 648 };
+// spot). The main hero ends at x1248, leaving 32px before the second cam; its
+// lower widget row starts 24px below the hero.
+const DUAL_HERO: Cam = { x: 64, y: 136, w: 1184, h: 666 };
 const DUAL_SECOND: Cam = { x: 1280, y: 628, w: 576, h: 324 };
 export const COWORK_LAYOUTS: Record<string, Cam[]> = {
   solo: [SOLO_HERO],

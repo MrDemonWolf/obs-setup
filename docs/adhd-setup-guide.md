@@ -171,36 +171,40 @@ Right, Timer.
 ### Howlbox chat on standby cards
 
 Add a `Howlbox Chat` browser source manually in OBS for Starting Soon and Be
-Right Back. The overlay videos now have a quiet glass frame at **640 × 300,
+Right Back. The overlay videos have a larger quiet glass frame at **704 × 320,
 x=64, y=720** on the 1920 × 1080 canvas; set the browser source to that size
 and position. Keep its background transparent if Howlbox supports it.
 
-Live and Co-Working are intentionally not assigned a permanent Howlbox position
-in this layout. The screenshots show why: co-working already has a timer, task
-list, rewards, music, and two camera views. Try these placements one at a time:
+Live has no permanent Howlbox frame, so use the lower-right only when the game
+leaves that area clear. Co-Working Solo keeps an open right rail; Co-Working
+Multi now has a dedicated chat frame and labeled spaces for the other widgets.
 
 | Scene | Suggested Howlbox area | Keep the scene calm by… |
 | ----- | ---------------------- | ----------------------- |
 | Live | Lower-right: **x=1216, y=660, 640 × 360** | Use it only when the game leaves that corner clear. |
 | Co-Working [Solo] | Portrait right rail: **x=1488, y=200, 368 × 700** | Use a matching portrait browser source and replace the task list / right-side Rewards. |
-| Co-Working [Multi] | Upper-right: **x=1280, y=200, 576 × 400** | Use a matching browser source, replace the task list, and keep the lower-right camera clear. |
+| Co-Working [Multi] | Upper-right: **x=1280, y=312, 576 × 288** | Use the new glass chat panel; keep the lower-right camera clear. |
 
-Treat Howlbox and the task list as alternatives in Co-Working. Keep Rewards and
-Wheel hidden until needed; that gives the cameras and the active work/chat room
-the visual priority.
-The two tall Co-Working placements need a separate browser source with matching
-viewport dimensions; the standby-card browser source can stay 640 × 300.
+Co-Working [Multi] now has labeled spaces for Chat, Timer, Tasks, and Now
+Playing. Put one browser source in each matching space; the lower row is split
+into **Timer 280 × 190 at (64, 826)**, **Tasks 500 × 190 at (364, 826)**, and
+**Now Playing 364 × 190 at (884, 826)**. Keep Rewards and Wheel hidden until
+needed so the cameras and chat stay easy to read. The standby and co-working
+chat placements need browser sources sized to their matching viewport.
 
-### Cams are pre-pinned to the overlay frames
+### Align OBS sources to the overlay frames
 
-The import already places cams exactly inside the overlay cam frames
-(Scale-to-inner-bounds), matching `masks/` and the bundle README:
+The Remotion overlays and bundled masks use these positions. The generated
+scene-collection JSON is unchanged, so adjust the corresponding OBS sources
+manually to match; these are the current overlay frame coordinates:
 
 | Scene              | Source     | Position   | Size       | Mask                        |
 | ------------------ | ---------- | ---------- | ---------- | --------------------------- |
 | Co-Working [Solo]  | Main Cam   | 64, 136    | 1400 × 788 | `co-working-solo.png`       |
-| Co-Working [Multi] | Main Cam   | 64, 136    | 1152 × 648 | `co-working-dual-big.png`   |
+| Co-Working [Multi] | Main Cam   | 64, 136    | 1184 × 666 | `co-working-dual-big.png`   |
 | Co-Working [Multi] | Second Cam | 1280, 628  | 576 × 324  | `co-working-dual-small.png` |
+| Just Chatting       | Cam        | 64, 190    | 1232 × 693 | `just-chatting-cam.png`     |
+| Just Chatting       | Chat       | 1328, 190  | 528 × 693  | `just-chatting-chat.png`    |
 
 Add the Image Mask/Blend filter per cam (see `masks/README.md`) and you are
 done.

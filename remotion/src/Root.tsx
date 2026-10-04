@@ -2,6 +2,15 @@ import "./index.css";
 import { Composition } from "remotion";
 import { SCENES } from "./scenes";
 import { VIDEO } from "./theme";
+import { StingerConceptBoard, StingerConceptStill, STINGER_CONCEPTS, StingerConceptId } from "./StingerConcepts";
+
+const CONCEPT_STILLS: Record<StingerConceptId, React.FC> = {
+  pawglass: () => <StingerConceptStill concept="pawglass" />,
+  aurora: () => <StingerConceptStill concept="aurora" />,
+  frost: () => <StingerConceptStill concept="frost" />,
+  eclipse: () => <StingerConceptStill concept="eclipse" />,
+  snow: () => <StingerConceptStill concept="snow" />,
+};
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -17,5 +26,24 @@ export const RemotionRoot: React.FC = () => (
         defaultProps={s.props}
       />
     ))}
+    {STINGER_CONCEPTS.map((concept) => (
+      <Composition
+        key={concept.id}
+        id={`Stinger${concept.id[0].toUpperCase()}${concept.id.slice(1)}`}
+        component={CONCEPT_STILLS[concept.id]}
+        durationInFrames={1}
+        fps={VIDEO.fps}
+        width={VIDEO.width}
+        height={VIDEO.height}
+      />
+    ))}
+    <Composition
+      id="StingerConceptBoard"
+      component={StingerConceptBoard}
+      durationInFrames={1}
+      fps={VIDEO.fps}
+      width={VIDEO.width}
+      height={VIDEO.height}
+    />
   </>
 );

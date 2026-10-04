@@ -42,6 +42,20 @@ npm run obs     # macOS-style previewer, a button per scene → http://localhost
 npm run dev     # Remotion Studio
 ```
 
+### Stinger visual concepts
+
+The preview-only compositions `StingerPawglass`, `StingerAurora`,
+`StingerFrost`, `StingerEclipse`, and `StingerSnow` are stills for comparing
+ideas. They are not included in overlay or Stinger releases. Render the contact
+sheet with:
+
+```bash
+npx remotion still src/index.ts StingerConceptBoard out/stinger-concepts-board.png --frame=0
+```
+
+The production Stinger remains the four-second, audio-aligned Paw Swipe until a
+new direction is selected.
+
 ## Add to OBS (and keep it light on an M1)
 
 1. **Sources → + → Media Source**, pick the file, check **Loop**.
@@ -55,19 +69,15 @@ npm run dev     # Remotion Studio
 4. Turn on **"Close file when inactive"** for sources in scenes you're not
    showing, so they cost nothing.
 
-### Fit your webcam to the Just Chatting frame
+### Fit sources to the live frames
 
-The webcam frame is **1160×1000** — position your webcam source at **x=40,
-y=40**. Its aspect is narrower than 16:9, so crop the sides:
-
-| Webcam | Crop Left | Crop Right | Crop Top | Crop Bottom |
-| ------ | --------- | ---------- | -------- | ----------- |
-| 1080p (1920×1080) | 334 | 334 | 0 | 0 |
-| 720p (1280×720)   | 222 | 222 | 0 | 0 |
-
-In OBS: select the webcam, hold **Alt** and drag the left/right edges (or
-right-click → **Transform → Edit Transform** and type the crop), then size it to
-fill the frame.
+The updated Just Chatting camera frame is **1232 × 693 at (64, 190)**, which
+keeps the webcam at 16:9. Its companion chat frame is **528 × 693 at
+(1328, 190)**. Co-Working Dual uses an **1184 × 666** main camera at (64, 136)
+and a **576 × 324** second camera at (1280, 628). Match the OBS source
+transform to those dimensions, then apply the matching PNG mask to each camera.
+The overlay files and masks are updated; the saved scene-collection JSON is
+left for you to adjust in OBS.
 
 ## Render one at a time
 
