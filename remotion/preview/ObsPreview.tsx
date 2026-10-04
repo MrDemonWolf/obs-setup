@@ -24,7 +24,7 @@ const PREVIEW_GROUPS: PreviewGroup[] = [
   {
     title: "Coffee cabin",
     description: "Complete background or separate OBS layers",
-    sceneIds: ["CoffeeBackground", "CabinBackground", "DeskForeground"],
+    sceneIds: ["CoffeeBackground", "CabinBackground"],
   },
   {
     title: "Widgets & transitions",
@@ -51,7 +51,7 @@ const PREVIEW_ONLY_SCENES: SceneDef[] = [
 const PREVIEW_SCENES = [...SCENES, ...PREVIEW_ONLY_SCENES];
 const GROUPED_SCENE_IDS = new Set(PREVIEW_GROUPS.flatMap((group) => group.sceneIds));
 const UNGROUPED_SCENE_IDS = PREVIEW_SCENES
-  .filter((scene) => !GROUPED_SCENE_IDS.has(scene.id))
+  .filter((scene) => !GROUPED_SCENE_IDS.has(scene.id) && scene.id !== "DeskForeground")
   .map((scene) => scene.id);
 const GROUPS_WITH_FALLBACK: PreviewGroup[] = UNGROUPED_SCENE_IDS.length
   ? [
