@@ -2,8 +2,8 @@
 // Pad is ONE smooth rounded shape — the old three-rear-lobe cutouts read as
 // "bites" at large sizes (e.g. the stinger's 210px paws).
 // Shared by Background + PawTrail.
-export const Paw: React.FC<{ size: number; color: string; opacity?: number }> = ({ size, color, opacity = 1 }) => (
-  <svg width={size} height={size} viewBox="0 0 100 100" style={{ opacity, color }}>
+export const Paw: React.FC<{ size: number; color: string; opacity?: number; x?: number; y?: number }> = ({ size, color, opacity = 1, x = 0, y = 0 }) => (
+  <svg x={x} y={y} width={size} height={size} viewBox="0 0 100 100" style={{ opacity, color }}>
     {/* metacarpal pad — smooth rounded triangle, no notches */}
     <path
       d="M50 46 C64 46 74 56 73 67 C72 77 64 83 50 83 C36 83 28 77 27 67 C26 56 36 46 50 46 Z"

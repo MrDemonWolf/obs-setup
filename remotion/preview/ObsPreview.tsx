@@ -33,7 +33,7 @@ const PREVIEW_GROUPS: PreviewGroup[] = [
   },
   {
     title: "Stinger concepts",
-    description: "Five visual directions, shown as stills",
+    description: "Compare the paw swipe with the animated full moon",
     sceneIds: ["FullMoonStinger", "StingerConceptBoard"],
   },
 ];
