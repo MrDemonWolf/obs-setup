@@ -30,6 +30,9 @@ class ReleasePackageTests(unittest.TestCase):
         return archive_path
 
     def test_overlay_archive_has_all_videos_masks_and_no_stinger(self):
+        self.assertEqual(len(OVERLAY_FILES), 12)
+        self.assertIn("countdown-hevc.mov", OVERLAY_FILES)
+        self.assertIn("countdown-10m-hevc.mov", OVERLAY_FILES)
         masks = {"co-working-solo.png", "just-chatting-cam.png"}
         members = {"README.md"}
         members.update(f"Overlays/{name}" for name in OVERLAY_FILES)

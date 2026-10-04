@@ -178,11 +178,11 @@ npm run render:all  # render the standard set into out/
 
 Composition ids: `StartingSoon`, `BRB`, `JustChatting`,
 `JustChattingVtuber`, `CoworkingSolo`, `CoworkingDual`,
-`EndingStream`, `Background` (full-frame MP4s), plus three
-transparent overlays: `Socials` (760x180 badge), `Countdown` (5:00
-timer, plays once), and `LoadingBarks` (fake loading bar with wolf
-puns), plus the `Stinger` transition (4s alpha wipe, plays once). The
-heavy `Countdown` and `LoadingBarks` ProRes masters are excluded from
+`EndingStream`, `Background` (full-frame MP4s), plus four
+transparent overlays: `Socials` (760x180 badge), `Countdown` options
+(5:00 and 10:00, play once), and `LoadingBarks` (wolf-tech jokes), plus
+the `Stinger` transition (4s alpha wipe, plays once). The heavy
+`Countdown` options and `LoadingBarks` ProRes masters are excluded from
 `render:all`; `make release` (or a manual `npx remotion render`)
 handles them and the stinger.
 

@@ -17,9 +17,9 @@ permissions:
 jobs:
   bundle:
     runs-on: macos-14     # Apple Silicon — has VideoToolbox
-    # Measured on a real run: renders ~85 min + SOFTWARE HEVC transcodes
-    # (no HW encoder in the VM) ~65 min for countdown+loading-barks ≈ 155 min.
-    timeout-minutes: 180
+    # Two timer lengths roughly double the heavy transparent-render work.
+    # GitHub's hosted-job timeout tops out at 360 minutes.
+    timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
         with:

@@ -12,8 +12,8 @@ import { WindowDots } from "./WindowChrome";
 // set the OBS media source to play ONCE (loop OFF) and start it when you go
 // live for a real countdown. Registered duration = (`from`+1)s — the extra
 // second is the held 00:00 frame (at exactly from×fps the last frame still
-// reads 00:01). Re-render with --props='{"from":600}' AND a matching longer
-// comp for other lengths.
+// reads 00:01). The repo registers both 5:00 and 10:00 variants with matching
+// durations; any added length also needs a composition of (`from`+1)×fps frames.
 export const Countdown: React.FC<{ from?: number; label?: string }> = ({ from = 300, label = "STREAM STARTS IN" }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();

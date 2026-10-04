@@ -20,12 +20,12 @@ const PREVIEW_GROUPS: PreviewGroup[] = [
   {
     title: "Widgets & transitions",
     description: "Transparent overlays and the scene change",
-    sceneIds: ["Background", "Socials", "Countdown", "LoadingBarks", "Stinger"],
+    sceneIds: ["Background", "Socials", "Countdown", "Countdown10", "LoadingBarks", "Stinger"],
   },
 ];
 
-const NO_LOOP = new Set(["Countdown", "Stinger"]);
-const ALPHA_SCENES = new Set(["Socials", "Countdown", "LoadingBarks", "Stinger"]);
+const NO_LOOP = new Set(["Countdown", "Countdown10", "Stinger"]);
+const ALPHA_SCENES = new Set(["Socials", "Countdown", "Countdown10", "LoadingBarks", "Stinger"]);
 type StageBackground = "forest" | "checker" | "midnight";
 
 const formatTime = (frame: number, fps: number) => {

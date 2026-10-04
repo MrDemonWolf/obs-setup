@@ -43,6 +43,7 @@ export const SCENES: SceneDef[] = [
   // the held 00:00 frame (at from×fps the last frame still reads 00:01).
   // NOT in render:all (heavy).
   { id: "Countdown", label: "Countdown (5:00)", component: Countdown, fps: 60, durationInFrames: (300 + 1) * 60, props: { from: 300 } },
+  { id: "Countdown10", label: "Countdown (10:00)", component: Countdown, fps: 60, durationInFrames: (600 + 1) * 60, props: { from: 600 } },
   // Transparent full-frame glass status card with ten wolf-tech joke pairs.
   // Seeded schedule (each phrase 20–40s; bar fills to 100%); duration ~4.7 min.
   // 60fps; LOADING_BARKS_DURATION is computed at LOADING_BARKS_FPS so they match.

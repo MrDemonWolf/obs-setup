@@ -7,7 +7,7 @@
 # keeps the transparency, hardware-decodes everywhere, and is a fraction of the
 # ProRes size. Use these for the OBS media sources; keep the ProRes as master.
 #
-# Usage: ./to-hevc.sh out/countdown.mov out/loading-barks.mov out/socials-badge.mov
+# Usage: ./to-hevc.sh out/countdown.mov out/countdown-10m.mov out/loading-barks.mov out/socials-badge.mov
 #   writes <name>-hevc.mov next to each input.
 # ponytail: fixed 12M bitrate — plenty for a 1080p60 overlay; bump if you see blocking.
 set -euo pipefail

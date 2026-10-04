@@ -126,11 +126,12 @@ npm run render:all  # render every scene into out/ (see render-all.mjs)
 npx remotion render <CompId> out/<name>.mp4
 #   StartingSoon | BRB | JustChatting | JustChattingVtuber
 #   CoworkingSolo | CoworkingDual | EndingStream | Background | Socials
+#   Countdown | Countdown10 | LoadingBarks | Stinger
 ```
 
 Architecture:
 
-- **`src/scenes.ts` is the single source of truth** for the **12** scenes, each
+- **`src/scenes.ts` is the single source of truth** for the **13** scenes, each
   with `id`, `label`, `component`, `props`, and optional `width`/`height`.
   `src/Root.tsx` registers a `<Composition>` per scene (applying per-scene
   `width ?? VIDEO.width` / `height ?? VIDEO.height` — so `Socials` is 760×180,
@@ -142,18 +143,19 @@ Architecture:
   Reuses `Paw` (wolf print: ONE smooth rounded pad + splayed toes — the old
   3-lobe pad read as "bites" at large sizes — shared with `PawTrail`, the
   LoadingBarks fill-edge rider, the TitleChip corner mark, and the Stinger).
-- **`Countdown`** (`Countdown.tsx`) = transparent standalone timer chip
+- **`Countdown` / `Countdown10`** (`Countdown.tsx`) = transparent standalone timer chips
   (`HOWLING IN` + `M:SS` + `PawLoader`). Counts `from`s → 0 over the comp
   duration then holds at 00:00. **The one intentional non-loop** — render it out
   and set the OBS media source to play ONCE (loop OFF), start on going live.
   Full-frame 1920×1080 (chip centered) so it drops in without repositioning.
-  Registered at 5:00 (`from:300`, **(300+1)×60 = 18060f @60fps** — the +1s is
-  the held 00:00 frame; at `from`×fps the last frame still reads 00:01. Per-comp
+  Registered at 5:00 (`from:300`, **18060f**) and 10:00 (`from:600`,
+  **36060f**) at 60fps. Each duration includes the extra held 00:00 second; at
+  `from`×fps the last frame still reads 00:01. Per-comp
   `fps:60` in `scenes.ts`, motion reads `useVideoConfig().fps`; the glow runs a
   local 8s wave, NOT `loopSin`, whose 240f period would double the rate at 60fps);
   **kept out of `render:all`** (too heavy). Render
-  manually: `npx remotion render Countdown out/countdown.mov --codec=prores
-  --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le --log=error`.
+  manually as `Countdown` → `out/countdown.mov` or `Countdown10` →
+  `out/countdown-10m.mov` with ProRes 4444.
 - **`LoadingBarks`** (`LoadingBarks.tsx`) = a transparent full-frame glass
   status card with ten short wolf-tech jokes. Each phrase has a headline and a
   punchline. A **seeded module-load schedule** (LCG, loop-safe — no per-frame
@@ -276,14 +278,14 @@ Architecture:
   in Remotion — animate with `useCurrentFrame()` + `interpolate()` only.
 - **Perf / formats:** opaque scenes render to H.264 MP4 (hardware-decoded in
   OBS on Apple Silicon — the lightest option; a GIF is heavier). Transparent
-  scenes (`Socials`, `Countdown`, `LoadingBarks`) render to **ProRes 4444 `.mov`
+  scenes (`Socials`, both `Countdown` options, and `LoadingBarks`) render to **ProRes 4444 `.mov`
   as the alpha master**, but ProRes only hardware-decodes on M1/M2 **Pro/Max/Ultra**
   — a base M1/M2 Mac Mini software-decodes it and can stutter in OBS. **For the
   actual OBS media source, transcode the master to HEVC-with-alpha (`hvc1`) via
   `./to-hevc.sh out/<name>.mov`** — HEVC hardware-decodes on EVERY Apple Silicon
   chip and is a fraction of the size. (`Socials` also ships a GIF.) Glass elements
   use plain translucent fills, not `backdrop-filter` (expensive to render);
-  overlays that sit OVER live gameplay (`Countdown`/`LoadingBarks`/`Socials`)
+  overlays that sit OVER live gameplay (countdowns/`LoadingBarks`/`Socials`)
   share `theme.glassPanel` (dot grid + `glassSheen` + `glassDense` 0.84) +
   `glassPanelShadow` + `WindowDots` (corner-pinned, no domain tag — just widgets),
   so they read as the same little macOS window
@@ -295,15 +297,15 @@ Architecture:
   numbers from reflowing), loading only the weights/subset used.
   `render-all.mjs` renders the 8 full-frame ids to MP4, then `Socials` to
   `.mov` + `.gif` and a bonus `Background.gif`, into `out/` (which is
-  gitignored). `Socials` is omitted from the 8-id MP4 array; `Countdown`
-  (5 min) + `LoadingBarks` (~4.7 min) are transparent full-frame ProRes 4444
+  gitignored). `Socials` is omitted from the 8-id MP4 array; both `Countdown`
+  options (5 and 10 min) + `LoadingBarks` (~4.7 min) are transparent full-frame ProRes 4444
   (multi-GB, slow) → omitted from `render:all` entirely, rendered manually.
 - **`release.sh`** (repo root, `make release`) runs the pipeline end to end:
-  `render:all` → render Countdown + LoadingBarks ProRes (reused if the master
-  already exists, `--force` to re-render) → render the Stinger ProRes → encode
-  the four transparent masters as HEVC-alpha → validate the WAV timing and
+  `render:all` → render both Countdown options + LoadingBarks ProRes (reused if
+  a master already exists, `--force` to re-render) → render the Stinger ProRes → encode
+  the five transparent masters as HEVC-alpha → validate the WAV timing and
   rendered streams → regenerate `masks/` → make separate dated downloads:
-  `OBS-overlays-<date>.zip` (11 scene videos + masks + setup README) and
+  `OBS-overlays-<date>.zip` (12 scene videos + masks + setup README) and
   `OBS-stinger-<date>.zip` (HEVC-alpha transition + source WAV + setup README).
   The stinger whoosh is embedded in the MOV; its sample-accurate WAV offset is
   checked in the ProRes render. `OBS_RELEASE_OUTPUT_DIR` changes the download

@@ -80,8 +80,8 @@ Current standby copy:
   left-to-right walk and fades before the loop seam.
 - Use a single restrained pulse for glass edges. Avoid adding glow, particles,
   or multiple simultaneous loops to the same panel.
-- Countdown and Stinger are intentional one-shot compositions; keep their timing
-  and source audio rules unchanged.
+- Both Countdown presets and the Stinger are intentional one-shot compositions;
+  keep their timing and source audio rules unchanged.
 
 ## Fursona use
 

@@ -22,6 +22,7 @@ OVERLAY_FILES = frozenset(
         "socials-badge-hevc.mov",
         "loading-barks-hevc.mov",
         "countdown-hevc.mov",
+        "countdown-10m-hevc.mov",
     }
 )
 STINGER_FILES = frozenset({"README.md", "stinger-hevc.mov", "stinger.wav"})

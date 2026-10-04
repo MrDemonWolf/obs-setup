@@ -78,7 +78,7 @@ npx remotion render Socials out/socials-badge.gif --codec=gif
 
 Composition ids (left arg): `StartingSoon`, `BRB`, `JustChatting`,
 `JustChattingVtuber`, `CoworkingSolo`, `CoworkingDual`, `EndingStream`,
-`Background`, `Socials`, `Countdown`, `LoadingBarks`, and the `Stinger`
+`Background`, `Socials`, `Countdown` (5:00), `Countdown10` (10:00), `LoadingBarks`, and the `Stinger`
 transition. The output filename (right arg) is up to you — `render:all` uses the
 numbered names above (Countdown, LoadingBarks, and Stinger render via
 `make release`).

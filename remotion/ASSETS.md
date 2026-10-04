@@ -33,9 +33,9 @@ other content, and the Stinger is a one-shot scene transition.
 - **Socials** — standalone badge (760×180, transparent) fading through your
   platforms one at a time in real brand colors. Edit the list/handles in
   `src/Socials.tsx`.
-- **Countdown** — transparent 5:00 timer chip, full-frame. The one intentional
-  non-loop: set the OBS media source to play ONCE (Loop off), start on going
-  live.
+- **Countdown** — transparent 5:00 and 10:00 timer chips, full-frame. These
+  are the intentional non-loops: set the OBS media source to play ONCE (Loop
+  off), start on going live.
 - **LoadingBarks** — transparent forest-glass status card with ten short
   wolf-tech jokes and paw-mark progress (~4.7 min loop). Edit `BARKS` in
   `src/LoadingBarks.tsx`.
@@ -71,6 +71,7 @@ slow) — render manually, or let `../release.sh` handle everything:
 
 ```bash
 npx remotion render Countdown    out/countdown.mov     --codec=prores --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le --log=error
+npx remotion render Countdown10 out/countdown-10m.mov --codec=prores --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le --log=error
 npx remotion render LoadingBarks out/loading-barks.mov --codec=prores --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le --log=error
 ```
 

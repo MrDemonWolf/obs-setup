@@ -38,8 +38,8 @@ if [ "$PACKAGE_ONLY" -eq 1 ]; then
     01-starting-soon.mp4 02-just-chatting.mp4 03-just-chatting-vtuber.mp4
     04-co-working-solo.mp4 05-co-working-dual.mp4 06-be-right-back.mp4
     07-ending-stream.mp4 background.mp4
-    socials-badge.mov countdown.mov loading-barks.mov stinger.mov
-    socials-badge-hevc.mov countdown-hevc.mov loading-barks-hevc.mov stinger-hevc.mov
+    socials-badge.mov countdown.mov countdown-10m.mov loading-barks.mov stinger.mov
+    socials-badge-hevc.mov countdown-hevc.mov countdown-10m-hevc.mov loading-barks-hevc.mov stinger-hevc.mov
   )
   for file in "${required_outputs[@]}"; do
     if [ ! -s "out/$file" ]; then
@@ -64,6 +64,7 @@ prores() { # <CompId> <outfile>
   fi
 }
 prores Countdown    countdown.mov
+prores Countdown10  countdown-10m.mov
 prores LoadingBarks loading-barks.mov
 
 # Stinger transition — short, so always render (no reuse gate). The SFX is baked
@@ -78,7 +79,7 @@ npx remotion render Stinger out/stinger.mov --codec=prores --prores-profile=4444
 # keeps transparency, hardware-decodes on every Apple Silicon chip, and OBS on
 # macOS reads it natively (both target Macs). See README note.
 echo "▶ transcode transparent masters → HEVC-alpha (hvc1)…"
-./to-hevc.sh out/socials-badge.mov out/countdown.mov out/loading-barks.mov out/stinger.mov
+./to-hevc.sh out/socials-badge.mov out/countdown.mov out/countdown-10m.mov out/loading-barks.mov out/stinger.mov
 fi
 
 echo "▶ validate stinger timing and encoded streams…"
@@ -86,6 +87,7 @@ python3 "$ROOT/scripts/validate_stinger.py" \
   --rendered "$OUT/stinger.mov" --encoded "$OUT/stinger-hevc.mov" \
   --alpha-file "$OUT/socials-badge-hevc.mov" \
   --alpha-file "$OUT/countdown-hevc.mov" \
+  --alpha-file "$OUT/countdown-10m-hevc.mov" \
   --alpha-file "$OUT/loading-barks-hevc.mov"
 
 echo "▶ regenerate webcam masks…"
@@ -106,7 +108,7 @@ echo "▶ assemble separate overlay and stinger archives…"
 mkdir -p "$OVERLAY_DIR/Overlays" "$OVERLAY_DIR/Masks" "$STINGER_DIR"
 cp "$OUT"/0*.mp4 "$OUT"/background.mp4 \
    "$OUT"/socials-badge-hevc.mov "$OUT"/loading-barks-hevc.mov \
-   "$OUT"/countdown-hevc.mov "$OVERLAY_DIR/Overlays/"
+   "$OUT"/countdown-hevc.mov "$OUT"/countdown-10m-hevc.mov "$OVERLAY_DIR/Overlays/"
 cp "$ROOT"/masks/*.png "$OVERLAY_DIR/Masks/"
 cp "$OUT"/stinger-hevc.mov "$R"/public/stinger.wav "$STINGER_DIR/"
 
@@ -120,14 +122,14 @@ cp "$OUT"/stinger-hevc.mov "$R"/public/stinger.wav "$STINGER_DIR/"
 This package contains the scene overlays and webcam masks.
 
 ```
-Overlays/   11 videos — 8 full-frame MP4s + 3 transparent HEVC-alpha .mov
+Overlays/   12 videos — 8 full-frame MP4s + 4 transparent HEVC-alpha .mov
 Masks/      rounded-corner webcam masks (PNG, alpha)
 ```
 
 ## Add each as a Media Source
 
 1. Sources → **+** → **Media Source** → **Local File** → pick the file.
-2. **Loop**: ON for everything **except `countdown-hevc.mov`** (plays once, start on going live).
+2. **Loop**: ON for everything **except the two countdown files** (play once, start on going live).
 3. Full-frame overlays sit at **0, 0** (they're 1920×1080). `socials-badge` is 760×180 — place it anywhere.
 
 ### Files → scene → loop
@@ -145,6 +147,7 @@ Masks/      rounded-corner webcam masks (PNG, alpha)
 | `socials-badge-hevc.mov` | Socials badge (over anything) | ON |
 | `loading-barks-hevc.mov` | Loading overlay (over anything) | ON |
 | `countdown-hevc.mov` | 5:00 countdown | **OFF** — start on going live |
+| `countdown-10m-hevc.mov` | 10:00 countdown | **OFF** — start on going live |
 
 ## Stinger transition
 
