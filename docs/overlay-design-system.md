@@ -135,5 +135,5 @@ space rather than squeezing it into these panels.
 - `src/TitleChip.tsx` and `src/ChatBoxFrame.tsx`: standby title and chat glass.
 - `src/JustChattingScene.tsx` and `src/CoworkFrame.tsx`: scene-specific camera
   layouts using the same forest system.
-- `src/scenes.ts`: the 14 production compositions and their copy.
+- `src/scenes.ts`: the 16 production compositions and their copy, including full coffee and cabin-only backgrounds.
 - `preview/ObsPreview.tsx`: browser preview of the production scenes.

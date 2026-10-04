@@ -20,6 +20,11 @@ const PREVIEW_GROUPS: PreviewGroup[] = [
     sceneIds: ["JustChatting", "JustChattingVtuber", "CoworkingSolo", "CoworkingDual"],
   },
   {
+    title: "Coffee cabin",
+    description: "Complete background or separate OBS layers",
+    sceneIds: ["CoffeeBackground", "CabinBackground", "DeskForeground"],
+  },
+  {
     title: "Widgets & transitions",
     description: "Transparent overlays and the scene change",
     sceneIds: ["Background", "Socials", "Countdown", "Countdown10", "LoadingBarks", "Stinger"],
@@ -57,7 +62,7 @@ const GROUPS_WITH_FALLBACK: PreviewGroup[] = UNGROUPED_SCENE_IDS.length
   : PREVIEW_GROUPS;
 
 const NO_LOOP = new Set(["Countdown", "Countdown10", "Stinger", "StingerConceptBoard"]);
-const ALPHA_SCENES = new Set(["Socials", "Countdown", "Countdown10", "LoadingBarks", "Stinger"]);
+const ALPHA_SCENES = new Set(["Socials", "Countdown", "Countdown10", "LoadingBarks", "Stinger", "DeskForeground"]);
 type StageBackground = "forest" | "checker" | "midnight";
 
 const formatTime = (frame: number, fps: number) => {

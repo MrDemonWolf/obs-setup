@@ -19,6 +19,8 @@ OVERLAY_FILES = frozenset(
         "06-be-right-back.mp4",
         "07-ending-stream.mp4",
         "background.mp4",
+        "coffee-background.mp4",
+        "cabin-background.mp4",
         "socials-badge-hevc.mov",
         "loading-barks-hevc.mov",
         "countdown-hevc.mov",

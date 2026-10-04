@@ -17,6 +17,8 @@ const scenes = [
   { id: "BRB", file: "06-be-right-back" },
   { id: "EndingStream", file: "07-ending-stream" },
   { id: "Background", file: "background" },
+  { id: "CoffeeBackground", file: "coffee-background" },
+  { id: "CabinBackground", file: "cabin-background" },
 ];
 
 // HQ + OBS-optimized H.264:

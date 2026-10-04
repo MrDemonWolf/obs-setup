@@ -3,7 +3,19 @@
 The cabin scene and desk foreground are separate videos. This lets a VTuber
 model sit behind the desk instead of looking like a floating head.
 
-## Source order
+## Full background or split layers
+
+- **Coffee Cabin · Full Background** (`coffee-background.mp4`): cabin, desk,
+  mug, and animated steam in one opaque video. Use it as a simple background.
+- **Coffee Cabin · Background Only (split layers)** (`cabin-background.mp4`):
+  the cabin without frames, desk, or steam. Put your model above this video
+  and the transparent `desk-foreground-hevc.mov` above your model.
+
+Both options are 1920×1080, loop every 8 seconds, and have no baked chat box.
+Use one option per scene. Adding the transparent desk over the full coffee
+background would double the coffee steam.
+
+## Layer order for the split option
 
 OBS lists the highest visible layer first. Use this order:
 

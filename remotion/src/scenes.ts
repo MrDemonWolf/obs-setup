@@ -8,6 +8,8 @@ import { Countdown } from "./Countdown";
 import { LoadingBarks, LOADING_BARKS_DURATION, LOADING_BARKS_FPS } from "./LoadingBarks";
 import { Stinger, STINGER_FPS, STINGER_DURATION } from "./Stinger";
 import { DeskForeground } from "./DeskForeground";
+import { CabinBackground } from "./CabinBackground";
+import { CoffeeBackground } from "./CoffeeBackground";
 
 // Single source of truth for every scene. `component` picks the layout.
 // `width`/`height` override the default 1920×1080 for compact alpha widgets.
@@ -36,6 +38,8 @@ export const SCENES: SceneDef[] = [
   { id: "CoworkingDual", label: "Co-Working · Dual", component: Cowork, props: { cams: COWORK_LAYOUTS.dual, moon: { x: 1568 } } },
   { id: "EndingStream", label: "Ending Stream", component: Scene, durationInFrames: 4500, props: { title: "Until the Next Howl", titleLines: ["Until the", "Next Howl"], holdTitle: true, subtitle: "Thanks for spending time with the pack.", showMascot: false, showChatBox: false } },
   { id: "Background", label: "Background", component: BackdropScene, props: {} },
+  { id: "CoffeeBackground", label: "Coffee Cabin · Full Background", component: CoffeeBackground, props: {} },
+  { id: "CabinBackground", label: "Coffee Cabin · Background Only (split layers)", component: CabinBackground, props: {} },
   { id: "DeskForeground", label: "Desk + Coffee (transparent)", component: DeskForeground, durationInFrames: 240, props: {} },
   // Transparent widget outputs stay close to the visible glass panels so OBS
   // source bounds are easy to place; the preview centers them on the 1080p stage.

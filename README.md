@@ -80,8 +80,8 @@ here opens a formula update PR after an `obs-setup` release.
   so a glance tells you camera vs. alerts vs. screen vs. standby.
 - **HTML previewer.** A color-coded map of every scene that runs
   locally or on GitHub Pages, no build step.
-- **Animated overlays.** Thirteen Remotion compositions: eight scene/background
-  screens, four transparent widgets, and the Stinger transition. See the
+- **Animated overlays.** Sixteen Remotion compositions: ten scene/background
+  screens, four transparent widgets, a transparent desk foreground, and the Stinger transition. See the
   [`remotion/` guide](remotion/README.md) for previews, renders, and OBS setup.
 - **Branded stinger transition.** A 4-second alpha wipe (`Stinger`) for
   OBS scene cuts. Its whoosh is embedded in the video; a timing check
@@ -215,7 +215,7 @@ npm run render:all  # render the standard set into out/
 
 Composition ids: `StartingSoon`, `BRB`, `JustChatting`,
 `JustChattingVtuber`, `CoworkingSolo`, `CoworkingDual`,
-`EndingStream`, `Background` (full-frame MP4s), plus four
+`EndingStream`, `Background`, `CoffeeBackground`, `CabinBackground` (full-frame MP4s), plus four
 panel-sized transparent overlays: `Socials` (720x140 badge), `Countdown`
 options (5:00 and 10:00, each 820x500 and playing once), and `LoadingBarks`
 (1080x420 status panel with wolf-tech jokes), plus
@@ -224,6 +224,8 @@ the `Stinger` transition (4s alpha wipe, plays once), and `DeskForeground`
 Co-Working share a moonlit cabin background. The preview shows the desk;
 the exported desk is a separate foreground video placed above your model in OBS.
 See the [cabin layer setup guide](docs/cabin-setup.md) for source order and bounds.
+The preview's **Coffee cabin** section offers a complete cabin/desk/steam
+background and a cabin-only option for stacking the model and transparent desk separately.
 The cabin artwork was generated with imagegen; animation is implemented in Remotion.
 The heavy
 `Countdown` options and `LoadingBarks` ProRes masters are excluded from

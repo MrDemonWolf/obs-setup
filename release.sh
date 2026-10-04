@@ -42,7 +42,7 @@ if [ "$PACKAGE_ONLY" -eq 1 ]; then
   required_outputs=(
     01-starting-soon.mp4 02-just-chatting.mp4 03-just-chatting-vtuber.mp4
     04-co-working-solo.mp4 05-co-working-dual.mp4 06-be-right-back.mp4
-    07-ending-stream.mp4 background.mp4
+    07-ending-stream.mp4 background.mp4 coffee-background.mp4 cabin-background.mp4
     socials-badge.mov desk-foreground.mov countdown.mov countdown-10m.mov loading-barks.mov stinger.mov
     socials-badge-hevc.mov desk-foreground-hevc.mov countdown-hevc.mov countdown-10m-hevc.mov loading-barks-hevc.mov stinger-hevc.mov
   )
@@ -53,7 +53,7 @@ if [ "$PACKAGE_ONLY" -eq 1 ]; then
     fi
   done
 else
-  echo "▶ render:all (8 opaque MP4s + socials + background)…"
+  echo "▶ render:all (10 opaque MP4s + socials + desk)…"
   npm run render:all
 
 # Heavy transparent ProRes 4444 panel masters — multi-GB and slow, and they
@@ -112,7 +112,7 @@ STINGER_ZIP="$WORK/$STINGER_NAME.zip"
 
 echo "▶ assemble separate overlay and stinger archives…"
 mkdir -p "$OVERLAY_DIR/Overlays" "$OVERLAY_DIR/Masks" "$STINGER_DIR"
-cp "$OUT"/0*.mp4 "$OUT"/background.mp4 \
+cp "$OUT"/0*.mp4 "$OUT"/background.mp4 "$OUT"/coffee-background.mp4 "$OUT"/cabin-background.mp4 \
    "$OUT"/socials-badge-hevc.mov "$OUT"/desk-foreground-hevc.mov "$OUT"/loading-barks-hevc.mov \
    "$OUT"/countdown-hevc.mov "$OUT"/countdown-10m-hevc.mov "$OVERLAY_DIR/Overlays/"
 cp "$ROOT"/masks/*.png "$OVERLAY_DIR/Masks/"
@@ -128,7 +128,7 @@ cp "$OUT"/stinger-hevc.mov "$R"/public/stinger.wav "$STINGER_DIR/"
 This package contains the scene overlays and webcam masks.
 
 ```
-Overlays/   13 videos — 8 full-frame MP4s + 5 transparent HEVC-alpha .mov
+Overlays/   15 videos — 10 full-frame MP4s + 5 transparent HEVC-alpha .mov
 Masks/      rounded-corner webcam masks (PNG, alpha)
 ```
 
@@ -136,7 +136,7 @@ Masks/      rounded-corner webcam masks (PNG, alpha)
 
 1. Sources → **+** → **Media Source** → **Local File** → pick the file.
 2. **Loop**: ON except Ending Stream and the two countdown files (play once).
-3. Place the eight full-frame scene MP4s and transparent desk at **0, 0** (1920×1080). The four
+3. Place the ten full-frame scene MP4s and transparent desk at **0, 0** (1920×1080). The four
    transparent widgets use compact bounds; position them where you want.
 
 ### Files → scene → loop
@@ -151,6 +151,8 @@ Masks/      rounded-corner webcam masks (PNG, alpha)
 | `06-be-right-back.mp4` | Be Right Back | 1920×1080 | ON |
 | `07-ending-stream.mp4` | Ending Stream (2:30) | 1920×1080 | OFF |
 | `background.mp4` | Background (also plain gameplay) | 1920×1080 | ON |
+| `coffee-background.mp4` | Complete cabin + desk + coffee steam | 1920×1080 | ON |
+| `cabin-background.mp4` | Cabin only, for separate desk/model layers | 1920×1080 | ON |
 | `desk-foreground-hevc.mov` | Desk + animated coffee steam | 1920×1080 | ON |
 | `socials-badge-hevc.mov` | Socials badge (over anything) | 720×140 | ON |
 | `loading-barks-hevc.mov` | Loading Barks panel (over anything) | 1080×420 | ON |
