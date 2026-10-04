@@ -101,8 +101,8 @@ Everything is defined in `src/`:
 
 - **Text / scene list** — `src/scenes.ts` (titles, status lines, mascot mouth).
 - **Colors / radii / timing** — `src/theme.ts`.
-- **Fonts** — `src/fonts.ts` (Montserrat; swap in Proxima Nova by dropping the
-  files in `public/fonts/`).
+- **Fonts** — `src/fonts.ts` (Plus Jakarta Sans 500/800 for lounge titles and
+  widgets; Open Sans for chat). Shared widget surfaces live in `src/ForestWidget.ts`.
 - **Socials** — `src/Socials.tsx` (which platforms + handles). Brand logos live
   in `public/brands/` (Twitch, X, YouTube, Instagram, GitHub, Discord, plus
   Bluesky / Ko-fi / Patreon / Threads / Kick / TikTok to swap in).

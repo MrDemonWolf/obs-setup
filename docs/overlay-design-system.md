@@ -55,9 +55,9 @@ and 1080×420 respectively; the 8 scene screens and Stinger remain full-frame.
 
 ## Typography and copy
 
-- **Display:** Montserrat for the main headline.
-- **Body:** Open Sans for status lines and small labels.
-- Keep the title to one short line and the status to one clear sentence.
+- **Display:** Plus Jakarta Sans 800 for lounge headlines and widget values.
+- **Body:** Plus Jakarta Sans 500 for lounge support text and widget labels; Open Sans remains on the chat frame.
+- Use deliberate line breaks for large standby titles and one clear supporting sentence.
 - Use one forest or pack phrase at a time; follow it with plain wording that
   tells viewers what is happening.
 - Prefer sentence case. Keep utility labels such as `Chat` short.
@@ -90,8 +90,9 @@ playful wolf-tech jokes.
   VTuber model to hide its lower crop. See [cabin setup](cabin-setup.md).
 - **Co-Working:** the same cabin with clean camera frames and open space for OBS
   timers, tasks, music, and chat sources.
-- **Transparent widgets:** use the denser shared glass surface so labels stay
-  legible over gameplay. Use real platform marks only for Socials.
+- **Transparent widgets:** use `ForestWidget` moonlit glass so labels stay
+  legible over gameplay. No traffic-light dots or window bars. Use white paws,
+  silver-blue progress, and real platform marks for Socials.
 - **Background:** park the standalone background scene's moon on the right to
   match the other right-aligned layouts; scene-specific camera compositions
   may still move it when that keeps the sky clear.
@@ -133,6 +134,7 @@ space rather than squeezing it into these panels.
 - `src/theme.ts`: shared palette, glass, radius, and forest paw-trail tokens.
 - `src/Background.tsx` and `src/wolf/PawTrail.tsx`: forest backdrop and walk.
 - `src/TitleChip.tsx` and `src/ChatBoxFrame.tsx`: standby title and chat glass.
+- `src/ForestWidget.ts`: shared moonlit glass for Socials, Countdown, and Loading Barks. No window controls or domain labels; Plus Jakarta Sans 500/800, white paws, and a restrained silver-blue accent. Local integer animation cycles preserve loop seams at either frame rate. Existing panel bounds and timer durations remain unchanged.
 - `src/JustChattingScene.tsx` and `src/CoworkFrame.tsx`: scene-specific camera
   layouts using the same forest system.
 - `src/scenes.ts`: the 16 production compositions and their copy, including full coffee and cabin-only backgrounds.

@@ -1,8 +1,8 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { theme, radius, clamp01, glassPanel, glassPanelShadow } from "./theme";
-import { body, display } from "./fonts";
+import { theme, clamp01 } from "./theme";
+import { lounge as body, lounge as display } from "./fonts";
 import { Paw } from "./Paw";
-import { WindowDots } from "./WindowChrome";
+import { useForestWidget } from "./ForestWidget";
 
 const BARKS = [
   { headline: "Warming up the pack…", detail: "One wolf is still finding the mute button." },
@@ -55,12 +55,8 @@ const curveLevel = (i: number, p: number) => {
   return 1;
 };
 
-// Glow must complete an INTEGER number of cycles over the comp (13572 % 240 ≠ 0,
-// so plain loopSin pops ~1.2px blur at the loop seam — the invariant violation).
-// H cycles over the full duration ≈ the house 8s breathe (13572/28/60 ≈ 8.08s).
-const GLOW_CYCLES = Math.round(LOADING_BARKS_DURATION / (8 * FPS));
-
 export const LoadingBarks: React.FC = () => {
+  const surface = useForestWidget();
   const f = useCurrentFrame() % LOADING_BARKS_DURATION;
 
   let i = 0;
@@ -74,7 +70,6 @@ export const LoadingBarks: React.FC = () => {
   // bar fills 0 → 100% within THIS phrase (uneven spurts), maxing out right
   // before the next phrase takes over.
   const level = curveLevel(i, clamp01(local / hold));
-  const glow = 14 + 8 * (0.5 + 0.5 * Math.sin(2 * Math.PI * (GLOW_CYCLES * f / LOADING_BARKS_DURATION + 0.5)));
 
   const barW = 640;
   const fillW = Math.round(barW * level);
@@ -87,22 +82,17 @@ export const LoadingBarks: React.FC = () => {
           width: 900,
           boxSizing: "border-box",
           padding: "34px 40px 36px",
-          borderRadius: radius.card,
-          // shared over-gameplay glass panel (dot grid + sheen + dense fill)
-          background: glassPanel,
-          border: `1px solid ${theme.glassBorder}`,
-          boxShadow: glassPanelShadow(glow),
+          ...surface,
         }}
       >
-        {/* Minimal window chrome and a clear widget label keep this readable as a
-            small stream status panel, not a second title card. */}
+        {/* White paw and a quiet label match the forest lounge chat header. */}
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
-          <WindowDots size={10} gap={6} />
+          <Paw size={18} color={theme.pawWhite} opacity={0.8} />
           <span
             style={{
               fontFamily: body,
               fontSize: 14,
-              fontWeight: 700,
+              fontWeight: 500,
               color: theme.textDim,
               letterSpacing: 2.4,
               lineHeight: 1,
@@ -127,7 +117,7 @@ export const LoadingBarks: React.FC = () => {
             style={{
               fontFamily: display,
               fontSize: 44,
-              fontWeight: 700,
+              fontWeight: 800,
               color: theme.white,
               letterSpacing: -1.2,
               lineHeight: 1.16,
@@ -142,7 +132,7 @@ export const LoadingBarks: React.FC = () => {
             style={{
               fontFamily: body,
               fontSize: 20,
-              fontWeight: 600,
+              fontWeight: 500,
               color: "rgba(255,255,255,0.76)",
               lineHeight: 1.35,
               whiteSpace: "nowrap",
@@ -173,8 +163,8 @@ export const LoadingBarks: React.FC = () => {
                   bottom: 0,
                   width: fillW,
                   borderRadius: 7,
-                  background: `linear-gradient(90deg, ${theme.blue}, ${theme.blueBright})`,
-                  boxShadow: "0 0 14px rgba(0,172,237,0.48), inset 0 1px 0 rgba(255,255,255,0.45)",
+                  background: "linear-gradient(90deg, #668fa9, #c4e6f5)",
+                  boxShadow: "0 0 12px rgba(196,230,245,0.2), inset 0 1px 0 rgba(255,255,255,0.35)",
                 }}
               />
               {[0.25, 0.5, 0.75].map((mark) => (
@@ -191,11 +181,11 @@ export const LoadingBarks: React.FC = () => {
               style={{
                 fontFamily: body,
                 fontSize: 24,
-                fontWeight: 700,
+                fontWeight: 800,
                 fontVariantNumeric: "tabular-nums",
                 width: 78,
                 textAlign: "right",
-                color: theme.blueBright,
+                color: "#c4e6f5",
               }}
             >
               {Math.round(level * 100)}%

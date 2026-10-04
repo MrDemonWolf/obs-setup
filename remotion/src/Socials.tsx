@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
-import { theme, VIDEO, glassPanel } from "./theme";
-import { display } from "./fonts";
-import { WindowDots } from "./WindowChrome";
+import { theme, VIDEO } from "./theme";
+import { lounge as display } from "./fonts";
+import { useForestWidget } from "./ForestWidget";
 
 const items = [
   { b: "twitch", h: "/MrDemonWolf" },
@@ -55,14 +55,16 @@ export const SocialFade: React.FC<{ size?: number }> = ({ size = 44 }) => {
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 18, width: "100%", height: "100%", opacity: op }}>
       <BrandLogo b={it.b} size={size} />
-      <span style={{ fontFamily: display, fontWeight: 700, fontSize: size * 0.82, color: theme.white, whiteSpace: "nowrap" }}>{it.h}</span>
+      <span style={{ fontFamily: display, fontWeight: 800, fontSize: size * 0.82, color: theme.white, whiteSpace: "nowrap" }}>{it.h}</span>
     </div>
   );
 };
 
 // Standalone composition for GIF export — transparent background + a rounded
 // glass card (macOS corners, not a pill). Render: npx remotion render Socials …
-export const SocialsScene: React.FC = () => (
+export const SocialsScene: React.FC = () => {
+  const surface = useForestWidget();
+  return (
   <AbsoluteFill style={{ alignItems: "center", justifyContent: "center" }}>
     <div
       style={{
@@ -72,19 +74,13 @@ export const SocialsScene: React.FC = () => (
         justifyContent: "center",
         width: "92%",
         height: "86%",
-        borderRadius: 16, // macOS window-style corners (30 read too round on a short badge)
-        // shared over-gameplay glass panel (dot grid + sheen + dense fill); no drop
-        // shadow — keeps a clean GIF alpha edge — just the top bevel
-        background: glassPanel,
-        border: `1px solid ${theme.glassBorder}`,
-        boxShadow: `inset 0 1.5px 0 rgba(255,255,255,0.22)`,
+        ...surface,
+        borderRadius: 20,
+        boxShadow: "inset 0 1px 0 rgba(239,248,255,0.16)",
       }}
     >
-      {/* small macOS window dots, top-left — stays put while the handle fades */}
-      <div style={{ position: "absolute", top: 16, left: 18 }}>
-        <WindowDots size={10} gap={7} />
-      </div>
       <SocialFade />
     </div>
   </AbsoluteFill>
 );
+};
