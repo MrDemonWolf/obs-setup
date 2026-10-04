@@ -65,6 +65,7 @@ const GROUPS_WITH_FALLBACK: PreviewGroup[] = UNGROUPED_SCENE_IDS.length
   : PREVIEW_GROUPS;
 
 const NO_LOOP = new Set(["Countdown", "Countdown10", "Stinger", "FullMoonStinger", "StingerConceptBoard"]);
+const AUDIO_PREVIEW_SCENES = new Set(["Stinger", "FullMoonStinger"]);
 const ALPHA_SCENES = new Set(["Socials", "Countdown", "Countdown10", "LoadingBarks", "Stinger", "FullMoonStinger", "DeskForeground"]);
 type StageBackground = "forest" | "checker" | "midnight";
 
@@ -85,6 +86,7 @@ export const ObsPreview: React.FC = () => {
   const duration = scene.durationInFrames ?? VIDEO.durationInFrames;
   const nativeSize = `${scene.width ?? VIDEO.width} × ${scene.height ?? VIDEO.height}`;
   const isAlpha = ALPHA_SCENES.has(scene.id);
+  const hasAudioCue = AUDIO_PREVIEW_SCENES.has(scene.id);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -124,7 +126,7 @@ export const ObsPreview: React.FC = () => {
 
   const chooseScene = (id: string) => {
     setFrame(0);
-    setPlaying(true);
+    setPlaying(!AUDIO_PREVIEW_SCENES.has(id));
     setSceneId(id);
   };
 
@@ -135,14 +137,17 @@ export const ObsPreview: React.FC = () => {
       player.pause();
       setPlaying(false);
     } else {
+      if (hasAudioCue) player.unmute();
       player.play();
       setPlaying(true);
     }
   };
 
   const restart = () => {
-    playerRef.current?.seekTo(0);
-    playerRef.current?.play();
+    const player = playerRef.current;
+    player?.seekTo(0);
+    if (hasAudioCue) player?.unmute();
+    player?.play();
     setPlaying(true);
   };
 
@@ -175,8 +180,8 @@ export const ObsPreview: React.FC = () => {
               compositionHeight={VIDEO.height}
               style={{ width: "100%", height: "100%" }}
               loop={!NO_LOOP.has(scene.id)}
-              autoPlay
-              initiallyMuted
+              autoPlay={!hasAudioCue}
+              initiallyMuted={!hasAudioCue}
               controls={false}
               clickToPlay={false}
             />
@@ -207,6 +212,7 @@ export const ObsPreview: React.FC = () => {
             <div className="scene-caption">
               <span className="scene-state">{isAlpha ? "TRANSPARENT OVERLAY" : "FULL SCENE"}</span>
               <span>{scene.label}</span>
+              {hasAudioCue && <span className="scene-audio-note">Press Play to hear the stinger whoosh cue.</span>}
             </div>
             {isAlpha && (
               <div className="background-picker" aria-label="Preview background">

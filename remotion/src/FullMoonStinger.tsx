@@ -9,11 +9,12 @@ export const FullMoonStinger: React.FC = () => {
   const seconds = frame / fps;
   const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
   const arrive = interpolate(seconds, [0.1, 1.65], [0, 1], { ...clamp, easing: Easing.inOut(Easing.cubic) });
-  const dissolve = interpolate(seconds, [2.65, 3.85], [1, 0], { ...clamp, easing: Easing.inOut(Easing.cubic) });
-  const visible = interpolate(seconds, [0, 0.18], [0, 1], clamp) * dissolve;
-  const radius = 72 + arrive * (Math.hypot(width, height) / 2 + 120 - 72);
-  const x = interpolate(arrive, [0, 1], [1568, width / 2]);
-  const y = interpolate(arrive, [0, 1], [108, height / 2]);
+  const recede = interpolate(seconds, [2.6, 3.85], [1, 0], { ...clamp, easing: Easing.inOut(Easing.cubic) });
+  const travel = seconds < 2.6 ? arrive : recede;
+  const visible = interpolate(seconds, [0, 0.18, 3.82, 4], [0, 1, 1, 0], clamp);
+  const radius = 72 + travel * (Math.hypot(width, height) / 2 + 120 - 72);
+  const x = interpolate(travel, [0, 1], [1568, width / 2]);
+  const y = interpolate(travel, [0, 1], [108, height / 2]);
   const mist = interpolate(seconds, [2.5, 2.95, 3.98], [0, 0.4, 0], clamp);
   return (
     <AbsoluteFill style={{ overflow: "hidden" }}>
