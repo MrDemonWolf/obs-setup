@@ -13,6 +13,8 @@ One command to back up. Separate downloads for overlays and transitions. No lost
 
 ## Table of Contents
 
+- [Start Here](#start-here)
+- [How the Pieces Fit](#how-the-pieces-fit)
 - [Features](#features)
 - [Getting Started](#getting-started)
 - [Usage](#usage)
@@ -30,6 +32,40 @@ One command to back up. Separate downloads for overlays and transitions. No lost
 - [License](#license)
 - [Contact](#contact)
 
+## Start Here
+
+| If you want to… | Start here |
+| --- | --- |
+| Install and run the `obs-backup` command | [Homebrew install and backup guide](docs/backup-guide.md) · [script source](scripts/README.md) · [Homebrew formula](https://github.com/MrDemonWolf/homebrew-den/blob/main/Formula/obs-backup.rb) |
+| Import the ready-made scene collection | [Scene and source guide](docs/adhd-setup-guide.md) · choose a file in [`devices/`](devices/) |
+| Preview the color-coded scene collection | Run `make preview`, then open <http://localhost:8000> |
+| Download overlays and webcam masks | [Latest GitHub Release](https://github.com/MrDemonWolf/obs-setup/releases) |
+| Preview, edit, or render the Remotion overlays | [`remotion/README.md`](remotion/README.md) |
+| Change how this repo works | [Development guide](#development) · [project map](#project-structure) |
+
+## How the Pieces Fit
+
+The backup command, OBS scene setup, and Remotion overlays are related tools,
+but they have separate sources and release paths:
+
+```mermaid
+flowchart LR
+    Tap["Homebrew Den tap<br/>obs-backup formula"] -->|installs| CLI["scripts/backup.sh<br/>scripts/sanitize.py"]
+    CLI --> Raw["Private full backup<br/>configured location"]
+    CLI --> Device["Scrubbed OBS files<br/>devices/"]
+    Generator[scripts/gen_scene_collection.py] --> Device
+    Device --> Preview["index.html<br/>scene preview"]
+    Remotion[remotion/src + public] --> Release[release.sh]
+    Release --> OverlayZip[OBS-overlays ZIP]
+    Release --> StingerZip[OBS-stinger ZIP]
+```
+
+The `obs-backup` Homebrew formula lives in the separate
+[`homebrew-den` tap](https://github.com/MrDemonWolf/homebrew-den), not in this
+repository. It packages the two backup scripts as a terminal command; it is
+not an OBS plugin. The [tap update workflow](.github/workflows/update-homebrew.yml)
+here opens a formula update PR after an `obs-setup` release.
+
 ## Features
 
 - **Per-device backups.** One command reads live macOS OBS settings, saves a
@@ -44,11 +80,9 @@ One command to back up. Separate downloads for overlays and transitions. No lost
   so a glance tells you camera vs. alerts vs. screen vs. standby.
 - **HTML previewer.** A color-coded map of every scene that runs
   locally or on GitHub Pages, no build step.
-- **Animated overlays.** Eleven Remotion-built scenes with seamless
-  looping motion (Starting Soon, Just Chatting, Just Chatting VTuber,
-  Co-Working Solo/Dual, Be Right Back, Ending Stream, Background,
-  Socials badge, Countdown, Loading Barks), rendered to video for OBS
-  media sources.
+- **Animated overlays.** Thirteen Remotion compositions: eight scene/background
+  screens, four transparent widgets, and the Stinger transition. See the
+  [`remotion/` guide](remotion/README.md) for previews, renders, and OBS setup.
 - **Branded stinger transition.** A 4-second alpha wipe (`Stinger`) for
   OBS scene cuts. Its whoosh is embedded in the video; a timing check
   aligns the measured WAV peak with the covered scene-swap point.
@@ -123,6 +157,9 @@ Everything runs through `make`:
    and copies a scrubbed version into
    `devices/<device>/`.
 3. Review `git status` and the staged diff before committing.
+
+The Homebrew formula packages only the backup command and sanitizer. See the
+[backup tool map](scripts/README.md) for the source files and release flow.
 
 Force the device when auto-detect is wrong:
 
@@ -284,8 +321,9 @@ obs-setup/
 ├── release.sh                # render + transcode + masks + zip, one command
 ├── assets/                   # repo art (MrDemonWolf logo)
 ├── .github/workflows/
-│   ├── ci.yml                # Python, Remotion, and stinger render checks
-│   └── release.yml           # builds two downloads for each GitHub Release
+│   ├── ci.yml                # Python, Remotion, and Stinger checks
+│   ├── release.yml           # builds the overlays and Stinger downloads
+│   └── update-homebrew.yml   # opens a formula update PR after a release
 ├── devices/
 │   ├── macbook-pro/          # portable rig
 │   │   ├── index.json        # which scene files exist (read by the previewer)
@@ -295,9 +333,10 @@ obs-setup/
 │       ├── index.json        # which scene files exist (read by the previewer)
 │       └── scenes/           # generated collection + sanitized live backup
 ├── scripts/
+│   ├── README.md             # backup CLI source map and maintenance notes
+│   ├── backup.sh             # installed as the `obs-backup` Homebrew command
+│   ├── sanitize.py           # scrubs credentials before files enter Git
 │   ├── gen_scene_collection.py
-│   ├── sanitize.py
-│   ├── backup.sh
 │   ├── validate_stinger.py
 │   └── validate_release_packages.py
 ├── docs/
@@ -306,25 +345,27 @@ obs-setup/
 │   ├── backup-guide.md
 │   ├── color-coding.md
 │   ├── obs-json-reference.md
+│   ├── overlay-design-system.md
 │   └── stinger-setup.md
 ├── masks/                    # rounded webcam masks for the cam-frame overlays
 │   ├── *.png                 # one alpha mask per cam (named per overlay)
 │   ├── gen_masks.py          # regenerate from the frame geometry
 │   └── README.md             # OBS Image Mask/Blend steps
 ├── remotion/                 # animated overlays (separate Node project)
-    ├── src/                  # scenes + layers
-    │   ├── scenes.ts         # every scene (single source of truth)
-    │   ├── Root.tsx          # registers each scene as a composition
-    │   ├── Scene.tsx         # card layout; JustChattingScene / CoworkFrame / BackdropScene / Socials
-    │   ├── wolf/             # night ambience (Moon, Starfield, Embers, PawTrail)
-    │   └── theme.ts          # palette + seamless-loop helpers
-    ├── preview/              # macOS-style previewer (Vite + @remotion/player)
-    ├── public/               # mascot SVGs (logo-*.svg) + brands/ (social logos)
-    ├── render-all.mjs        # render the standard set into out/
-    ├── to-hevc.sh            # transcode transparent masters to HEVC-alpha
-    └── ASSETS.md             # asset drop-in + render/OBS instructions
+│   ├── README.md             # preview, render, and OBS workflow
+│   ├── ASSETS.md             # scene and asset reference
+│   ├── src/                  # scenes + layers; scenes.ts is the composition list
+│   ├── preview/              # macOS-style previewer (Vite + @remotion/player)
+│   ├── public/               # forest, mascot, fonts, and platform marks
+│   ├── render-all.mjs        # render the standard set into out/
+│   └── to-hevc.sh            # transcode transparent masters to HEVC-alpha
 └── tests/                    # Python tests for secret scrubbing and releases
 ```
+
+The Homebrew formula itself lives in
+[`MrDemonWolf/homebrew-den`](https://github.com/MrDemonWolf/homebrew-den/blob/main/Formula/obs-backup.rb).
+This repo keeps the command's source and release automation; the tap owns its
+Homebrew packaging and catalog.
 
 ## License
 
