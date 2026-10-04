@@ -7,7 +7,7 @@ motion stay consistent.
 
 ## Research notes
 
-Reviewed on 2026-10-03:
+Reviewed on 2026-10-04:
 
 - [Nerd or Die: Glitch](https://nerdordie.com/product/glitch-full-stream-overlay-package/)
   keeps scene screens modular and lets creators use their own background loops.
@@ -17,13 +17,19 @@ Reviewed on 2026-10-03:
 - [Nerd or Die: React](https://nerdordie.com/product/react-stream-pack/)
   treats Starting Soon, BRB, Ending, Chatting, webcam layouts, widgets, and the
   stinger as one complete pack.
+- [Nerd or Die: Exodus](https://nerdordie.com/product/exodus-stream-pack/)
+  presents a consistent set of Starting Soon, BRB, and Ending scenes, with
+  editable text and a clear-content-first layout.
+- [Nerd or Die: Grid](https://nerdordie.com/product/grid-stream-package/)
+  uses minimal, bold scene typography and customizable wording.
 - [Streamlabs themes](https://streamlabs.com/themes) groups scene screens,
   webcam frames, chat, alerts, and goal widgets into matching theme bundles.
 
 The direction for this stream takes the useful part of those systems—matching
 scene and widget materials, reusable layouts, and room to adapt—while keeping
 the visible decoration quiet so the forest, face camera, and chat stay easy to
-read.
+read. Keeping navigation labels literal while placing theme language in the
+main card copy is our recommendation based on those examples.
 
 ## Visual tokens
 
@@ -56,12 +62,19 @@ and 1080×420 respectively; the 8 scene screens and Stinger remain full-frame.
   tells viewers what is happening.
 - Prefer sentence case. Keep utility labels such as `Chat` short.
 
-Current standby copy:
+Current scene-card copy:
 
 | Scene | Headline | Status |
 | --- | --- | --- |
-| Starting Soon | The Pack Gathers | We’ll be live in a moment. |
-| Be Right Back | A Short Trail Break | Stay cozy — I’ll be back soon. |
+| Starting Soon | The Pack Gathers | Settle in. We’ll begin shortly. |
+| Be Right Back | Trail Break | Stepping away for a moment. I’ll be back soon. |
+| Ending | Until Next Time | Thanks for sharing the trail. |
+
+Keep scene labels and widget labels literal (`Starting Soon`, `Be Right Back`,
+`Chat`). Put the forest-and-pack voice in one headline or status line instead
+of adding themed labels to every widget. The countdown keeps `STREAM STARTS
+IN` so viewers immediately know what its timer means; Loading Barks carries the
+playful wolf-tech jokes.
 
 ## Scene patterns
 
@@ -75,6 +88,9 @@ Current standby copy:
   timers, tasks, music, and chat sources.
 - **Transparent widgets:** use the denser shared glass surface so labels stay
   legible over gameplay. Use real platform marks only for Socials.
+- **Background:** park the standalone background scene's moon on the right to
+  match the other right-aligned layouts; scene-specific camera compositions
+  may still move it when that keeps the sky clear.
 - **Stinger:** keep the forest glass sweep and right-facing white paw trail as
   the single focal motion.
 
@@ -102,5 +118,5 @@ space rather than squeezing it into these panels.
 - `src/TitleChip.tsx` and `src/ChatBoxFrame.tsx`: standby title and chat glass.
 - `src/JustChattingScene.tsx` and `src/CoworkFrame.tsx`: scene-specific camera
   layouts using the same forest system.
-- `src/scenes.ts`: the 12 production scenes and their copy.
+- `src/scenes.ts`: the 13 production scenes and their copy.
 - `preview/ObsPreview.tsx`: browser preview of the production scenes.

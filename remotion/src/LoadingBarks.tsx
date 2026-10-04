@@ -5,16 +5,16 @@ import { Paw } from "./Paw";
 import { WindowDots } from "./WindowChrome";
 
 const BARKS = [
-  { headline: "One brain cell is booting…", detail: "Please do not tap the glass." },
-  { headline: "Sniffing out one last bug…", detail: "It ran under the keyboard. Again." },
-  { headline: "The moon said five more minutes…", detail: "We respect lunar time." },
-  { headline: "Connecting to paw-fi…", detail: "Signal strong. Router a little scared." },
-  { headline: "Zoomies found the progress bar…", detail: "Someone put them on a leash." },
-  { headline: "Loading treats & dependencies…", detail: "Both have suspiciously long build times." },
-  { headline: "Awoo-thentication pending…", detail: "Please verify your howl." },
-  { headline: "Stream gremlins are hiding…", detail: "The paw patrol is on the case." },
-  { headline: "Paw-gress looks good…", detail: "Measured in zoomies, obviously." },
-  { headline: "The den is almost online…", detail: "If it howls, startup passed." },
+  { headline: "Warming up the pack…", detail: "One wolf is still finding the mute button." },
+  { headline: "Tracking one last bug…", detail: "It doubled back under the desk." },
+  { headline: "Moonlight: connected…", detail: "Cloud cover: pending." },
+  { headline: "Pack signal check…", detail: "The router heard that howl." },
+  { headline: "Zoomies detected…", detail: "Progress bar under supervision." },
+  { headline: "Fetching one last treat…", detail: "Build system classified it as a dependency." },
+  { headline: "Night shift is clocking in…", detail: "Paws off the production branch." },
+  { headline: "Something moved in the code…", detail: "Probably just a feature." },
+  { headline: "Final settings check…", detail: "The menu moved. Again." },
+  { headline: "Final howl check…", detail: "If it echoes, we’re live." },
 ];
 
 // Deterministic seeded schedule, computed ONCE at module load (loop-safe — no

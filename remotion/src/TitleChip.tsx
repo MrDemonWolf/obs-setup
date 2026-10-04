@@ -31,8 +31,8 @@ export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, 
         // but GLASS, not flat: a diagonal sheen + vertical light-from-above
         // gradient fake the vibrancy that backdrop-filter would give (banned —
         // render cost). Both static → zero loop/perf impact.
-        background: `linear-gradient(115deg, rgba(255,255,255,0.05) 0%, transparent 40%), linear-gradient(180deg, rgba(32,54,116,0.92) 0%, rgba(16,29,70,0.90) 100%)`,
-        border: `1px solid rgba(255,255,255,0.22)`,
+        background: `linear-gradient(115deg, rgba(255,255,255,0.07) 0%, transparent 42%), linear-gradient(180deg, rgba(20,38,92,0.90) 0%, rgba(9,21,51,0.90) 100%)`,
+        border: `1px solid rgba(190,225,245,0.28)`,
         boxShadow: `0 30px 80px rgba(0,0,0,0.45), inset 0 1.5px 0 rgba(255,255,255,0.22), 0 0 ${glow}px rgba(0,172,237,0.28)`,
       }}
     >

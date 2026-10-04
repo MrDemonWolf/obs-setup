@@ -5,6 +5,6 @@ import { Background } from "./Background";
 // your webcam / screen / widgets on top however you like.
 export const BackdropScene: React.FC = () => (
   <AbsoluteFill>
-    <Background variant="forest" />
+    <Background variant="forest" moon={{ x: 1568 }} />
   </AbsoluteFill>
 );
