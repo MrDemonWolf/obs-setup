@@ -221,8 +221,8 @@ options (5:00 and 10:00, each 820x500 and playing once), and `LoadingBarks`
 (1080x420 status panel with wolf-tech jokes), plus
 the `Stinger` transition (4s alpha wipe, plays once), and `DeskForeground`
 (1920×1080 transparent desk with looping coffee steam). Just Chatting and
-Co-Working share a moonlit cabin background; the chatting videos show the desk,
-and its separate foreground video goes above your VTuber model in OBS.
+Co-Working share a moonlit cabin background. The preview shows the desk;
+the exported desk is a separate foreground video placed above your model in OBS.
 See the [cabin layer setup guide](docs/cabin-setup.md) for source order and bounds.
 The cabin artwork was generated with imagegen; animation is implemented in Remotion.
 The heavy

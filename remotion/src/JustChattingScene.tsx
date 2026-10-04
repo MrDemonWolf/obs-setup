@@ -1,6 +1,5 @@
 import { AbsoluteFill } from "remotion";
 import { CabinBackground } from "./CabinBackground";
-import { DeskForeground } from "./DeskForeground";
 import { CamFrame } from "./CamFrame";
 import { theme } from "./theme";
 
@@ -17,6 +16,5 @@ export const JustChattingScene: React.FC<{ hideCam?: boolean }> = ({ hideCam }) 
     {/* staggered glow phases so cam + chat don't pulse in lockstep */}
     {!hideCam && <CamFrame x={96} y={190} w={1120} h={630} phase={0.4} />}
     <CamFrame x={1328} y={190} w={528} h={650} phase={0.73} />
-    <DeskForeground />
   </AbsoluteFill>
 );

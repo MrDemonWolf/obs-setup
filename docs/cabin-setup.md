@@ -37,9 +37,10 @@ For Just Chatting, the camera frame is **1120×630 at x=96, y=190**. Chat is
 transform to these bounds and apply the corresponding camera/chat PNG mask
 if its corners need clipping. The VTuber variant leaves the model area open.
 
-The chatting videos already show the same desk for preview and background
-continuity; the separate transparent desk goes above the model to create the
-foreground occlusion. Co-Working keeps the cabin without the desk layer so
+The preview composites the desk over the chatting scenes to show the intended
+layout. The exported cabin videos contain no desk or steam; the separate
+transparent desk goes above the model in OBS, so steam is not doubled.
+Co-Working keeps the cabin without the desk layer so
 camera and widget space stays available.
 
 ## Render

@@ -4,6 +4,7 @@ import { Player, PlayerRef } from "@remotion/player";
 import { SCENES, type SceneDef } from "../src/scenes";
 import { VIDEO } from "../src/theme";
 import { StingerConceptBoard } from "../src/StingerConcepts";
+import { DeskForeground } from "../src/DeskForeground";
 
 type PreviewGroup = { title: string; description: string; sceneIds: string[] };
 
@@ -105,7 +106,10 @@ export const ObsPreview: React.FC = () => {
           </div>
         </AbsoluteFill>
       ) : (
-        <Comp {...scene.props} />
+        <>
+          <Comp {...scene.props} />
+          {(scene.id === "JustChatting" || scene.id === "JustChattingVtuber") && <DeskForeground />}
+        </>
       );
     return Preview;
   }, [scene]);
