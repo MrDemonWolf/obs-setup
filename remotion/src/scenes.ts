@@ -43,8 +43,8 @@ export const SCENES: SceneDef[] = [
   // the held 00:00 frame (at from×fps the last frame still reads 00:01).
   // NOT in render:all (heavy).
   { id: "Countdown", label: "Countdown (5:00)", component: Countdown, fps: 60, durationInFrames: (300 + 1) * 60, props: { from: 300 } },
-  // Transparent full-frame overlay — fake wolf-pun loading bar. Seeded schedule
-  // (each phrase 20–40s, bar creeps to ~95%); duration = sum of holds (~6.1 min, 13 phrases).
+  // Transparent full-frame glass status card with ten wolf-tech joke pairs.
+  // Seeded schedule (each phrase 20–40s; bar fills to 100%); duration ~4.7 min.
   // 60fps; LOADING_BARKS_DURATION is computed at LOADING_BARKS_FPS so they match.
   { id: "LoadingBarks", label: "Loading Barks", component: LoadingBarks, fps: LOADING_BARKS_FPS, durationInFrames: LOADING_BARKS_DURATION, props: {} },
   // OBS stinger transition (Paw Swipe). Transparent full-frame, 60fps, plays

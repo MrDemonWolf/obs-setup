@@ -154,18 +154,18 @@ Architecture:
   **kept out of `render:all`** (too heavy). Render
   manually: `npx remotion render Countdown out/countdown.mov --codec=prores
   --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le --log=error`.
-- **`LoadingBarks`** (`LoadingBarks.tsx`) = transparent full-frame fake
-  loading-bar overlay cycling wolf puns (`Loading barks…`, `Fur real, almost
-  there…`, …). A **seeded module-load schedule** (LCG, loop-safe — no per-frame
+- **`LoadingBarks`** (`LoadingBarks.tsx`) = a transparent full-frame glass
+  status card with ten short wolf-tech jokes. Each phrase has a headline and a
+  punchline. A **seeded module-load schedule** (LCG, loop-safe — no per-frame
   random) gives each phrase a random 20–40s hold; within EACH phrase the bar
   fills 0→100% (per-phrase `CURVES`, random uneven spurts) and maxes at 100 right
-  before the next phrase starts fresh. A `Paw` rides the fill edge; bar corners
-  are macOS-rounded (`8`, not a pill); fixed-width `%` never reflows. The 0.45s
-  crossfade wraps the WHOLE content (text + bar + %) so the one-frame bar reset
-  at each swap happens invisibly, and the glow runs an integer number of cycles
-  over the comp (`GLOW_CYCLES`) — plain `loopSin` popped at the loop seam
-  (13572 % 240 ≠ 0). `durationInFrames = LOADING_BARKS_DURATION`
-  (sum of holds, ~6.1 min over 13 phrases) built at `LOADING_BARKS_FPS` (**60**; per-comp `fps` in
+  before the next phrase starts fresh. Three paw marks show progress milestones
+  and a bright `Paw` rides the fill edge; fixed-width `%` never reflows. The
+  0.45s crossfade wraps the headline, punchline, bar, and percentage so the
+  one-frame bar reset stays invisible. The glow runs an integer number of
+  cycles over the comp (`GLOW_CYCLES`) so the loop seam stays smooth.
+  `durationInFrames = LOADING_BARKS_DURATION` (sum of holds, about 4.7 min over
+  10 phrases) built at `LOADING_BARKS_FPS` (**60**; per-comp `fps` in
   `scenes.ts`). **Heavy → NOT in `render:all`**, render manually. Edit
   `BARKS`/seed to taste.
 - **`Stinger`** (`Stinger.tsx`) = the OBS **stinger transition** (a transition,
@@ -296,7 +296,7 @@ Architecture:
   `render-all.mjs` renders the 8 full-frame ids to MP4, then `Socials` to
   `.mov` + `.gif` and a bonus `Background.gif`, into `out/` (which is
   gitignored). `Socials` is omitted from the 8-id MP4 array; `Countdown`
-  (5 min) + `LoadingBarks` (~6.1 min) are transparent full-frame ProRes 4444
+  (5 min) + `LoadingBarks` (~4.7 min) are transparent full-frame ProRes 4444
   (multi-GB, slow) → omitted from `render:all` entirely, rendered manually.
 - **`release.sh`** (repo root, `make release`) runs the pipeline end to end:
   `render:all` → render Countdown + LoadingBarks ProRes (reused if the master

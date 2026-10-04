@@ -36,8 +36,9 @@ other content, and the Stinger is a one-shot scene transition.
 - **Countdown** — transparent 5:00 timer chip, full-frame. The one intentional
   non-loop: set the OBS media source to play ONCE (Loop off), start on going
   live.
-- **LoadingBarks** — transparent fake loading bar cycling wolf puns (~6.1 min
-  loop). Edit `BARKS` in `src/LoadingBarks.tsx`.
+- **LoadingBarks** — transparent forest-glass status card with ten short
+  wolf-tech jokes and paw-mark progress (~4.7 min loop). Edit `BARKS` in
+  `src/LoadingBarks.tsx`.
 
 The forest photo, sky stars, moon, and white paw trail live in `public/` and
 `src/wolf/` + `src/Background.tsx`. See
