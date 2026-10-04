@@ -1,17 +1,17 @@
 import { lounge } from "./fonts";
 import { interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 
-// Forest Lounge: open typography, with room below for independent OBS widgets.
-export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, status }) => {
+// Forest Lounge: composed lines, a long readable hold, and a masked loop reset.
+export const TitleChip: React.FC<{ title: string; status: string; lines?: string[]; hold?: boolean }> = ({ title, status, lines = [title], hold = false }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const time = (frame / fps) % 24;
+  const time = hold ? Math.min(frame / fps, 20) : (frame / fps) % 36;
   const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
-  const exit = interpolate(time, [21, 23], [0, 1], clamp);
-  const support = interpolate(time, [0.9, 1.8, 21, 23], [0, 1, 1, 0], clamp);
+  const exit = interpolate(time, [33, 35], [0, 1], clamp);
+  const support = interpolate(time, [0.9, 1.8, 33, 35], [0, 1, 1, 0], clamp);
   const sweep = interpolate(time, [8, 10], [-35, 135], clamp);
   // A subtle accent breath accompanies each masked title sequence.
-  const breath = (1 - Math.cos((time / 24) * Math.PI * 2)) / 2;
+  const breath = (1 - Math.cos((time / 36) * Math.PI * 2)) / 2;
   return (
   <div style={{ position: "absolute", left: 96, top: 344, width: 1000,
     transform: `translateY(${-5 * breath}px)`,
@@ -22,12 +22,12 @@ export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, 
     <div style={{
       fontFamily: lounge, fontWeight: 800, fontSize: 104,
       lineHeight: 1.12, color: "#f4f9fc", letterSpacing: -3,
-      maxWidth: 980, display: "flex", flexWrap: "wrap", columnGap: 24,
+      maxWidth: 980,
       textShadow: `0 4px 24px rgba(0,0,0,0.65), 0 0 ${12 + 8 * breath}px rgba(185,225,245,0.08)`,
-    }} aria-label={title}>{title.split(" ").map((word, index) => {
-      const progress = interpolate(time, [0.12 + index * 0.14, 0.85 + index * 0.14], [0, 1], clamp);
+    }} aria-label={title}>{lines.map((word, index) => {
+      const progress = interpolate(time, [0.12 + index * 0.3, 1.1 + index * 0.3], [0, 1], clamp);
       const enter = 1 - Math.pow(1 - progress, 3);
-      return <span key={index} style={{ overflow: "hidden", paddingBottom: 10 }}>
+      return <span key={index} style={{ display: "block", overflow: "hidden", paddingBottom: 10 }}>
         <span style={{ display: "block", position: "relative", opacity: enter * (1 - exit),
           transform: `translateY(${(1 - enter) * 110 - exit * 110}%)`,
         }}>{word}<span aria-hidden style={{ position: "absolute", inset: 0, color: "transparent", textShadow: "none",

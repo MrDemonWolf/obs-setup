@@ -8,6 +8,8 @@ import { theme } from "./theme";
 
 export type SceneProps = {
   title: string;
+  titleLines?: string[];
+  holdTitle?: boolean;
   subtitle: string; // rendered as the status line (body font)
   showMascot: boolean;
   showTitle?: boolean;
@@ -18,6 +20,8 @@ export type SceneProps = {
 
 export const Scene: React.FC<SceneProps> = ({
   title,
+  titleLines,
+  holdTitle,
   subtitle,
   showMascot,
   showTitle = true,
@@ -32,7 +36,7 @@ export const Scene: React.FC<SceneProps> = ({
       pointerEvents: "none",
     }} />
     {showChatBox && <ChatBoxFrame />}
-    {showTitle && <TitleChip title={title} status={subtitle} />}
+    {showTitle && <TitleChip title={title} status={subtitle} lines={titleLines} hold={holdTitle} />}
     {showTitle && <FursonaCameo src={mascotSrc} />}
     {showMascot && <Mascot src={mascotSrc} />}
   </AbsoluteFill>

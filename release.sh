@@ -143,7 +143,7 @@ Masks/      rounded-corner webcam masks (PNG, alpha)
 | `04-co-working-solo.mp4` | Co-Working · Solo | 1920×1080 | ON |
 | `05-co-working-dual.mp4` | Co-Working · Dual | 1920×1080 | ON |
 | `06-be-right-back.mp4` | Be Right Back | 1920×1080 | ON |
-| `07-ending-stream.mp4` | Ending Stream | 1920×1080 | ON |
+| `07-ending-stream.mp4` | Ending Stream (2:30) | 1920×1080 | OFF |
 | `background.mp4` | Background (also plain gameplay) | 1920×1080 | ON |
 | `socials-badge-hevc.mov` | Socials badge (over anything) | 720×140 | ON |
 | `loading-barks-hevc.mov` | Loading Barks panel (over anything) | 1080×420 | ON |

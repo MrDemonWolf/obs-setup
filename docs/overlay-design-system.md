@@ -80,7 +80,8 @@ playful wolf-tech jokes.
 
 - **Starting Soon / BRB / Ending — Forest Lounge:** open headline at
   `(96,330)` over a gentle left-side dark fade; no title box, window dots,
-  website label, or logo. Glass chat panel at `(1216,280)`, sized `608×656`.
+  website label, or fixed logo. Starting Soon and BRB have a glass chat panel
+  at `(1216,280)`, sized `608×656`; Ending has no chat panel.
   Place the real chat source inside `(1238,340)`, sized `564×574`.
   Reserve the lower-left area `(96,700)` through `(1096,936)` for separately
   added countdown, loading barks, or socials sources. No baked widget outlines.
@@ -98,14 +99,21 @@ playful wolf-tech jokes.
 
 ## Motion
 
-- Forest Lounge standby scenes export as 72-second loops (2160 frames at 30 fps).
-  Plus Jakarta Sans 800 headlines reveal word by word, hold, catch a moonlight
-  sweep at 8–10 seconds, and exit at 21–23 seconds. This repeats every 24 seconds.
+- Starting Soon and BRB export as 72-second loops (2160 frames at 30 fps).
+  Plus Jakarta Sans 800 headlines reveal with deliberate line breaks, hold,
+  catch a moonlight sweep at 8–10 seconds, and exit at 33–35 seconds.
+  This repeats every 36 seconds, giving the headline a longer readable hold.
   Supporting text uses Plus Jakarta Sans 500 and follows the title with a fade.
   The existing fursona artwork peeks from the upper-left edge at 37–43.8 seconds;
   this is a predetermined cameo once per loop, not runtime randomness. It stays
   above the text and away from the lower-left widget area and right-side chat.
   Forest motion repeats nine eight-second cycles, including the white paw trail.
+- Ending plays once for 150 seconds (4500 frames at 30 fps), with no chat.
+  Its headline reveals once and remains readable. This is the 90-second raid
+  countdown documented in [Twitch's API reference](https://dev.twitch.tv/docs/api/reference/#start-a-raid)
+  plus 60 seconds. It does not start or synchronize a Twitch raid automatically.
+  In OBS, disable Loop and disable "Show nothing when playback ends" to hold
+  the final image. Play the song separately; no song audio is embedded.
 - Stars twinkle softly; the moon stays still; the paw trail appears in a slow
   left-to-right walk and fades before the loop seam.
 - Use a single restrained pulse for glass edges. Avoid adding glow, particles,

@@ -1,8 +1,9 @@
 # Forest Lounge motion research
 
 Research collected October 4, 2026. The word reveal, moonlight sweep, and title
-exit now run as a 24-second sequence within the 72-second standby compositions.
-An existing-artwork fursona cameo appears once per longer loop. Vendor timings
+exit now run as a 36-second sequence within Starting Soon and BRB's 72-second
+compositions. Ending is a chat-free 150-second one-shot with a held headline.
+An existing-artwork fursona cameo appears once per composition. Vendor timings
 below remain design references, not measured reproductions.
 
 - [Nerd or Die references](nerd-or-die-motion.md): Grid, Relay, React, and Amused.
