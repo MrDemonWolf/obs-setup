@@ -98,9 +98,24 @@ jobs:
       - name: Encode the transparent cabin desk
         run: ./remotion/to-hevc.sh "$RUNNER_TEMP/desk-foreground.mov"
 
+      - name: Render and encode forest lounge widget samples
+        working-directory: remotion
+        run: |
+          for composition in Socials Countdown Countdown10 LoadingBarks; do
+            npx remotion render "$composition" "$RUNNER_TEMP/$composition.mov" \
+              --frames=60-119 --codec=prores --prores-profile=4444 \
+              --image-format=png --pixel-format=yuva444p10le \
+              --muted --concurrency=2 --log=error
+            ./to-hevc.sh "$RUNNER_TEMP/$composition.mov"
+          done
+
       - name: Verify frame count and exact embedded WAV timing
         run: >-
           python3 scripts/validate_stinger.py
           --rendered "$RUNNER_TEMP/stinger.mov"
           --encoded "$RUNNER_TEMP/stinger-hevc.mov"
           --alpha-file "$RUNNER_TEMP/desk-foreground-hevc.mov"
+          --alpha-file "$RUNNER_TEMP/Socials-hevc.mov"
+          --alpha-file "$RUNNER_TEMP/Countdown-hevc.mov"
+          --alpha-file "$RUNNER_TEMP/Countdown10-hevc.mov"
+          --alpha-file "$RUNNER_TEMP/LoadingBarks-hevc.mov"
