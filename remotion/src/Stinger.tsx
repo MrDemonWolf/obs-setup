@@ -167,7 +167,8 @@ export const PawSwipeBackend: React.FC = () => {
             width: 52,
             height: "100%",
             background: theme.blue,
-            boxShadow: `0 0 90px ${theme.blueBright}, 0 0 36px ${theme.blue}`,
+            opacity: 0.62,
+            boxShadow: `0 0 54px ${theme.blueBright}88, 0 0 24px ${theme.blue}66`,
           }}
         />
         <div
@@ -178,6 +179,7 @@ export const PawSwipeBackend: React.FC = () => {
             width: 18,
             height: "100%",
             background: theme.white,
+            opacity: 0.6,
           }}
         />
         {/* paws painted on the panel — they ride the sweep with it */}

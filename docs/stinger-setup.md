@@ -1,9 +1,9 @@
 # Stinger transition setup
 
-The Stinger is an OBS **scene transition**, not a Media Source. A navy-and-cyan
-full moon with a centered paw expands to cover the frame, holds for the scene
-swap, then recedes to reveal the next scene. The original paw-glass sweep runs
-behind it as a subtle underlay.
+The Stinger is an OBS **scene transition**, not a Media Source. A cratered
+steel-blue full moon with a centered navy paw and subtle cyan edge expands to
+cover the frame, holds for the scene swap, then recedes to reveal the next
+scene. The original paw-glass sweep runs behind it as a subtle underlay.
 
 ## Download
 

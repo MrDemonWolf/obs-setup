@@ -53,8 +53,8 @@ sheet with:
 npx remotion still src/index.ts StingerConceptBoard out/stinger-concepts-board.png --frame=0
 ```
 
-The production `Stinger` is the four-second full-moon wipe with a centered cyan
-paw print. The former Paw Swipe stays behind it as a layered glass-and-forest
+The production `Stinger` is the four-second cratered steel-blue full-moon wipe
+with a centered navy paw and restrained cyan outline. The former Paw Swipe stays behind it as a layered glass-and-forest
 underlay. It has no second audio track; the original WAV is played once, with
 its measured peak aligned to the 2000 ms covered scene-swap point.
 
