@@ -28,7 +28,7 @@ export const theme = {
 // widgets independently while reusing the same backdrop and quiet paw trail.
 export const forest = {
   backgroundAsset: "forest-night-base.png",
-  pawTrail: { count: 9, y: 946, maxOpacity: 0.3, xStart: 700, xEnd: 1818 },
+  pawTrail: { count: 15, y: 946, maxOpacity: 0.3, xStart: 8, xEnd: 1818 },
 } as const;
 
 // macOS-ish rounded radii
