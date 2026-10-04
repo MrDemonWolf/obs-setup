@@ -96,8 +96,10 @@ playful wolf-tech jokes.
 - **Background:** park the standalone background scene's moon on the right to
   match the other right-aligned layouts; scene-specific camera compositions
   may still move it when that keeps the sky clear.
-- **Stinger:** keep the forest glass sweep and right-facing white paw trail as
-  the single focal motion.
+- **Stinger:** a navy-and-cyan full moon expands around a centered paw, covers
+  the frame for the scene swap, then retreats to reveal the next scene. The
+  former paw sweep remains a subtle rear glass layer; its original WAV timing
+  stays aligned to the 2000 ms cut point.
 
 ## Motion
 

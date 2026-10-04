@@ -83,8 +83,9 @@ here opens a formula update PR after an `obs-setup` release.
 - **Animated overlays.** Sixteen Remotion compositions: ten scene/background
   screens, four transparent widgets, a transparent desk foreground, and the Stinger transition. See the
   [`remotion/` guide](remotion/README.md) for previews, renders, and OBS setup.
-- **Branded stinger transition.** A 4-second alpha wipe (`Stinger`) for
-  OBS scene cuts. Its whoosh is embedded in the video; a timing check
+- **Branded stinger transition.** A 4-second full-moon and centered-paw wipe
+  (`Stinger`) for OBS scene cuts, with the former paw sweep as its underlay.
+  Its whoosh is embedded in the video; a timing check
   aligns the measured WAV peak with the covered scene-swap point.
 - **Separate downloads.** `make release` renders the overlays and stinger
   with Remotion, encodes the transparent videos, regenerates the webcam

@@ -6,7 +6,8 @@ import { JustChattingScene } from "./JustChattingScene";
 import { SocialsScene, SOCIALS_DURATION, SOCIALS_HEIGHT, SOCIALS_WIDTH } from "./Socials";
 import { Countdown } from "./Countdown";
 import { LoadingBarks, LOADING_BARKS_DURATION, LOADING_BARKS_FPS } from "./LoadingBarks";
-import { Stinger, STINGER_FPS, STINGER_DURATION } from "./Stinger";
+import { STINGER_FPS, STINGER_DURATION } from "./Stinger";
+import { FullMoonStinger as Stinger } from "./FullMoonStinger";
 import { DeskForeground } from "./DeskForeground";
 import { CabinBackground } from "./CabinBackground";
 import { CoffeeBackground } from "./CoffeeBackground";
@@ -54,7 +55,7 @@ export const SCENES: SceneDef[] = [
   // Seeded schedule (each phrase 20–40s; bar fills to 100%); duration ~4.7 min.
   // 60fps; LOADING_BARKS_DURATION is computed at LOADING_BARKS_FPS so they match.
   { id: "LoadingBarks", label: "Loading Barks", component: LoadingBarks, width: 1080, height: 420, fps: LOADING_BARKS_FPS, durationInFrames: LOADING_BARKS_DURATION, props: {} },
-  // OBS stinger transition (Paw Swipe). Transparent full-frame, 60fps, plays
-  // ONCE (not a loop) — like Countdown, kept out of render:all.
+  // OBS stinger: full moon with the legacy paw-sweep underlay. Transparent
+  // full-frame, 60fps, plays ONCE (not a loop), and stays out of render:all.
   { id: "Stinger", label: "Stinger", component: Stinger, fps: STINGER_FPS, durationInFrames: STINGER_DURATION, props: {} },
 ];

@@ -1,6 +1,6 @@
-import { AbsoluteFill, Audio, Easing, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Easing, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import { Paw } from "./Paw";
-import { STINGER_SFX_DELAY_FRAMES } from "./Stinger";
+import { PawSwipeBackend, StingerAudio } from "./Stinger";
 
 /** The opaque lunar disc covers every corner before the 2000ms OBS cut. */
 export const FullMoonStinger: React.FC = () => {
@@ -18,6 +18,7 @@ export const FullMoonStinger: React.FC = () => {
   const mist = interpolate(seconds, [2.5, 2.95, 3.98], [0, 0.4, 0], clamp);
   return (
     <AbsoluteFill style={{ overflow: "hidden" }}>
+      <PawSwipeBackend />
       <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ position: "absolute", opacity: visible }}>
         <defs>
           <radialGradient id="lunar-navy" cx="34%" cy="28%">
@@ -49,9 +50,7 @@ export const FullMoonStinger: React.FC = () => {
           background: `radial-gradient(ellipse at ${20 + i * 30}% ${35 + i * 20}%, rgba(185,219,235,0.65), transparent 65%)`,
         }} />
       ))}
-      <Sequence from={STINGER_SFX_DELAY_FRAMES}>
-        <Audio src={staticFile("stinger.wav")} />
-      </Sequence>
+      <StingerAudio />
     </AbsoluteFill>
   );
 };

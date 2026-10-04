@@ -1,12 +1,12 @@
 import {
   AbsoluteFill,
-  Audio,
   Easing,
+  Audio,
   interpolate,
   Sequence,
-  staticFile,
   useCurrentFrame,
   useVideoConfig,
+  staticFile,
 } from "remotion";
 import { theme, dotGridLayer, glassSheen, clamp01 } from "./theme";
 import { Paw } from "./Paw";
@@ -33,9 +33,8 @@ export const STINGER_COVER = 0.5; // transition point = middle of the covered ho
 // OBS Stinger "Transition Point" (ms) — a frame inside the fully-covered window.
 export const STINGER_POINT_MS = Math.round(STINGER_COVER * STINGER_SECONDS * 1000);
 
-// Measured from the checked-in stereo PCM WAV: its largest channel sample is
-// at sample frame 8,160 (170.000 ms at 48 kHz, 16-bit). Keep the Remotion
-// timeline tied to that asset; the delay rounds to 110 video frames at 60 fps.
+// The full-moon foreground keeps the original transition's measured WAV cue:
+// its strongest sample lands on the covered scene-swap point.
 export const STINGER_SFX_PEAK_MS = 170;
 export const STINGER_SFX_DELAY_FRAMES = Math.max(
   0,
@@ -137,7 +136,8 @@ const PawWalk: React.FC<{ p: number }> = ({ p }) => (
   </>
 );
 
-export const Stinger: React.FC = () => {
+/** Legacy paw-glass sweep retained as the moon stinger's rear visual layer. */
+export const PawSwipeBackend: React.FC = () => {
   const { p, x } = usePanelX();
   const { width } = useVideoConfig();
   return (
@@ -183,10 +183,13 @@ export const Stinger: React.FC = () => {
         {/* paws painted on the panel — they ride the sweep with it */}
         <PawWalk p={p} />
       </div>
-      {/* real SFX, delayed so its impact lands on the cover point */}
-      <Sequence from={STINGER_SFX_DELAY_FRAMES}>
-        <Audio src={staticFile("stinger.wav")} />
-      </Sequence>
     </AbsoluteFill>
   );
 };
+
+/** The original PCM cue and delay are kept in the legacy transition module. */
+export const StingerAudio: React.FC = () => (
+  <Sequence from={STINGER_SFX_DELAY_FRAMES}>
+    <Audio src={staticFile("stinger.wav")} />
+  </Sequence>
+);
