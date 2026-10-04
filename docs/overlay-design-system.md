@@ -98,7 +98,14 @@ playful wolf-tech jokes.
 
 ## Motion
 
-- Full-scene movement loops seamlessly over the existing eight-second cycle.
+- Forest Lounge standby scenes export as 72-second loops (2160 frames at 30 fps).
+  Plus Jakarta Sans 800 headlines reveal word by word, hold, catch a moonlight
+  sweep at 8–10 seconds, and exit at 21–23 seconds. This repeats every 24 seconds.
+  Supporting text uses Plus Jakarta Sans 500 and follows the title with a fade.
+  The existing fursona artwork peeks from the upper-left edge at 37–43.8 seconds;
+  this is a predetermined cameo once per loop, not runtime randomness. It stays
+  above the text and away from the lower-left widget area and right-side chat.
+  Forest motion repeats nine eight-second cycles, including the white paw trail.
 - Stars twinkle softly; the moon stays still; the paw trail appears in a slow
   left-to-right walk and fades before the loop seam.
 - Use a single restrained pulse for glass edges. Avoid adding glow, particles,

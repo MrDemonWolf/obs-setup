@@ -13,7 +13,7 @@ export const PawTrail: React.FC<{
   xEnd?: number;
 }> = ({ count = 9, y = 946, maxOpacity = 0.3, xStart = 100, xEnd = 1820 }) => {
   const frame = useCurrentFrame();
-  const progress = frame / VIDEO.durationInFrames;
+  const progress = (frame % VIDEO.durationInFrames) / VIDEO.durationInFrames;
   const firstLanding = 0.08;
   const lastLanding = 0.64;
   const fadeIn = 0.035;

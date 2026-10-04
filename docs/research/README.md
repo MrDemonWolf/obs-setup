@@ -1,7 +1,9 @@
 # Forest Lounge motion research
 
-Research collected October 4, 2026. These notes guide the next animation pass;
-they do not mean the proposed sequence has been implemented or rendered.
+Research collected October 4, 2026. The word reveal, moonlight sweep, and title
+exit now run as a 24-second sequence within the 72-second standby compositions.
+An existing-artwork fursona cameo appears once per longer loop. Vendor timings
+below remain design references, not measured reproductions.
 
 - [Nerd or Die references](nerd-or-die-motion.md): Grid, Relay, React, and Amused.
 - [Other stream packages](stream-package-motion.md): OWN3D, Streamlabs, and StreamElements.
