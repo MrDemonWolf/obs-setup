@@ -140,7 +140,7 @@ export const ObsPreview: React.FC = () => {
         <div>
           <p className="eyebrow"><span className="eyebrow-paw">✦</span> MRDEMONWOLF · REMOTION PREVIEW</p>
           <h1>Stream scenes</h1>
-          <p className="intro">One moonlit forest look across your scenes, with layouts tuned for standby, live, and co-working.</p>
+          <p className="intro">Moonlit forest standby scenes and a cozy cabin for chatting and co-working.</p>
         </div>
         <div className="live-pill"><span /> LIVE PREVIEW</div>
       </header>

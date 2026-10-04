@@ -35,6 +35,9 @@ console.log("\n▶ Rendering socials-badge (mov + gif)…");
 execSync("npx remotion render Socials out/socials-badge.mov --codec=prores --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le --log=error", { stdio: "inherit" });
 execSync("npx remotion render Socials out/socials-badge.gif --codec=gif --log=error", { stdio: "inherit" });
 
+console.log("\n▶ Rendering transparent desk + coffee…");
+execSync("npx remotion render DeskForeground out/desk-foreground.mov --codec=prores --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le --muted --log=error", { stdio: "inherit" });
+
 // NOTE: Countdown (5 + 10 min) + LoadingBarks (~4.7 min) are transparent
 // panel-sized ProRes 4444 outputs; they remain heavy and slow. Kept OUT of this
 // batch; render on demand:

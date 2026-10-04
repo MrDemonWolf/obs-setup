@@ -1,5 +1,5 @@
 import { AbsoluteFill } from "remotion";
-import { Background } from "./Background";
+import { CabinBackground } from "./CabinBackground";
 import { CamFrame } from "./CamFrame";
 
 // Co-Working overlays: animated forest background + baked 16:9 cam frame(s).
@@ -13,9 +13,9 @@ export type CoworkProps = {
   moon?: { x?: number; y?: number; r?: number };
 };
 
-export const Cowork: React.FC<CoworkProps> = ({ cams, moon }) => (
+export const Cowork: React.FC<CoworkProps> = ({ cams }) => (
   <AbsoluteFill>
-    <Background variant="forest" moon={moon} />
+    <CabinBackground />
     {cams.map((c, i) => (
       // staggered glow phases — identical phases pulse in lockstep (metronome)
       <CamFrame key={i} {...c} phase={0.4 + i * 0.33} />

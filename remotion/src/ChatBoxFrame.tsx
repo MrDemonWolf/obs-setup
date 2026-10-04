@@ -5,7 +5,7 @@ import { radius, theme } from "./theme";
 // Quiet, fixed-size landing area for the Howlbox browser source on standby cards.
 // The chat source sits over the open body area; this frame supplies only the
 // glass backing and a small label so chat content stays easy to read.
-export const CHAT_BOX = { x: 1216, y: 280, w: 608, h: 656 } as const;
+export const CHAT_BOX = { x: 1184, y: 216, w: 640, h: 720 } as const;
 
 export const ChatPanel: React.FC<{
   x: number;

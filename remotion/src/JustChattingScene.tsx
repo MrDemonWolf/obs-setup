@@ -1,5 +1,6 @@
 import { AbsoluteFill } from "remotion";
-import { Background } from "./Background";
+import { CabinBackground } from "./CabinBackground";
+import { DeskForeground } from "./DeskForeground";
 import { CamFrame } from "./CamFrame";
 import { theme } from "./theme";
 
@@ -11,11 +12,11 @@ import { theme } from "./theme";
 // but keeps the tall chat frame on the right.
 export const JustChattingScene: React.FC<{ hideCam?: boolean }> = ({ hideCam }) => (
   <AbsoluteFill style={{ backgroundColor: theme.navyDeep }}>
-    {/* Move the moon to the right-side sky pocket, matching Co-Working. Its
-        shared height/radius stay unchanged; the body clears the taller frame. */}
-    <Background variant="forest" moon={{ x: 1568 }} />
+    {/* The shared cabin plate leaves an open seated-model area by the window. */}
+    <CabinBackground />
     {/* staggered glow phases so cam + chat don't pulse in lockstep */}
-    {!hideCam && <CamFrame x={64} y={190} w={1232} h={693} phase={0.4} />}
-    <CamFrame x={1328} y={190} w={528} h={693} phase={0.73} />
+    {!hideCam && <CamFrame x={96} y={190} w={1120} h={630} phase={0.4} />}
+    <CamFrame x={1328} y={190} w={528} h={650} phase={0.73} />
+    <DeskForeground />
   </AbsoluteFill>
 );

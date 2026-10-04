@@ -38,8 +38,8 @@ if [ "$PACKAGE_ONLY" -eq 1 ]; then
     01-starting-soon.mp4 02-just-chatting.mp4 03-just-chatting-vtuber.mp4
     04-co-working-solo.mp4 05-co-working-dual.mp4 06-be-right-back.mp4
     07-ending-stream.mp4 background.mp4
-    socials-badge.mov countdown.mov countdown-10m.mov loading-barks.mov stinger.mov
-    socials-badge-hevc.mov countdown-hevc.mov countdown-10m-hevc.mov loading-barks-hevc.mov stinger-hevc.mov
+    socials-badge.mov desk-foreground.mov countdown.mov countdown-10m.mov loading-barks.mov stinger.mov
+    socials-badge-hevc.mov desk-foreground-hevc.mov countdown-hevc.mov countdown-10m-hevc.mov loading-barks-hevc.mov stinger-hevc.mov
   )
   for file in "${required_outputs[@]}"; do
     if [ ! -s "out/$file" ]; then
@@ -79,13 +79,14 @@ npx remotion render Stinger out/stinger.mov --codec=prores --prores-profile=4444
 # keeps transparency, hardware-decodes on every Apple Silicon chip, and OBS on
 # macOS reads it natively (both target Macs). See README note.
 echo "▶ transcode transparent masters → HEVC-alpha (hvc1)…"
-./to-hevc.sh out/socials-badge.mov out/countdown.mov out/countdown-10m.mov out/loading-barks.mov out/stinger.mov
+./to-hevc.sh out/socials-badge.mov out/desk-foreground.mov out/countdown.mov out/countdown-10m.mov out/loading-barks.mov out/stinger.mov
 fi
 
 echo "▶ validate stinger timing and encoded streams…"
 python3 "$ROOT/scripts/validate_stinger.py" \
   --rendered "$OUT/stinger.mov" --encoded "$OUT/stinger-hevc.mov" \
   --alpha-file "$OUT/socials-badge-hevc.mov" \
+  --alpha-file "$OUT/desk-foreground-hevc.mov" \
   --alpha-file "$OUT/countdown-hevc.mov" \
   --alpha-file "$OUT/countdown-10m-hevc.mov" \
   --alpha-file "$OUT/loading-barks-hevc.mov"
@@ -107,7 +108,7 @@ STINGER_ZIP="$WORK/$STINGER_NAME.zip"
 echo "▶ assemble separate overlay and stinger archives…"
 mkdir -p "$OVERLAY_DIR/Overlays" "$OVERLAY_DIR/Masks" "$STINGER_DIR"
 cp "$OUT"/0*.mp4 "$OUT"/background.mp4 \
-   "$OUT"/socials-badge-hevc.mov "$OUT"/loading-barks-hevc.mov \
+   "$OUT"/socials-badge-hevc.mov "$OUT"/desk-foreground-hevc.mov "$OUT"/loading-barks-hevc.mov \
    "$OUT"/countdown-hevc.mov "$OUT"/countdown-10m-hevc.mov "$OVERLAY_DIR/Overlays/"
 cp "$ROOT"/masks/*.png "$OVERLAY_DIR/Masks/"
 cp "$OUT"/stinger-hevc.mov "$R"/public/stinger.wav "$STINGER_DIR/"
@@ -122,15 +123,15 @@ cp "$OUT"/stinger-hevc.mov "$R"/public/stinger.wav "$STINGER_DIR/"
 This package contains the scene overlays and webcam masks.
 
 ```
-Overlays/   12 videos — 8 full-frame MP4s + 4 panel-sized transparent HEVC-alpha .mov
+Overlays/   13 videos — 8 full-frame MP4s + 5 transparent HEVC-alpha .mov
 Masks/      rounded-corner webcam masks (PNG, alpha)
 ```
 
 ## Add each as a Media Source
 
 1. Sources → **+** → **Media Source** → **Local File** → pick the file.
-2. **Loop**: ON for everything **except the two countdown files** (play once, start on going live).
-3. Place the eight full-frame scene MP4s at **0, 0** (1920×1080). The four
+2. **Loop**: ON except Ending Stream and the two countdown files (play once).
+3. Place the eight full-frame scene MP4s and transparent desk at **0, 0** (1920×1080). The four
    transparent widgets use compact bounds; position them where you want.
 
 ### Files → scene → loop
@@ -145,6 +146,7 @@ Masks/      rounded-corner webcam masks (PNG, alpha)
 | `06-be-right-back.mp4` | Be Right Back | 1920×1080 | ON |
 | `07-ending-stream.mp4` | Ending Stream (2:30) | 1920×1080 | OFF |
 | `background.mp4` | Background (also plain gameplay) | 1920×1080 | ON |
+| `desk-foreground-hevc.mov` | Desk + animated coffee steam | 1920×1080 | ON |
 | `socials-badge-hevc.mov` | Socials badge (over anything) | 720×140 | ON |
 | `loading-barks-hevc.mov` | Loading Barks panel (over anything) | 1080×420 | ON |
 | `countdown-hevc.mov` | 5:00 countdown panel | 820×500 | **OFF** — start on going live |
@@ -169,23 +171,33 @@ Overlay source = full-frame 1920×1080 at **0,0**. Cam source Transform
 | Co-Working · Solo | Cam | 64, 136 | 1400 × 788 | `co-working-solo.png` |
 | Co-Working · Dual | Main cam | 64, 136 | 1184 × 666 | `co-working-dual-big.png` |
 | Co-Working · Dual | 2nd cam | 1280, 628 | 576 × 324 | `co-working-dual-small.png` |
-| Just Chatting | Cam | 64, 190 | 1232 × 693 | `just-chatting-cam.png` |
-| Just Chatting | Chat | 1328, 190 | 528 × 693 | `just-chatting-chat.png` |
-| Just Chatting · VTuber | Chat | 1328, 190 | 528 × 693 | `just-chatting-chat.png` |
+| Just Chatting | Cam | 96, 190 | 1120 × 630 | `just-chatting-cam.png` |
+| Just Chatting | Chat | 1328, 190 | 528 × 650 | `just-chatting-chat.png` |
+| Just Chatting · VTuber | Chat | 1328, 190 | 528 × 650 | `just-chatting-chat.png` |
 
 VTuber = no cam frame (model fullscreen); chat frame is the same box.
 
+## Cabin desk foreground
+
+For VTuber scenes, add `desk-foreground-hevc.mov` as a separate Media Source,
+loop ON, at **0,0**, size **1920×1080**. Its sky and room area is transparent.
+The desk starts at **y=860** and covers the model's lower edge. In OBS Sources,
+order top to bottom: chat/widgets, desk foreground, VTuber model, cabin scene.
+The coffee mug sits near **x=1090–1247, y=785–895**; its steam loops over 8 seconds.
+Move the model behind the desk so the shoulders and head remain above y=860.
+
 ## Starting Soon + BRB Chat
 
-The Howlbox chat panel is at **64, 720 · 704 × 320**. Size and position its
-browser source to match the glass panel in each standby scene.
+The chat panel is at **1184, 216 · 640 × 720**, just below the moon.
+Place the browser source inside **1206, 276 · 596 × 638** to leave the header
+and inner padding clear. Ending has no chat panel.
 
 ### Co-Working · Dual open placement areas
 
 The overlay leaves a clear chat or task placement above the second camera at
 **1280, 312 · 576 × 288**, plus an open lower band below the main camera at
 **64, 826 · 1184 × 190** for Timer, Tasks, Now Playing, or other OBS sources.
-These are forest areas with no widget boxes or labels baked into the video, and
+These are cabin areas with no widget boxes or labels baked into the video, and
 they do not need webcam masks.
 
 ### Apply a mask (rounds the cam corners)

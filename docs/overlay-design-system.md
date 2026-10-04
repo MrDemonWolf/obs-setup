@@ -81,13 +81,14 @@ playful wolf-tech jokes.
 - **Starting Soon / BRB / Ending — Forest Lounge:** open headline at
   `(96,330)` over a gentle left-side dark fade; no title box, window dots,
   website label, or fixed logo. Starting Soon and BRB have a glass chat panel
-  at `(1216,280)`, sized `608×656`; Ending has no chat panel.
-  Place the real chat source inside `(1238,340)`, sized `564×574`.
+  at `(1184,216)`, sized `640×720`, closer to the moon; Ending has no chat panel.
+  Place the real chat source inside `(1206,276)`, sized `596×638`.
   Reserve the lower-left area `(96,700)` through `(1096,936)` for separately
   added countdown, loading barks, or socials sources. No baked widget outlines.
-- **Just Chatting:** forest sky with a large camera area and a separate chat
-  rail. Keep text and decoration out of the camera and chat openings.
-- **Co-Working:** forest sky with clean camera frames and open space for OBS
+- **Just Chatting:** moonlit cabin window with a large camera area and chat
+  rail. A separate transparent desk and coffee-steam video layers above the
+  VTuber model to hide its lower crop. See [cabin setup](cabin-setup.md).
+- **Co-Working:** the same cabin with clean camera frames and open space for OBS
   timers, tasks, music, and chat sources.
 - **Transparent widgets:** use the denser shared glass surface so labels stay
   legible over gameplay. Use real platform marks only for Socials.
@@ -134,5 +135,5 @@ space rather than squeezing it into these panels.
 - `src/TitleChip.tsx` and `src/ChatBoxFrame.tsx`: standby title and chat glass.
 - `src/JustChattingScene.tsx` and `src/CoworkFrame.tsx`: scene-specific camera
   layouts using the same forest system.
-- `src/scenes.ts`: the 13 production scenes and their copy.
+- `src/scenes.ts`: the 14 production compositions and their copy.
 - `preview/ObsPreview.tsx`: browser preview of the production scenes.
