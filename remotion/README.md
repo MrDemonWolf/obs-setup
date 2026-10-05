@@ -53,10 +53,12 @@ sheet with:
 npx remotion still src/index.ts StingerConceptBoard out/stinger-concepts-board.png --frame=0
 ```
 
-The production `Stinger` is the four-second cratered steel-blue full-moon wipe
-with a centered navy paw and restrained cyan outline. The former Paw Swipe stays behind it as a layered glass-and-forest
-underlay. It has no second audio track; the original WAV is played once, with
-its measured peak aligned to the 2000 ms covered scene-swap point.
+The production `Stinger` is a four-second cratered steel-blue full-moon wipe
+with a restrained cyan rim. It has no paw mark or layered paw-swipe. The old
+paw-glass transition is preserved as the `LegacyPawSwipeStingerBackup`
+composition in Remotion, but stays out of the previewer and release package.
+The active moon transition plays the original WAV once, with its measured peak
+aligned to the 2000 ms scene-swap point.
 
 ## Add to OBS (and keep it light on an M1)
 

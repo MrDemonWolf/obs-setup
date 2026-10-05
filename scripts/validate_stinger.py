@@ -21,7 +21,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_WAV = ROOT / "remotion/public/stinger.wav"
-STINGER_SOURCE = ROOT / "remotion/src/Stinger.tsx"
+STINGER_SOURCE = ROOT / "remotion/src/StingerAudio.tsx"
 
 
 @dataclass(frozen=True)
@@ -89,7 +89,7 @@ def read_timing(wav_path: Path = SOURCE_WAV, source_path: Path = STINGER_SOURCE)
         source,
     )
     if not delay_match:
-        raise ValueError("STINGER_SFX_DELAY_FRAMES must be declared in Stinger.tsx")
+        raise ValueError("STINGER_SFX_DELAY_FRAMES must be declared in StingerAudio.tsx")
     delay_expression = delay_match.group(1)
     for required_name in ("STINGER_POINT_MS", "STINGER_SFX_PEAK_MS", "STINGER_FPS"):
         if required_name not in delay_expression:

@@ -3,6 +3,8 @@ import { Composition } from "remotion";
 import { SCENES } from "./scenes";
 import { VIDEO } from "./theme";
 import { StingerConceptBoard, StingerConceptStill, STINGER_CONCEPTS, StingerConceptId } from "./StingerConcepts";
+import { LegacyPawSwipeStinger } from "./StingerPawSwipeBackup";
+import { STINGER_DURATION, STINGER_FPS } from "./StingerAudio";
 
 const CONCEPT_STILLS: Record<StingerConceptId, React.FC> = {
   pawglass: () => <StingerConceptStill concept="pawglass" />,
@@ -37,6 +39,16 @@ export const RemotionRoot: React.FC = () => (
         height={VIDEO.height}
       />
     ))}
+    {/* Retained as a renderable rollback option; the OBS preview and release
+        continue to use only the moon-only Stinger composition above. */}
+    <Composition
+      id="LegacyPawSwipeStingerBackup"
+      component={LegacyPawSwipeStinger}
+      durationInFrames={STINGER_DURATION}
+      fps={STINGER_FPS}
+      width={VIDEO.width}
+      height={VIDEO.height}
+    />
     <Composition
       id="StingerConceptBoard"
       component={StingerConceptBoard}

@@ -80,12 +80,15 @@ here opens a formula update PR after an `obs-setup` release.
   so a glance tells you camera vs. alerts vs. screen vs. standby.
 - **HTML previewer.** A color-coded map of every scene that runs
   locally or on GitHub Pages, no build step.
-- **Animated overlays.** Sixteen Remotion compositions: ten scene/background
-  screens, four transparent widgets, a transparent desk foreground, and the Stinger transition. See the
+- **Animated overlays.** Sixteen preview and release compositions: ten
+  scene/background screens, four transparent widgets, a transparent desk
+  foreground, and the moon-only Stinger. The former paw-swipe is kept as a
+  separate rollback composition. See the
   [`remotion/` guide](remotion/README.md) for previews, renders, and OBS setup.
-- **Branded stinger transition.** A 4-second full-moon and centered-paw wipe
-  (`Stinger`) for OBS scene cuts, with the former paw sweep as its underlay.
-  Its whoosh is embedded in the video; a timing check
+- **Branded stinger transition.** A 4-second shaded full-moon wipe (`Stinger`)
+  for OBS scene cuts, with no paw mark or layered paw sweep. The former
+  paw-swipe transition remains available in Remotion as a backup composition.
+  The whoosh is embedded in the video; a timing check
   aligns the measured WAV peak with the covered scene-swap point.
 - **Separate downloads.** `make release` renders the overlays and stinger
   with Remotion, encodes the transparent videos, regenerates the webcam

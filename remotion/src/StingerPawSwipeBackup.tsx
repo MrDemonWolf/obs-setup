@@ -1,15 +1,7 @@
-import {
-  AbsoluteFill,
-  Easing,
-  Audio,
-  interpolate,
-  Sequence,
-  useCurrentFrame,
-  useVideoConfig,
-  staticFile,
-} from "remotion";
+import { AbsoluteFill, Easing, interpolate, useCurrentFrame, useVideoConfig, staticFile } from "remotion";
 import { theme, dotGridLayer, glassSheen, clamp01 } from "./theme";
 import { Paw } from "./Paw";
+import { StingerAudio } from "./StingerAudio";
 
 // OBS "stinger" transition — Paw Swipe. A short full-frame alpha video that wipes
 // across the screen during a scene cut. Structure: sweep IN (from the LEFT) ->
@@ -21,25 +13,9 @@ import { Paw } from "./Paw";
 //
 // Plays ONCE per cut — like Countdown, NOT a seamless loop, so motion is plain
 // interpolate (no loop* helper).
-export const STINGER_FPS = 60;
-export const STINGER_SECONDS = 4; // total clip; ~1.5s is held fully covered
-export const STINGER_DURATION = Math.round(STINGER_SECONDS * STINGER_FPS);
-
 // Phase boundaries (fractions of the clip). Fully covered across [IN_END, OUT_START].
 const IN_END = 0.34;
 const OUT_START = 0.7225; // hold lingers before the panel exits
-export const STINGER_COVER = 0.5; // transition point = middle of the covered hold
-
-// OBS Stinger "Transition Point" (ms) — a frame inside the fully-covered window.
-export const STINGER_POINT_MS = Math.round(STINGER_COVER * STINGER_SECONDS * 1000);
-
-// The full-moon foreground keeps the original transition's measured WAV cue:
-// its strongest sample lands on the covered scene-swap point.
-export const STINGER_SFX_PEAK_MS = 170;
-export const STINGER_SFX_DELAY_FRAMES = Math.max(
-  0,
-  Math.round(((STINGER_POINT_MS - STINGER_SFX_PEAK_MS) * STINGER_FPS) / 1000),
-);
 
 // Navy-dominant cover panel (matches the original: solid navy, cerulean only on
 // the leading edge). Dot grid + sheen sit over an OPAQUE navy gradient, so the
@@ -136,7 +112,7 @@ const PawWalk: React.FC<{ p: number }> = ({ p }) => (
   </>
 );
 
-/** Legacy paw-glass sweep retained as the moon stinger's rear visual layer. */
+/** Preserved original paw-glass sweep, available only as a backup composition. */
 export const PawSwipeBackend: React.FC = () => {
   const { p, x } = usePanelX();
   const { width } = useVideoConfig();
@@ -189,9 +165,10 @@ export const PawSwipeBackend: React.FC = () => {
   );
 };
 
-/** The original PCM cue and delay are kept in the legacy transition module. */
-export const StingerAudio: React.FC = () => (
-  <Sequence from={STINGER_SFX_DELAY_FRAMES}>
-    <Audio src={staticFile("stinger.wav")} />
-  </Sequence>
+/** Standalone backup of the old paw-swipe transition. */
+export const LegacyPawSwipeStinger: React.FC = () => (
+  <AbsoluteFill>
+    <PawSwipeBackend />
+    <StingerAudio />
+  </AbsoluteFill>
 );

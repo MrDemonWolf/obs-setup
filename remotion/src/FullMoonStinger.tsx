@@ -1,6 +1,5 @@
 import { AbsoluteFill, Easing, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
-import { Paw } from "./Paw";
-import { PawSwipeBackend, StingerAudio } from "./Stinger";
+import { StingerAudio } from "./StingerAudio";
 
 /** The opaque lunar disc covers every corner before the 2000ms OBS cut. */
 export const FullMoonStinger: React.FC = () => {
@@ -20,7 +19,6 @@ export const FullMoonStinger: React.FC = () => {
   const mist = interpolate(seconds, [2.5, 2.95, 3.98], [0, 0.4, 0], clamp);
   return (
     <AbsoluteFill style={{ overflow: "hidden" }}>
-      <PawSwipeBackend />
       <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ position: "absolute", opacity: visible }}>
         <defs>
           <radialGradient id="lunar-surface" cx="34%" cy="28%">
@@ -60,7 +58,6 @@ export const FullMoonStinger: React.FC = () => {
               <circle cx="-23" cy="42" r="11" />
             </g>
             <circle r="180" fill="url(#lunar-rim-light)" />
-            <Paw x={-45} y={-34} size={90} color="#091533" stroke="#00ACED" strokeWidth={0.9} opacity={0.94} />
           </g>
         </g>
       </svg>
