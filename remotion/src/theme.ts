@@ -21,6 +21,14 @@ export const theme = {
   glassHi: "rgba(255, 255, 255, 0.10)",
   grid: "rgba(0, 172, 237, 0.10)",
   textDim: "rgba(255, 255, 255, 0.62)",
+  pawWhite: "#F2F7FF", // soft white stays visible against the dark forest
+} as const;
+
+// Shared Night Forest Walk tokens. Scene layouts can move their cameras and
+// widgets independently while reusing the same backdrop and quiet paw trail.
+export const forest = {
+  backgroundAsset: "forest-night-base.png",
+  pawTrail: { count: 15, y: 946, maxOpacity: 0.3, xStart: 8, xEnd: 1818 },
 } as const;
 
 // macOS-ish rounded radii
@@ -70,4 +78,4 @@ export const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 export const loopTri = (frame: number, phase = 0) =>
   1 - Math.abs(2 * (((frame / VIDEO.durationInFrames) + phase) % 1) - 1);
 
-export type BgVariant = "night" | "minimal" | "glow";
+export type BgVariant = "night" | "minimal" | "glow" | "forest";

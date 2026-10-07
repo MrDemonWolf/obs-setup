@@ -1,42 +1,100 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AbsoluteFill } from "remotion";
 import { Player, PlayerRef } from "@remotion/player";
-import { SCENES } from "../src/scenes";
+import { SCENES, type SceneDef } from "../src/scenes";
 import { VIDEO } from "../src/theme";
+import { StingerConceptBoard } from "../src/StingerConcepts";
+import { DeskForeground } from "../src/DeskForeground";
+
+type PreviewGroup = { title: string; description: string; sceneIds: string[] };
+
+const PREVIEW_GROUPS: PreviewGroup[] = [
+  {
+    title: "Stream screens",
+    description: "The screens viewers see between segments",
+    sceneIds: ["StartingSoon", "BRB", "EndingStream"],
+  },
+  {
+    title: "Live layouts",
+    description: "Chat and co-working arrangements",
+    sceneIds: ["JustChatting", "JustChattingVtuber", "CoworkingSolo", "CoworkingDual"],
+  },
+  {
+    title: "Coffee cabin",
+    description: "Complete background or separate OBS layers",
+    sceneIds: ["CoffeeBackground", "CabinBackground"],
+  },
+  {
+    title: "Widgets & transitions",
+    description: "Transparent overlays and the scene change",
+    sceneIds: ["Background", "Socials", "Countdown", "Countdown10", "LoadingBarks", "Stinger"],
+  },
+  {
+    title: "Stinger concepts",
+    description: "Alternative visual directions; the full moon is the main Stinger",
+    sceneIds: ["StingerConceptBoard"],
+  },
+];
+
+const PREVIEW_ONLY_SCENES: SceneDef[] = [
+  {
+    id: "StingerConceptBoard",
+    label: "Stinger concept board",
+    component: StingerConceptBoard,
+    durationInFrames: 1,
+    props: {},
+  },
+];
+const PREVIEW_SCENES = [...SCENES, ...PREVIEW_ONLY_SCENES];
+const GROUPED_SCENE_IDS = new Set(PREVIEW_GROUPS.flatMap((group) => group.sceneIds));
+const UNGROUPED_SCENE_IDS = PREVIEW_SCENES
+  .filter((scene) => !GROUPED_SCENE_IDS.has(scene.id) && scene.id !== "DeskForeground")
+  .map((scene) => scene.id);
+const GROUPS_WITH_FALLBACK: PreviewGroup[] = UNGROUPED_SCENE_IDS.length
+  ? [
+      ...PREVIEW_GROUPS,
+      {
+        title: "Other scenes",
+        description: "Additional compositions available in the preview",
+        sceneIds: UNGROUPED_SCENE_IDS,
+      },
+    ]
+  : PREVIEW_GROUPS;
+
+const NO_LOOP = new Set(["Countdown", "Countdown10", "Stinger", "StingerConceptBoard"]);
+const AUDIO_PREVIEW_SCENES = new Set(["Stinger"]);
+const ALPHA_SCENES = new Set(["Socials", "Countdown", "Countdown10", "LoadingBarks", "Stinger", "DeskForeground"]);
+type StageBackground = "forest" | "checker" | "midnight";
+
+const formatTime = (frame: number, fps: number) => {
+  const seconds = Math.floor(frame / fps);
+  const minutes = Math.floor(seconds / 60);
+  return `${String(minutes).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
+};
 
 export const ObsPreview: React.FC = () => {
-  const [sceneId, setSceneId] = useState(SCENES[0].id);
-  const scene = useMemo(() => SCENES.find((s) => s.id === sceneId)!, [sceneId]);
+  const [sceneId, setSceneId] = useState("StartingSoon");
+  const [frame, setFrame] = useState(0);
+  const [playing, setPlaying] = useState(true);
+  const [stageBackground, setStageBackground] = useState<StageBackground>("forest");
+  const scene = useMemo(() => PREVIEW_SCENES.find((candidate) => candidate.id === sceneId)!, [sceneId]);
   const playerRef = useRef<PlayerRef>(null);
+  const fps = scene.fps ?? VIDEO.fps;
+  const duration = scene.durationInFrames ?? VIDEO.durationInFrames;
+  const nativeSize = `${scene.width ?? VIDEO.width} × ${scene.height ?? VIDEO.height}`;
+  const isAlpha = ALPHA_SCENES.has(scene.id);
+  const hasAudioCue = AUDIO_PREVIEW_SCENES.has(scene.id);
 
-  // @remotion/player gates `autoPlay` until a user gesture, so a fresh page
-  // load sits paused. Try play() on mount + scene change (works in browsers
-  // that allow silent autoplay)…
   useEffect(() => {
-    const kick = setInterval(() => {
-      const p = playerRef.current;
-      if (p && !p.isPlaying()) p.play();
-    }, 150);
-    const stop = setTimeout(() => clearInterval(kick), 1500);
-    return () => {
-      clearInterval(kick);
-      clearTimeout(stop);
-    };
+    const timer = window.setInterval(() => {
+      if (playerRef.current) {
+        setFrame(playerRef.current.getCurrentFrame());
+        setPlaying(playerRef.current.isPlaying());
+      }
+    }, 100);
+    return () => window.clearInterval(timer);
   }, [sceneId]);
 
-  // …and for browsers that hard-gate autoplay, start on the very first user
-  // interaction ANYWHERE on the page (pointer/key/scroll), so it's animating
-  // the instant you touch it — no need to hunt for a button to click.
-  useEffect(() => {
-    const start = () => playerRef.current?.play();
-    const evs = ["pointerdown", "keydown", "wheel", "touchstart"] as const;
-    evs.forEach((e) => window.addEventListener(e, start, { once: true, passive: true }));
-    return () => evs.forEach((e) => window.removeEventListener(e, start));
-  }, []);
-
-  // Preview EVERY scene on a fixed 1920×1080 stage so the box never changes
-  // size. Off-size scenes (e.g. the 760×180 Socials badge) render at native
-  // size, centred — instead of the Player blowing them up to fill the frame.
   const StageComp = useMemo(() => {
     const Comp = scene.component;
     const offSize = scene.width || scene.height;
@@ -55,54 +113,161 @@ export const ObsPreview: React.FC = () => {
           </div>
         </AbsoluteFill>
       ) : (
-        <Comp {...scene.props} />
+        <>
+          <Comp {...scene.props} />
+          {(scene.id === "JustChatting" || scene.id === "JustChattingVtuber") && <DeskForeground />}
+        </>
       );
     return Preview;
   }, [scene]);
 
+  const chooseScene = (id: string) => {
+    setFrame(0);
+    setPlaying(!AUDIO_PREVIEW_SCENES.has(id));
+    setSceneId(id);
+  };
+
+  const togglePlayback = () => {
+    const player = playerRef.current;
+    if (!player) return;
+    if (player.isPlaying()) {
+      player.pause();
+      setPlaying(false);
+    } else {
+      if (hasAudioCue) player.unmute();
+      player.play();
+      setPlaying(true);
+    }
+  };
+
+  const restart = () => {
+    const player = playerRef.current;
+    player?.seekTo(0);
+    if (hasAudioCue) player?.unmute();
+    player?.play();
+    setPlaying(true);
+  };
+
   return (
-    <div className="app">
-      <div className="window">
-        <div className="titlebar">
-          <span className="dots">
-            <i style={{ background: "#E0533D" }} />
-            <i style={{ background: "#E6B34B" }} />
-            <i style={{ background: "#3ED598" }} />
-          </span>
-          <span className="wintitle">MrDemonWolf · Stream Overlays</span>
+    <main className="app">
+      <header className="masthead">
+        <div>
+          <p className="eyebrow"><span className="eyebrow-paw">✦</span> MRDEMONWOLF · REMOTION PREVIEW</p>
+          <h1>Stream scenes</h1>
+          <p className="intro">Moonlit forest standby scenes and a cozy cabin for chatting and co-working.</p>
         </div>
-        <div className="stage">
-          <Player
-            key={sceneId}
-            ref={playerRef}
-            component={StageComp}
-            durationInFrames={scene.durationInFrames ?? VIDEO.durationInFrames}
-            fps={scene.fps ?? VIDEO.fps}
-            compositionWidth={VIDEO.width}
-            compositionHeight={VIDEO.height}
-            style={{ width: "100%", height: "100%" }}
-            loop={scene.id !== "Countdown" && scene.id !== "Stinger"}
-            autoPlay
-            initiallyMuted
-            controls={false}
-            clickToPlay={false}
-          />
+        <div className="live-pill"><span /> LIVE PREVIEW</div>
+      </header>
+
+      <section className="preview-column" aria-label="Selected scene preview">
+        <div className="window">
+          <div className="titlebar">
+            <span className="dots" aria-hidden="true"><i /><i /><i /></span>
+            <span className="wintitle">{scene.label}</span>
+            <span className="scene-size">{nativeSize} · {fps} fps</span>
+          </div>
+          <div className={`stage stage-${stageBackground}`}>
+            <Player
+              key={sceneId}
+              ref={playerRef}
+              component={StageComp}
+              durationInFrames={duration}
+              fps={fps}
+              compositionWidth={VIDEO.width}
+              compositionHeight={VIDEO.height}
+              style={{ width: "100%", height: "100%" }}
+              loop={!NO_LOOP.has(scene.id)}
+              autoPlay={!hasAudioCue}
+              initiallyMuted={!hasAudioCue}
+              controls={false}
+              clickToPlay={false}
+            />
+          </div>
+          <div className="transport">
+            <button className="transport-button primary" onClick={togglePlayback} aria-label="Play or pause preview">
+              {playing ? "Ⅱ" : "▶"}
+              <span>{playing ? "Pause" : "Play"}</span>
+            </button>
+            <button className="transport-button" onClick={restart} aria-label="Restart preview">↺<span>Restart</span></button>
+            <div className="timeline">
+              <input
+                aria-label="Preview timeline"
+                type="range"
+                min={0}
+                max={Math.max(0, duration - 1)}
+                value={Math.min(frame, duration - 1)}
+                onChange={(event) => {
+                  const next = Number(event.currentTarget.value);
+                  playerRef.current?.seekTo(next);
+                  setFrame(next);
+                }}
+              />
+              <div className="timecodes"><span>{formatTime(frame, fps)}</span><span>{formatTime(duration - 1, fps)}</span></div>
+            </div>
+          </div>
+          <div className="stage-footer">
+            <div className="scene-caption">
+              <span className="scene-state">{isAlpha ? "TRANSPARENT OVERLAY" : "FULL SCENE"}</span>
+              <span>{scene.label}</span>
+              {hasAudioCue && <span className="scene-audio-note">Press Play to hear the stinger whoosh cue.</span>}
+            </div>
+            {isAlpha && (
+              <div className="background-picker" aria-label="Preview background">
+                <span>Preview on</span>
+                {(["forest", "checker", "midnight"] as const).map((background) => (
+                  <button
+                    key={background}
+                    className={stageBackground === background ? "bg-choice active" : "bg-choice"}
+                    onClick={() => setStageBackground(background)}
+                    aria-pressed={stageBackground === background}
+                  >
+                    {background === "forest" ? "Forest" : background === "checker" ? "Grid" : "Dark"}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div className="switch">
-        {SCENES.map((s) => (
-          <button
-            key={s.id}
-            className={s.id === sceneId ? "scene-btn active" : "scene-btn"}
-            aria-pressed={s.id === sceneId}
-            onClick={() => setSceneId(s.id)}
-          >
-            {s.label}
-          </button>
-        ))}
-      </div>
-
-    </div>
+      <aside className="scene-library" aria-label="Choose a scene">
+        <div className="library-heading">
+          <div>
+            <p className="eyebrow">SCENE LIBRARY</p>
+            <h2>Choose a view</h2>
+          </div>
+          <span className="scene-count">{PREVIEW_SCENES.length} scenes</span>
+        </div>
+        <div className="library-groups">
+          {GROUPS_WITH_FALLBACK.map((group) => {
+            const scenes = group.sceneIds
+              .map((id) => PREVIEW_SCENES.find((candidate) => candidate.id === id))
+              .filter((candidate) => candidate !== undefined);
+            return (
+              <section className="library-group" key={group.title}>
+                <div className="library-group-heading">
+                  <h3>{group.title}</h3>
+                  <p>{group.description}</p>
+                </div>
+                <div className="scene-list">
+                  {scenes.map((candidate) => (
+                    <button
+                      key={candidate.id}
+                      className={candidate.id === sceneId ? "scene-btn active" : "scene-btn"}
+                      aria-pressed={candidate.id === sceneId}
+                      onClick={() => chooseScene(candidate.id)}
+                    >
+                      <span className="scene-mark" aria-hidden="true">◦</span>
+                      <span>{candidate.label}</span>
+                      {candidate.id === sceneId && <span className="selected-mark" aria-hidden="true">✓</span>}
+                    </button>
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+        </div>
+      </aside>
+    </main>
   );
 };

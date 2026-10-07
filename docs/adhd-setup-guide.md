@@ -168,16 +168,43 @@ Right, Timer.
 `[src] Alerts` on the Mini = Chat Overlay + Sound Alerts + Twitch Alerts
 (purple). Audio is the same three per-app captures as the MacBook Pro.
 
-### Cams are pre-pinned to the overlay frames
+### Howlbox chat on standby cards
 
-The import already places cams exactly inside the overlay cam frames
-(Scale-to-inner-bounds), matching `masks/` and the bundle README:
+Add a `Howlbox Chat` browser source manually in OBS for Starting Soon and Be
+Right Back. The overlay videos have a larger quiet glass frame at **704 × 320,
+x=64, y=720** on the 1920 × 1080 canvas; set the browser source to that size
+and position. Keep its background transparent if Howlbox supports it.
+
+Live has no permanent Howlbox frame, so use the lower-right only when the game
+leaves that area clear. Co-Working Solo keeps an open right rail. Co-Working
+Multi leaves clear forest areas around the cameras for OBS widgets; the video
+does not draw widget boxes or labels there.
+
+| Scene | Suggested Howlbox area | Keep the scene calm by… |
+| ----- | ---------------------- | ----------------------- |
+| Live | Lower-right: **x=1216, y=660, 640 × 360** | Use it only when the game leaves that corner clear. |
+| Co-Working [Solo] | Portrait right rail: **x=1488, y=200, 368 × 700** | Use a matching portrait browser source and replace the task list / right-side Rewards. |
+| Co-Working [Multi] | Upper-right forest: **x=1280, y=312, 576 × 288** | Add chat or a task list directly over the clear forest above the small camera. |
+
+The dual layout also leaves an open lower band at **x=64, y=826, 1184 × 190**
+below the main camera. Place Timer, Tasks, Now Playing, or other OBS browser
+sources directly over the forest there; use only the widgets you need so the
+layout stays calm. Keep Rewards and Wheel hidden until needed. The standby and
+co-working chat placements need browser sources sized to their chosen area.
+
+### Align OBS sources to the overlay frames
+
+The Remotion overlays and bundled masks use these positions. The generated
+scene-collection JSON is unchanged, so adjust the corresponding OBS sources
+manually to match; these are the current overlay frame coordinates:
 
 | Scene              | Source     | Position   | Size       | Mask                        |
 | ------------------ | ---------- | ---------- | ---------- | --------------------------- |
 | Co-Working [Solo]  | Main Cam   | 64, 136    | 1400 × 788 | `co-working-solo.png`       |
-| Co-Working [Multi] | Main Cam   | 64, 136    | 1152 × 648 | `co-working-dual-big.png`   |
+| Co-Working [Multi] | Main Cam   | 64, 136    | 1184 × 666 | `co-working-dual-big.png`   |
 | Co-Working [Multi] | Second Cam | 1280, 628  | 576 × 324  | `co-working-dual-small.png` |
+| Just Chatting       | Cam        | 64, 190    | 1232 × 693 | `just-chatting-cam.png`     |
+| Just Chatting       | Chat       | 1328, 190  | 528 × 693  | `just-chatting-chat.png`    |
 
 Add the Image Mask/Blend filter per cam (see `masks/README.md`) and you are
 done.

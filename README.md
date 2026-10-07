@@ -9,10 +9,12 @@ code, and a small HTML previewer. It exists so I never lose a scene
 layout again and can rebuild either Mac from a clean install in
 minutes.
 
-One command to back up. One download to restock OBS. No lost scenes.
+One command to back up. Separate downloads for overlays and transitions. No lost scenes.
 
 ## Table of Contents
 
+- [Start Here](#start-here)
+- [How the Pieces Fit](#how-the-pieces-fit)
 - [Features](#features)
 - [Getting Started](#getting-started)
 - [Usage](#usage)
@@ -30,6 +32,40 @@ One command to back up. One download to restock OBS. No lost scenes.
 - [License](#license)
 - [Contact](#contact)
 
+## Start Here
+
+| If you want to… | Start here |
+| --- | --- |
+| Install and run the `obs-backup` command | [Homebrew install and backup guide](docs/backup-guide.md) · [script source](scripts/README.md) · [Homebrew formula](https://github.com/MrDemonWolf/homebrew-den/blob/main/Formula/obs-backup.rb) |
+| Import the ready-made scene collection | [Scene and source guide](docs/adhd-setup-guide.md) · choose a file in [`devices/`](devices/) |
+| Preview the color-coded scene collection | Run `make preview`, then open <http://localhost:8000> |
+| Download overlays and webcam masks | [Latest GitHub Release](https://github.com/MrDemonWolf/obs-setup/releases) |
+| Preview, edit, or render the Remotion overlays | [`remotion/README.md`](remotion/README.md) |
+| Change how this repo works | [Development guide](#development) · [project map](#project-structure) |
+
+## How the Pieces Fit
+
+The backup command, OBS scene setup, and Remotion overlays are related tools,
+but they have separate sources and release paths:
+
+```mermaid
+flowchart LR
+    Tap["Homebrew Den tap<br/>obs-backup formula"] -->|installs| CLI["scripts/backup.sh<br/>scripts/sanitize.py"]
+    CLI --> Raw["Private full backup<br/>configured location"]
+    CLI --> Device["Scrubbed OBS files<br/>devices/"]
+    Generator[scripts/gen_scene_collection.py] --> Device
+    Device --> Preview["index.html<br/>scene preview"]
+    Remotion[remotion/src + public] --> Release[release.sh]
+    Release --> OverlayZip[OBS-overlays ZIP]
+    Release --> StingerZip[OBS-stinger ZIP]
+```
+
+The `obs-backup` Homebrew formula lives in the separate
+[`homebrew-den` tap](https://github.com/MrDemonWolf/homebrew-den), not in this
+repository. It packages the two backup scripts as a terminal command; it is
+not an OBS plugin. The [tap update workflow](.github/workflows/update-homebrew.yml)
+here opens a formula update PR after an `obs-setup` release.
+
 ## Features
 
 - **Per-device backups.** One command reads live macOS OBS settings, saves a
@@ -44,23 +80,23 @@ One command to back up. One download to restock OBS. No lost scenes.
   so a glance tells you camera vs. alerts vs. screen vs. standby.
 - **HTML previewer.** A color-coded map of every scene that runs
   locally or on GitHub Pages, no build step.
-- **Animated overlays.** Eleven Remotion-built scenes with seamless
-  looping motion (Starting Soon, Just Chatting, Just Chatting VTuber,
-  Co-Working Solo/Dual, Be Right Back, Ending Stream, Background,
-  Socials badge, Countdown, Loading Barks), rendered to video for OBS
-  media sources.
-- **Branded stinger transition.** A 4-second alpha wipe (`Stinger`) for
-  OBS scene cuts: a navy panel with a cerulean-and-white leading edge
-  sweeps across, holds fully covered while OBS swaps the scene behind
-  it, and a wolf paw trail walks through. Ships with its baked whoosh
-  SFX in the bundle's own `Stinger/` folder.
-- **One-command release bundle.** `make release` renders every
-  overlay, renders the stinger, transcodes the transparent ones to
-  HEVC-alpha, regenerates the webcam masks, and zips a dated OBS
-  drop-in bundle to `~/Downloads`.
-- **CI-built bundles.** Every published GitHub Release builds the
-  same bundle on a macOS runner and attaches the zip as a release
-  asset, so the newest files are always one download away.
+- **Animated overlays.** Sixteen preview and release compositions: ten
+  scene/background screens, four transparent widgets, a transparent desk
+  foreground, and the moon-only Stinger. The former paw-swipe is kept as a
+  separate rollback composition. See the
+  [`remotion/` guide](remotion/README.md) for previews, renders, and OBS setup.
+- **Branded stinger transition.** A 4-second shaded full-moon wipe (`Stinger`)
+  for OBS scene cuts, with no paw mark or layered paw sweep. The former
+  paw-swipe transition remains available in Remotion as a backup composition.
+  The whoosh is embedded in the video; a timing check
+  aligns the measured WAV peak with the covered scene-swap point.
+- **Separate downloads.** `make release` renders the overlays and stinger
+  with Remotion, encodes the transparent videos, regenerates the webcam
+  masks, then writes two dated ZIPs to `~/Downloads`: one for scene overlays
+  and masks, another for the Stinger video, source WAV, and setup guide.
+- **CI-built release assets.** GitHub Actions lints and type-checks the
+  Remotion project, smoke-renders and checks the stinger timing, then renders
+  both complete downloads on a macOS runner for published GitHub Releases.
 - **Rounded webcam masks.** Ready-made alpha PNGs that clip a live
   cam to match each overlay's rounded frame.
 - **OBS JSON reference.** What the files contain, how source colors
@@ -89,10 +125,9 @@ Quick start:
 
 1. Download `OBS-overlays-<date>.zip` from the newest
    [GitHub Release](https://github.com/MrDemonWolf/obs-setup/releases)
-   - it contains every overlay video, the webcam masks, and a README
-   with the exact OBS media-source and placement settings. No clone
-   needed just to use the overlays. (No releases yet? Build it
-   locally with `make release`.)
+   for scene overlay videos and webcam masks. Download `OBS-stinger-<date>.zip`
+   separately for the scene transition. Each archive includes its setup
+   README. (No releases yet? Build both locally with `make release`.)
 2. To import the scene layout, clone the repo and in OBS use
    `Scene Collection -> Import ->`
    `devices/macbook-pro/scenes/MBP-Streaming.json` (MacBook Pro) or
@@ -109,7 +144,7 @@ Everything runs through `make`:
 | Command        | What it does                                                                                          |
 | -------------- | ----------------------------------------------------------------------------------------------------- |
 | `make backup`  | Zips live macOS OBS settings, then files a scrubbed copy into the repo for the current device.  |
-| `make release` | Renders every overlay, regenerates masks, and zips a dated OBS bundle into `~/Downloads`.             |
+| `make release` | Renders and validates the overlays and stinger, then writes two dated ZIPs to `~/Downloads`.             |
 | `make preview` | Serves the color-coded previewer at <http://localhost:8000>.                                          |
 | `make gen`     | Regenerates both device scene collections (MacBook Pro + Mac Mini).                                   |
 | `make masks`   | Regenerates the rounded webcam masks from the frame geometry.                                         |
@@ -127,6 +162,9 @@ Everything runs through `make`:
    `devices/<device>/`.
 3. Review `git status` and the staged diff before committing.
 
+The Homebrew formula packages only the backup command and sanitizer. See the
+[backup tool map](scripts/README.md) for the source files and release flow.
+
 Force the device when auto-detect is wrong:
 
 ```bash
@@ -139,15 +177,16 @@ The easiest path is the release bundle - no local rendering needed:
 
 1. Go to the
    [Releases page](https://github.com/MrDemonWolf/obs-setup/releases)
-   and download `OBS-overlays-<date>.zip` from the newest release.
-2. Unzip. Inside: `Overlays/` (all 11 videos — looping MP4s plus
-   HEVC-alpha `.mov` widgets), `Masks/` (webcam masks), `Stinger/`
-   (the transition video `stinger-hevc.mov` + its `stinger.wav`), and
-   a `README.md` with the file-to-scene table, loop settings, exact
-   webcam placement coordinates, and the OBS stinger setup.
-3. Add each video in OBS as a Media Source and follow that README. For
-   the stinger, add it under **Scene Transitions → + → Stinger** (not a
-   Media Source) with Transition Point **2000 ms**.
+   and download `OBS-overlays-<date>.zip` for scene videos and masks. Download
+   `OBS-stinger-<date>.zip` separately for the transition.
+2. Unzip the overlays archive: `Overlays/` has the 11 scene videos and
+   transparent widgets; `Masks/` has the rounded webcam masks. Its README
+   lists the scene mapping, loop settings, and webcam placement coordinates.
+3. Add the overlay videos in OBS as Media Sources. The Stinger archive
+   contains `stinger-hevc.mov`, the original `stinger.wav`, and its own setup
+   guide. Configure the video under **Scene Transitions → + → Stinger** with
+   Transition Point **2000 ms**. Its sound is embedded; do not add the WAV as
+   a second OBS audio source.
 
 To build the same bundle locally:
 
@@ -156,10 +195,14 @@ make release              # reuses the heavy ProRes masters if present
 make release FORCE=--force  # re-render everything (after overlay edits)
 ```
 
-Both paths end with `~/Downloads/OBS-overlays-<date>.zip`, ready to
-copy to Google Drive. On GitHub, `.github/workflows/release.yml` runs
-the identical pipeline on a macOS runner for every published release
-(`workflow_dispatch` builds it as a downloadable artifact instead).
+If all renders are already present and only the ZIP step needs to be retried,
+run `./release.sh --package-only` from the repository root.
+
+Both archives end up in `~/Downloads/`: `OBS-overlays-<date>.zip` and
+`OBS-stinger-<date>.zip`. Set `OBS_RELEASE_OUTPUT_DIR` to choose another
+output folder. On GitHub, `.github/workflows/release.yml` attaches both ZIPs
+to each published release; a manual workflow run uploads them as separate
+artifacts instead.
 
 ### Animated overlays
 
@@ -176,13 +219,26 @@ npm run render:all  # render the standard set into out/
 
 Composition ids: `StartingSoon`, `BRB`, `JustChatting`,
 `JustChattingVtuber`, `CoworkingSolo`, `CoworkingDual`,
-`EndingStream`, `Background` (full-frame MP4s), plus three
-transparent overlays: `Socials` (760x180 badge), `Countdown` (5:00
-timer, plays once), and `LoadingBarks` (fake loading bar with wolf
-puns), plus the `Stinger` transition (4s alpha wipe, plays once). The
-heavy `Countdown` and `LoadingBarks` ProRes masters are excluded from
+`EndingStream`, `Background`, `CoffeeBackground`, `CabinBackground` (full-frame MP4s), plus four
+panel-sized transparent overlays: `Socials` (720x140 badge), `Countdown`
+options (5:00 and 10:00, each 820x500 and playing once), and `LoadingBarks`
+(1080x420 status panel with wolf-tech jokes), plus
+the `Stinger` transition (4s alpha wipe, plays once), and `DeskForeground`
+(1920×1080 transparent desk with looping coffee steam). Just Chatting and
+Co-Working share a moonlit cabin background. The preview shows the desk;
+the exported desk is a separate foreground video placed above your model in OBS.
+See the [cabin layer setup guide](docs/cabin-setup.md) for source order and bounds.
+The preview's **Coffee cabin** section offers a complete cabin/desk/steam
+background and a cabin-only option for stacking the model and transparent desk separately.
+The cabin artwork was generated with imagegen; animation is implemented in Remotion.
+The heavy
+`Countdown` options and `LoadingBarks` ProRes masters are excluded from
 `render:all`; `make release` (or a manual `npx remotion render`)
 handles them and the stinger.
+
+Local exports default to two Remotion workers to leave room for OBS and the
+preview browser. Set `OBS_RENDER_CONCURRENCY=1` on memory-constrained runs;
+increase it only when the machine has spare resources.
 
 ### Rounded webcam masks
 
@@ -245,7 +301,12 @@ npm install
   the backup script.
 - `scripts/backup.sh` - detects the device, zips a raw snapshot, runs
   the sanitizer. Run with `obs-backup` or `make backup`.
-- `release.sh` - the full bundle pipeline. Run with `make release`.
+- `release.sh` - the Remotion render, audio validation, encoding, and two-ZIP
+  packaging pipeline. Run with `make release`.
+- `scripts/validate_stinger.py` - checks the measured WAV-to-cover timing and
+  the rendered PCM track.
+- `scripts/validate_release_packages.py` - checks both ZIP manifests and
+  ensures the stinger stays separate from the overlay package.
 - `masks/gen_masks.py` - regenerates the webcam masks. Run with
   `make masks`.
 - In `remotion/`: `npm run obs` (previewer), `npm run dev` (Remotion
@@ -260,6 +321,10 @@ npm install
   anything.
 - `remotion/` is linted with eslint and type-checked with tsc
   (`npm run lint`).
+- Python CI checks verify the checked-in WAV timing, frame delay, and package
+  contents. A macOS job renders the Remotion stinger and confirms its audio is
+  embedded byte-for-byte at the intended frame; release builds repeat the
+  checks after HEVC encoding and before packaging.
 - Every overlay loops seamlessly by construction - all motion is
   periodic over the full composition length.
 
@@ -272,7 +337,9 @@ obs-setup/
 ├── release.sh                # render + transcode + masks + zip, one command
 ├── assets/                   # repo art (MrDemonWolf logo)
 ├── .github/workflows/
-│   └── release.yml           # builds the OBS bundle on every GitHub Release
+│   ├── ci.yml                # Python, Remotion, and Stinger checks
+│   ├── release.yml           # builds the overlays and Stinger downloads
+│   └── update-homebrew.yml   # opens a formula update PR after a release
 ├── devices/
 │   ├── macbook-pro/          # portable rig
 │   │   ├── index.json        # which scene files exist (read by the previewer)
@@ -282,32 +349,39 @@ obs-setup/
 │       ├── index.json        # which scene files exist (read by the previewer)
 │       └── scenes/           # generated collection + sanitized live backup
 ├── scripts/
+│   ├── README.md             # backup CLI source map and maintenance notes
+│   ├── backup.sh             # installed as the `obs-backup` Homebrew command
+│   ├── sanitize.py           # scrubs credentials before files enter Git
 │   ├── gen_scene_collection.py
-│   ├── sanitize.py
-│   └── backup.sh
+│   ├── validate_stinger.py
+│   └── validate_release_packages.py
 ├── docs/
 │   ├── adhd-setup-guide.md
 │   ├── audio-levels.md
 │   ├── backup-guide.md
 │   ├── color-coding.md
-│   └── obs-json-reference.md
+│   ├── obs-json-reference.md
+│   ├── overlay-design-system.md
+│   └── stinger-setup.md
 ├── masks/                    # rounded webcam masks for the cam-frame overlays
 │   ├── *.png                 # one alpha mask per cam (named per overlay)
 │   ├── gen_masks.py          # regenerate from the frame geometry
 │   └── README.md             # OBS Image Mask/Blend steps
-└── remotion/                 # animated overlays (separate Node project)
-    ├── src/                  # scenes + layers
-    │   ├── scenes.ts         # every scene (single source of truth)
-    │   ├── Root.tsx          # registers each scene as a composition
-    │   ├── Scene.tsx         # card layout; JustChattingScene / CoworkFrame / BackdropScene / Socials
-    │   ├── wolf/             # night ambience (Moon, Starfield, Embers, PawTrail)
-    │   └── theme.ts          # palette + seamless-loop helpers
-    ├── preview/              # macOS-style previewer (Vite + @remotion/player)
-    ├── public/               # mascot SVGs (logo-*.svg) + brands/ (social logos)
-    ├── render-all.mjs        # render the standard set into out/
-    ├── to-hevc.sh            # transcode transparent masters to HEVC-alpha
-    └── ASSETS.md             # asset drop-in + render/OBS instructions
+├── remotion/                 # animated overlays (separate Node project)
+│   ├── README.md             # preview, render, and OBS workflow
+│   ├── ASSETS.md             # scene and asset reference
+│   ├── src/                  # scenes + layers; scenes.ts is the composition list
+│   ├── preview/              # macOS-style previewer (Vite + @remotion/player)
+│   ├── public/               # forest, mascot, fonts, and platform marks
+│   ├── render-all.mjs        # render the standard set into out/
+│   └── to-hevc.sh            # transcode transparent masters to HEVC-alpha
+└── tests/                    # Python tests for secret scrubbing and releases
 ```
+
+The Homebrew formula itself lives in
+[`MrDemonWolf/homebrew-den`](https://github.com/MrDemonWolf/homebrew-den/blob/main/Formula/obs-backup.rb).
+This repo keeps the command's source and release automation; the tap owns its
+Homebrew packaging and catalog.
 
 ## License
 

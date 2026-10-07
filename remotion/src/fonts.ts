@@ -3,9 +3,11 @@
 // headings use Montserrat.) Both are on Google Fonts, loaded via @remotion/google-fonts.
 import { loadFont as loadDisplay } from "@remotion/google-fonts/Montserrat";
 import { loadFont as loadBody } from "@remotion/google-fonts/OpenSans";
+import { loadFont as loadLounge } from "@remotion/google-fonts/PlusJakartaSans";
 
 const displayFamily = loadDisplay("normal", { weights: ["400", "500", "600", "700", "800"], subsets: ["latin"] }).fontFamily;
 const bodyFamily = loadBody("normal", { weights: ["400", "600", "700"], subsets: ["latin"] }).fontFamily;
 
 export const display = displayFamily; // headings / titles — mrdemonwolf.com header font (Montserrat)
 export const body = bodyFamily; // status lines / labels / tags / numbers — mrdemonwolf.com body font (Open Sans)
+export const lounge = loadLounge("normal", { weights: ["500", "800"], subsets: ["latin"] }).fontFamily;

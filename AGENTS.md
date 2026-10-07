@@ -9,8 +9,9 @@ portable) and **Mac Mini** (`mac-mini`, main home rig). It holds reference
 docs, per-device backups, an import-ready color-coded scene collection, and a
 static HTML previewer. No app to run; it's tooling around OBS's own JSON.
 
-There are no external dependencies — Python 3 standard library, Bash, and Make
-only. No package manager, no build step, no test framework.
+The backup, scene generator, and HTML preview use Python 3's standard library,
+Bash, and Make. The separate `remotion/` project uses Node/npm and Remotion to
+render the animated overlays and stinger; CI runs the associated checks.
 
 ## Commands
 
@@ -20,14 +21,16 @@ make gen      # regenerate BOTH device scene collections (+ index.json each):
               #   devices/mac-mini/scenes/Mini-Streaming.json
 make backup   # zip live macOS OBS settings, then file a scrubbed copy into devices/<slug>/
 make preview  # serve the previewer at http://localhost:8000 (python3 -m http.server)
-make release  # render all overlays + package a dated OBS bundle .zip in ~/Downloads
+make release  # render assets + package separate overlay and stinger ZIPs in ~/Downloads
 make          # list targets
 ```
 
-- **Tests:** run `python3 -m unittest discover -s tests -v` for the sanitizer
-  secret-scrubbing check. `scripts/gen_scene_collection.py` also runs an inline
-  `selfcheck()` (ABGR color math + every scene item references a real source)
-  on each run — `make gen` fails loudly if it breaks.
+- **Tests:** run `python3 -m unittest discover -s tests -v` for sanitizer,
+  stinger timing, and archive-content checks. `scripts/validate_stinger.py`
+  checks the WAV peak and, when given rendered files, the exact embedded PCM
+  and encoded stream metadata. `scripts/gen_scene_collection.py` also runs an
+  inline `selfcheck()` (ABGR color math + every scene item references a real
+  source) on each run — `make gen` fails loudly if it breaks.
 - **Force a device** when `make backup` mis-detects:
   `DEVICE=mac-mini make backup`. Override the OBS data folder with
   `OBS_EXPORT_DIR=... make backup`. Run `obs-backup setup` once to write
@@ -123,15 +126,18 @@ npm run render:all  # render every scene into out/ (see render-all.mjs)
 npx remotion render <CompId> out/<name>.mp4
 #   StartingSoon | BRB | JustChatting | JustChattingVtuber
 #   CoworkingSolo | CoworkingDual | EndingStream | Background | Socials
+#   Countdown | Countdown10 | LoadingBarks | Stinger
 ```
 
 Architecture:
 
-- **`src/scenes.ts` is the single source of truth** for the **12** scenes, each
+- **`src/scenes.ts` is the single source of truth** for the **13** scenes, each
   with `id`, `label`, `component`, `props`, and optional `width`/`height`.
   `src/Root.tsx` registers a `<Composition>` per scene (applying per-scene
-  `width ?? VIDEO.width` / `height ?? VIDEO.height` — so `Socials` is 760×180,
-  the rest 1920×1080). `preview/ObsPreview.tsx`
+  `width ?? VIDEO.width` / `height ?? VIDEO.height` — transparent widgets use
+  compact panel bounds (`Socials` 720×140, countdowns 820×500, LoadingBarks
+  1080×420); the stream screens and Stinger remain 1920×1080.
+  `preview/ObsPreview.tsx`
   (button-per-scene switcher) imports the same list. Add a scene there once.
 - **`PawLoader`** (`PawLoader.tsx`) = reusable row of paws pulsing in a
   traveling wave (seamless via integer `harmonic`). Used inside `Countdown`
@@ -139,30 +145,32 @@ Architecture:
   Reuses `Paw` (wolf print: ONE smooth rounded pad + splayed toes — the old
   3-lobe pad read as "bites" at large sizes — shared with `PawTrail`, the
   LoadingBarks fill-edge rider, the TitleChip corner mark, and the Stinger).
-- **`Countdown`** (`Countdown.tsx`) = transparent standalone timer chip
+- **`Countdown` / `Countdown10`** (`Countdown.tsx`) = transparent standalone timer chips
   (`HOWLING IN` + `M:SS` + `PawLoader`). Counts `from`s → 0 over the comp
   duration then holds at 00:00. **The one intentional non-loop** — render it out
   and set the OBS media source to play ONCE (loop OFF), start on going live.
-  Full-frame 1920×1080 (chip centered) so it drops in without repositioning.
-  Registered at 5:00 (`from:300`, **(300+1)×60 = 18060f @60fps** — the +1s is
-  the held 00:00 frame; at `from`×fps the last frame still reads 00:01. Per-comp
+  Panel-sized 820×500 compositions with room for the glass shadow; position the
+  media source wherever the timer should appear.
+  Registered at 5:00 (`from:300`, **18060f**) and 10:00 (`from:600`,
+  **36060f**) at 60fps. Each duration includes the extra held 00:00 second; at
+  `from`×fps the last frame still reads 00:01. Per-comp
   `fps:60` in `scenes.ts`, motion reads `useVideoConfig().fps`; the glow runs a
   local 8s wave, NOT `loopSin`, whose 240f period would double the rate at 60fps);
   **kept out of `render:all`** (too heavy). Render
-  manually: `npx remotion render Countdown out/countdown.mov --codec=prores
-  --prores-profile=4444 --image-format=png --pixel-format=yuva444p10le --log=error`.
-- **`LoadingBarks`** (`LoadingBarks.tsx`) = transparent full-frame fake
-  loading-bar overlay cycling wolf puns (`Loading barks…`, `Fur real, almost
-  there…`, …). A **seeded module-load schedule** (LCG, loop-safe — no per-frame
+  manually as `Countdown` → `out/countdown.mov` or `Countdown10` →
+  `out/countdown-10m.mov` with ProRes 4444.
+- **`LoadingBarks`** (`LoadingBarks.tsx`) = a transparent 1080×420 glass status
+  panel (900px card) with ten short wolf-tech jokes. Each phrase has a headline and a
+  punchline. A **seeded module-load schedule** (LCG, loop-safe — no per-frame
   random) gives each phrase a random 20–40s hold; within EACH phrase the bar
   fills 0→100% (per-phrase `CURVES`, random uneven spurts) and maxes at 100 right
-  before the next phrase starts fresh. A `Paw` rides the fill edge; bar corners
-  are macOS-rounded (`8`, not a pill); fixed-width `%` never reflows. The 0.45s
-  crossfade wraps the WHOLE content (text + bar + %) so the one-frame bar reset
-  at each swap happens invisibly, and the glow runs an integer number of cycles
-  over the comp (`GLOW_CYCLES`) — plain `loopSin` popped at the loop seam
-  (13572 % 240 ≠ 0). `durationInFrames = LOADING_BARKS_DURATION`
-  (sum of holds, ~6.1 min over 13 phrases) built at `LOADING_BARKS_FPS` (**60**; per-comp `fps` in
+  before the next phrase starts fresh. Three paw marks show progress milestones
+  and a bright `Paw` rides the fill edge; fixed-width `%` never reflows. The
+  0.45s crossfade wraps the headline, punchline, bar, and percentage so the
+  one-frame bar reset stays invisible. The glow runs an integer number of
+  cycles over the comp (`GLOW_CYCLES`) so the loop seam stays smooth.
+  `durationInFrames = LOADING_BARKS_DURATION` (sum of holds, about 4.7 min over
+  10 phrases) built at `LOADING_BARKS_FPS` (**60**; per-comp `fps` in
   `scenes.ts`). **Heavy → NOT in `render:all`**, render manually. Edit
   `BARKS`/seed to taste.
 - **`Stinger`** (`Stinger.tsx`) = the OBS **stinger transition** (a transition,
@@ -185,37 +193,27 @@ Architecture:
   be the portable stinger format but Homebrew/CI ffmpeg lacks libvpx-alpha
   (VP8/VP9 silently drop alpha) → ship HEVC-alpha `.mov` (fine on macOS OBS).
 - **Card scenes** (`StartingSoon`, `BRB`, `EndingStream`) use `src/Scene.tsx`,
-  which layers `Background` → `PawTrail` (walking footsteps) → `TitleChip`
-  (glass panel: title + status line ending in a blinking cerulean `▊` cursor —
-  ONE metaphor per row, no LED dot) → `Mascot`. All three cards share ONE cool
-  `night` background — there is no per-scene mood/ember grade (an earlier warm
-  "ember" wind-down on EndingStream read as a jarring different color and was
-  removed). The mascot mouth is a static `mascotSrc` in
-  `scenes.ts` (`logo-main.svg` open / `logo-mouth-closed.svg` closed). The
-  `Mascot talking` mouth-swap prop exists but no registered scene uses it, and
-  the mascot has **no** glow/spotlight.
-- **Card chip: FIXED `CHIP_WIDTH` 1160px, left-aligned, glass-not-flat.** All
-  three cards are the same size (sized to "The Pack Gathers" at 108px); short
-  titles just leave some open space on the right (a paw glyph used to fill it but
-  read wrong and was removed). Fill is a static vertical gradient +
-  diagonal sheen + 1.5px top bevel (fakes macOS glass without `backdrop-filter`).
-  Traffic lights use TRUE macOS hexes (`#FF5F57/#FEBC2E/#28C840`) via the shared
-  `WindowChrome` (`MAC_DOT` + `WindowDots`; theme.red/amber/green stay for the
-  mascot). The CARD chip renders `WindowChrome.WindowTitleBar` = dots + a
-  `mrdemonwolf.com` tag on one row (it's the branded window). The transparent
-  overlays (Countdown/LoadingBarks/Socials) are just widgets — `WindowDots` only,
-  pinned to the top-left corner (`top:26,left:30`; Socials `top:16,left:18` for
-  its 10px dots), NO domain tag. Title tracks -1.5
-  (display-size extrabold). Chip never translates — it breathes in place
-  (`1 + 0.007 * loopBreathe(frame, 2)`, under the mascot's amplitude). Chip is
-  pinned at `left: 64` (the standard margin). The `Mascot` is pinned to ONE
-  constant spot on every card scene — right-anchored (`right: 0`), vertically
-  centred (`top: 50%`), `heightPct: 76`. The 76% (down from 82) is deliberate:
-  right-anchored, a smaller wolf sits its LEFT edge clear of the chip so the
-  title is never hidden behind it. **If you lengthen a title past "The Pack
-  Gathers" bump `CHIP_WIDTH`, and enlarging the mascot creeps it left over the
-  text — re-check the chip/wolf overlap either way.**
-- **`JustChatting`** = `JustChattingScene.tsx`: `glow` `Background` (moon parked
+  which layers the shared forest `Background` (including the left-to-right
+  white paw trail) with an optional `ChatBoxFrame` and `TitleChip`. The title
+  cards are logo-free; the small `mrdemonwolf.com` label in the glass title bar
+  carries the creator identity without adding another focal point. All card
+  scenes use the Night Forest Walk system documented in
+  `docs/overlay-design-system.md`. Starting Soon / BRB copy lives in `scenes.ts`
+  so the composition stays reusable.
+- **Card chip: FIXED `CHIP_WIDTH` 1160px, left-aligned, glass-not-flat.** The
+  glass uses a static vertical gradient + diagonal sheen + 1.5px top bevel
+  (fakes macOS glass without `backdrop-filter`). Traffic lights use TRUE macOS
+  hexes (`#FF5F57/#FEBC2E/#28C840`) via the shared `WindowChrome`
+  (`MAC_DOT` + `WindowDots`). The card renders `WindowChrome.WindowTitleBar`
+  with a `mrdemonwolf.com` tag and no logo badge. Display text stays
+  left-aligned and shrinks for longer headlines. Only the glass edge pulses;
+  the title and status remain still. The transparent overlays
+  (Countdown/LoadingBarks/Socials) use
+  `WindowDots` only, pinned to the top-left corner (`top:26,left:30`; Socials
+  `top:16,left:18` for its 10px dots), with no domain tag. Chip is pinned at
+  `left: 64`; its cerulean edge glow pulses gently while its content stays
+  still.
+- **`JustChatting`** = `JustChattingScene.tsx`: `forest` `Background` (moon parked
   LEFT, `{x:300}` — only x is passed; the shared `MOON_Y` 108 keeps it in the
   198px top band, clear of the cam frame) + a 16:9 `CamFrame` + a tall chat
   `CamFrame` (staggered glow
@@ -225,7 +223,7 @@ Architecture:
   (A plain-gameplay "Streaming" scene was removed — use `Background` instead;
   it's the same animated bg to stack game capture / cam / widgets over.)
 - **Co-Working** = one data-driven `Cowork` comp (`CoworkFrame.tsx`):
-  `Background variant="glow"` + baked **16:9** `CamFrame`(s) from
+  `Background variant="forest"` + baked **16:9** `CamFrame`(s) from
   `COWORK_LAYOUTS` (no bar, no widget boxes — the open space is for timer /
   tasks / chat / now-playing OBS sources). Both layouts share ONE top-left pin
   (`x64,y136` — nudged down from the old y40 to open a wider bottom widget
@@ -243,10 +241,10 @@ Architecture:
   clip it to the frame with a mask from `masks/`** (one alpha PNG per cam,
   named per overlay; `masks/README.md` has the Image Mask/Blend steps,
   `gen_masks.py` regenerates them from these coords + `radius.card`).
-- **`Background`** = `BackdropScene.tsx` → just `<Background/>` (aurora +
-  starfield + full moon + drifting embers + dot grid); no handle, no paw prints.
-  The most flexible overlay.
-- **`Socials`** = `Socials.tsx` `SocialsScene` (760×180, transparent) that fades
+- **`Background`** = `BackdropScene.tsx` → the shared forest photograph, sky
+  stars, moon, and soft rightward paw trail; no handle or widget boxes. The most
+  flexible overlay.
+- **`Socials`** = `Socials.tsx` `SocialsScene` (720×140, transparent) that fades
   through brand logos one at a time, in their **real brand colors** (no recolor
   filter; dark marks like x/instagram/tiktok's note are whitened in the SVG files
   themselves). Each handle holds a random **15–30s** (seeded schedule →
@@ -257,15 +255,17 @@ Architecture:
   + `socials.gif`.
 - **Wolf ambience** lives in `src/wolf/` (`Moon`, `Starfield`, `Embers`,
   `PawTrail`; barrel `wolf/index.ts`) + `Background.tsx` (`variant`:
-  night/glow/minimal — `glow` = aurora + moon, no starfield/embers;
+  forest/night/glow/minimal — `forest` = photo + sky stars + moon + paw trail;
+  `glow` = aurora + moon, no starfield/embers;
   optional `moon={x}` repositions the moon into clear sky on frame scenes. Size
   (`MOON_R`) AND height (`MOON_Y`) are shared — the moon sits at ONE altitude on
   every scene and only its LEFT/RIGHT x changes (300 left / 1568 right); don't
   re-add per-scene `r` or `y`. Only the moon's HALO breathes — the body stays still (a body throb
   read wrong on a celestial object). Starfield stars carry seeded integer
   harmonics 2–4 so they twinkle at varied rates instead of one shared breath.
-  `PawTrail` runs only on card scenes (via `Scene.tsx`),
-  not in the shared `Background`.
+  `PawTrail` runs inside the shared `Background` on the full forest scenes, so
+  its timing and soft-white color stay consistent across cards, live layouts,
+  and the flexible Background composition.
 - **Seamless loop is the invariant.** All motion is `loopSin`/`loopTri`/
   `loopBreathe` (from `theme.ts`) over the full `durationInFrames`, so frame 0
   flows into the last frame with no jump. Do NOT add entrance-once animations or
@@ -281,14 +281,14 @@ Architecture:
   in Remotion — animate with `useCurrentFrame()` + `interpolate()` only.
 - **Perf / formats:** opaque scenes render to H.264 MP4 (hardware-decoded in
   OBS on Apple Silicon — the lightest option; a GIF is heavier). Transparent
-  scenes (`Socials`, `Countdown`, `LoadingBarks`) render to **ProRes 4444 `.mov`
+  scenes (`Socials`, both `Countdown` options, and `LoadingBarks`) render to **ProRes 4444 `.mov`
   as the alpha master**, but ProRes only hardware-decodes on M1/M2 **Pro/Max/Ultra**
   — a base M1/M2 Mac Mini software-decodes it and can stutter in OBS. **For the
   actual OBS media source, transcode the master to HEVC-with-alpha (`hvc1`) via
   `./to-hevc.sh out/<name>.mov`** — HEVC hardware-decodes on EVERY Apple Silicon
   chip and is a fraction of the size. (`Socials` also ships a GIF.) Glass elements
   use plain translucent fills, not `backdrop-filter` (expensive to render);
-  overlays that sit OVER live gameplay (`Countdown`/`LoadingBarks`/`Socials`)
+  overlays that sit OVER live gameplay (countdowns/`LoadingBarks`/`Socials`)
   share `theme.glassPanel` (dot grid + `glassSheen` + `glassDense` 0.84) +
   `glassPanelShadow` + `WindowDots` (corner-pinned, no domain tag — just widgets),
   so they read as the same little macOS window
@@ -300,24 +300,23 @@ Architecture:
   numbers from reflowing), loading only the weights/subset used.
   `render-all.mjs` renders the 8 full-frame ids to MP4, then `Socials` to
   `.mov` + `.gif` and a bonus `Background.gif`, into `out/` (which is
-  gitignored). `Socials` is omitted from the 8-id MP4 array; `Countdown`
-  (5 min) + `LoadingBarks` (~6.1 min) are transparent full-frame ProRes 4444
-  (multi-GB, slow) → omitted from `render:all` entirely, rendered manually.
-- **`release.sh`** (repo root, `make release`) runs the whole pipeline end to
-  end: `render:all` → render Countdown + LoadingBarks ProRes (reused if the
-  master already exists, `--force` to re-render) → render the Stinger ProRes
-  (always fresh, it's short) → `to-hevc.sh` the four transparent masters →
-  regen `masks/` → assemble a dated OBS bundle
-  (flat `Overlays/` with all 11 videos, MP4 + HEVC-alpha `.mov` together —
-  NO opaque/transparent subfolders, per user — + `Masks/` + a **`Stinger/`**
-  folder holding `stinger-hevc.mov` + `stinger.wav`, per user — + a generated
-  `README.md`) and zip it to
-  `~/Downloads/OBS-overlays-<date>.zip` for copying to Google Drive. The bundle
-  README carries the file→scene→loop table + the webcam-placement coords (keep
-  those in sync with `gen_masks.py`) + the Stinger transition setup
-  (Transition Point 2000 ms = the middle of the covered hold).
-- **CI** (`.github/workflows/release.yml`) runs `release.sh --force` on a
-  **macOS runner** on every published GitHub Release and attaches the zip as a
-  release asset (`workflow_dispatch` uploads it as a workflow artifact instead).
-  macOS is mandatory: `to-hevc.sh`'s `hevc_videotoolbox` is Apple-only, so a
-  Linux runner can't produce the HEVC-alpha overlays.
+  gitignored). `Socials` is omitted from the 8-id MP4 array; both `Countdown`
+  options (5 and 10 min) + `LoadingBarks` (~4.7 min) are compact transparent
+  panel ProRes 4444 outputs (multi-GB, slow) → omitted from `render:all`,
+  rendered manually.
+- **`release.sh`** (repo root, `make release`) runs the pipeline end to end:
+  `render:all` → render both Countdown options + LoadingBarks ProRes (reused if
+  a master already exists, `--force` to re-render) → render the Stinger ProRes → encode
+  the five transparent masters as HEVC-alpha → validate the WAV timing and
+  rendered streams → regenerate `masks/` → make separate dated downloads:
+  `OBS-overlays-<date>.zip` (12 scene videos + masks + setup README) and
+  `OBS-stinger-<date>.zip` (HEVC-alpha transition + source WAV + setup README).
+  The stinger whoosh is embedded in the MOV; its sample-accurate WAV offset is
+  checked in the ProRes render. `OBS_RELEASE_OUTPUT_DIR` changes the download
+  directory from `~/Downloads`.
+- **CI** (`.github/workflows/ci.yml`) runs Python, Remotion lint/type checks,
+  and a Remotion-rendered stinger audio-timing check. **Release CI**
+  (`.github/workflows/release.yml`) renders both packages on macOS, attaches
+  both ZIPs to each published GitHub Release, and uploads them as separate
+  artifacts on `workflow_dispatch`. macOS is mandatory because HEVC-alpha uses
+  `hevc_videotoolbox`, which is Apple-only.

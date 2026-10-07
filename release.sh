@@ -1,50 +1,82 @@
 #!/usr/bin/env bash
 # Render every overlay, transcode the transparent ones to HEVC-alpha, regenerate
-# the webcam masks, and package a dated OBS drop-in bundle (videos + masks +
-# README) as a .zip in ~/Downloads — ready to copy to Google Drive.
+# the webcam masks, and package separate dated overlay and stinger ZIPs in
+# ~/Downloads — ready to copy to Google Drive.
 #
 # Usage:
 #   ./release.sh            # reuse the heavy Countdown/LoadingBarks ProRes
 #                           # masters if they already exist (they rarely change)
 #   ./release.sh --force    # re-render those two heavy overlays too
+#   ./release.sh --package-only # package and validate the existing renders
 #
 # Needs: node_modules installed in remotion/ (npm install), ffmpeg (to-hevc.sh),
 # and Pillow for mask regen (pip install pillow — optional; falls back to the
-# committed masks if missing).
+# committed masks if missing). Set OBS_RELEASE_OUTPUT_DIR to choose the output.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 R="$ROOT/remotion"
 OUT="$R/out"
-DATE="$(date +%F)"
-BUNDLE="$HOME/Downloads/OBS-overlays-$DATE"
-FORCE="${1:-}"
+DATE="${OBS_RELEASE_DATE:-$(date +%F)}"
+DOWNLOADS_DIR="${OBS_RELEASE_OUTPUT_DIR:-$HOME/Downloads}"
+OVERLAY_NAME="OBS-overlays-$DATE"
+STINGER_NAME="OBS-stinger-$DATE"
+FORCE=""
+PACKAGE_ONLY=0
+RENDER_CONCURRENCY="${OBS_RENDER_CONCURRENCY:-2}"
+case "$RENDER_CONCURRENCY" in
+  ""|*[!0-9]*) echo "OBS_RENDER_CONCURRENCY must be a positive integer" >&2; exit 2 ;;
+esac
+[ "$RENDER_CONCURRENCY" -gt 0 ] || { echo "OBS_RENDER_CONCURRENCY must be positive" >&2; exit 2; }
+case "${1:-}" in
+  "") ;;
+  --force) FORCE="--force" ;;
+  --package-only) PACKAGE_ONLY=1 ;;
+  *) echo "usage: $0 [--force|--package-only]" >&2; exit 2 ;;
+esac
 
 cd "$R"
 
-echo "▶ render:all (8 opaque MP4s + socials + background)…"
-npm run render:all
+if [ "$PACKAGE_ONLY" -eq 1 ]; then
+  echo "▶ package existing Remotion renders…"
+  required_outputs=(
+    01-starting-soon.mp4 02-just-chatting.mp4 03-just-chatting-vtuber.mp4
+    04-co-working-solo.mp4 05-co-working-dual.mp4 06-be-right-back.mp4
+    07-ending-stream.mp4 background.mp4 coffee-background.mp4 cabin-background.mp4
+    socials-badge.mov desk-foreground.mov countdown.mov countdown-10m.mov loading-barks.mov stinger.mov
+    socials-badge-hevc.mov desk-foreground-hevc.mov countdown-hevc.mov countdown-10m-hevc.mov loading-barks-hevc.mov stinger-hevc.mov
+  )
+  for file in "${required_outputs[@]}"; do
+    if [ ! -s "out/$file" ]; then
+      echo "missing rendered file: out/$file (run ./release.sh first)" >&2
+      exit 1
+    fi
+  done
+else
+  echo "▶ render:all (10 opaque MP4s + socials + desk)…"
+  npm run render:all
 
-# Heavy transparent full-frame ProRes 4444 masters — multi-GB and slow, and they
+# Heavy transparent ProRes 4444 panel masters — multi-GB and slow, and they
 # rarely change, so reuse an existing file unless --force.
 # ponytail: existence check, not a content hash; --force when you edited them.
 prores() { # <CompId> <outfile>
   if [ "$FORCE" = "--force" ] || [ ! -f "out/$2" ]; then
     echo "▶ render $1 (ProRes 4444, heavy)…"
     npx remotion render "$1" "out/$2" --codec=prores --prores-profile=4444 \
-      --image-format=png --pixel-format=yuva444p10le --log=error
+      --image-format=png --pixel-format=yuva444p10le --concurrency="$RENDER_CONCURRENCY" --log=error
   else
     echo "• reuse out/$2 (exists — pass --force to re-render)"
   fi
 }
 prores Countdown    countdown.mov
+prores Countdown10  countdown-10m.mov
 prores LoadingBarks loading-barks.mov
 
 # Stinger transition — short, so always render (no reuse gate). The SFX is baked
 # in via <Audio>, so the ProRes master carries an audio track.
 echo "▶ render Stinger (ProRes 4444)…"
 npx remotion render Stinger out/stinger.mov --codec=prores --prores-profile=4444 \
-  --image-format=png --pixel-format=yuva444p10le --log=error
+  --image-format=png --pixel-format=yuva444p10le --concurrency="$RENDER_CONCURRENCY" --log=error
 
 # Stinger joins the HEVC-alpha transcode. WebM-alpha is the "ideal" portable
 # stinger format, but Homebrew ffmpeg (local + the CI macOS runner) isn't built
@@ -52,83 +84,86 @@ npx remotion render Stinger out/stinger.mov --codec=prores --prores-profile=4444
 # keeps transparency, hardware-decodes on every Apple Silicon chip, and OBS on
 # macOS reads it natively (both target Macs). See README note.
 echo "▶ transcode transparent masters → HEVC-alpha (hvc1)…"
-./to-hevc.sh out/socials-badge.mov out/countdown.mov out/loading-barks.mov out/stinger.mov
+./to-hevc.sh out/socials-badge.mov out/desk-foreground.mov out/countdown.mov out/countdown-10m.mov out/loading-barks.mov out/stinger.mov
+fi
+
+echo "▶ validate stinger timing and encoded streams…"
+python3 "$ROOT/scripts/validate_stinger.py" \
+  --rendered "$OUT/stinger.mov" --encoded "$OUT/stinger-hevc.mov" \
+  --alpha-file "$OUT/socials-badge-hevc.mov" \
+  --alpha-file "$OUT/desk-foreground-hevc.mov" \
+  --alpha-file "$OUT/countdown-hevc.mov" \
+  --alpha-file "$OUT/countdown-10m-hevc.mov" \
+  --alpha-file "$OUT/loading-barks-hevc.mov"
 
 echo "▶ regenerate webcam masks…"
 python3 "$ROOT/masks/gen_masks.py" \
   || echo "⚠ mask regen skipped (need: pip install pillow) — using committed masks"
 
-echo "▶ assemble bundle → $BUNDLE"
-# Flat layout by request: ALL videos in one Overlays/ folder (no opaque/
-# transparent split), masks in Masks/, README.md at the zip root. Nothing else.
-VID="Overlays"   # top-level video folder name inside the bundle
-MSK="Masks"      # top-level mask folder name inside the bundle
-STG="Stinger"    # OBS stinger-transition folder (its own folder, by request)
-rm -rf "$BUNDLE"
-mkdir -p "$BUNDLE/$VID" "$BUNDLE/$MSK" "$BUNDLE/$STG"
-cp "$OUT"/0*.mp4 "$OUT"/background.mp4 \
-   "$OUT"/socials-badge-hevc.mov "$OUT"/loading-barks-hevc.mov \
-   "$OUT"/countdown-hevc.mov "$BUNDLE/$VID/"
-cp "$ROOT"/masks/*.png "$BUNDLE/$MSK/"
-cp "$OUT"/stinger-hevc.mov "$R"/public/stinger.wav "$BUNDLE/$STG/"
+# Keep the scene/overlay download independent from the separately encoded
+# stinger. Build archives in a fresh temporary directory; only the two ZIPs go
+# to the requested download folder.
+WORK="$(mktemp -d "${TMPDIR:-/tmp}/obs-release-$DATE.XXXXXX")"
+trap 'rm -rf "$WORK"' EXIT
+OVERLAY_DIR="$WORK/$OVERLAY_NAME"
+STINGER_DIR="$WORK/$STINGER_NAME"
+OVERLAY_ZIP="$WORK/$OVERLAY_NAME.zip"
+STINGER_ZIP="$WORK/$STINGER_NAME.zip"
 
-# README — quoted heredoc so markdown backticks stay literal; date prepended.
+echo "▶ assemble separate overlay and stinger archives…"
+mkdir -p "$OVERLAY_DIR/Overlays" "$OVERLAY_DIR/Masks" "$STINGER_DIR"
+cp "$OUT"/0*.mp4 "$OUT"/background.mp4 "$OUT"/coffee-background.mp4 "$OUT"/cabin-background.mp4 \
+   "$OUT"/socials-badge-hevc.mov "$OUT"/desk-foreground-hevc.mov "$OUT"/loading-barks-hevc.mov \
+   "$OUT"/countdown-hevc.mov "$OUT"/countdown-10m-hevc.mov "$OVERLAY_DIR/Overlays/"
+cp "$ROOT"/masks/*.png "$OVERLAY_DIR/Masks/"
+cp "$OUT"/stinger-hevc.mov "$R"/public/stinger.wav "$STINGER_DIR/"
+
+# Overlay package README — the scene transition has its own download.
 {
-  echo "# MrDemonWolf Stream Overlays — OBS drop-in bundle"
+  echo "# MrDemonWolf Stream Overlays — OBS bundle"
   echo
-  echo "_Rendered $DATE._"
+  echo "_Rendered $DATE. The Stinger transition is packaged separately._"
   echo
   cat <<'EOF'
-Everything OBS needs is in this folder.
+This package contains the scene overlays and webcam masks.
 
 ```
-Overlays/   11 videos — 8 full-frame MP4s + 3 transparent HEVC-alpha .mov
-Masks/      5 rounded-corner webcam masks (PNG, alpha)
-Stinger/    1 OBS stinger transition (HEVC-alpha .mov) + its baked SFX (.wav)
+Overlays/   15 videos — 10 full-frame MP4s + 5 transparent HEVC-alpha .mov
+Masks/      rounded-corner webcam masks (PNG, alpha)
 ```
 
 ## Add each as a Media Source
 
 1. Sources → **+** → **Media Source** → **Local File** → pick the file.
-2. **Loop**: ON for everything **except `countdown-hevc.mov`** (plays once, start on going live).
-3. Full-frame overlays sit at **0, 0** (they're 1920×1080). `socials-badge` is 760×180 — place it anywhere.
+2. **Loop**: ON except Ending Stream and the two countdown files (play once).
+3. Place the ten full-frame scene MP4s and transparent desk at **0, 0** (1920×1080). The four
+   transparent widgets use compact bounds; position them where you want.
 
 ### Files → scene → loop
 
-| File | Scene | Loop |
-|---|---|---|
-| `01-starting-soon.mp4` | Starting Soon | ON |
-| `02-just-chatting.mp4` | Just Chatting | ON |
-| `03-just-chatting-vtuber.mp4` | Just Chatting · VTuber | ON |
-| `04-co-working-solo.mp4` | Co-Working · Solo | ON |
-| `05-co-working-dual.mp4` | Co-Working · Dual | ON |
-| `06-be-right-back.mp4` | Be Right Back | ON |
-| `07-ending-stream.mp4` | Ending Stream | ON |
-| `background.mp4` | Background (also plain gameplay) | ON |
-| `socials-badge-hevc.mov` | Socials badge (over anything) | ON |
-| `loading-barks-hevc.mov` | Loading overlay (over anything) | ON |
-| `countdown-hevc.mov` | 5:00 countdown | **OFF** — start on going live |
+| File | Scene | Source size | Loop |
+|---|---|---|---|
+| `01-starting-soon.mp4` | Starting Soon | 1920×1080 | ON |
+| `02-just-chatting.mp4` | Just Chatting | 1920×1080 | ON |
+| `03-just-chatting-vtuber.mp4` | Just Chatting · VTuber | 1920×1080 | ON |
+| `04-co-working-solo.mp4` | Co-Working · Solo | 1920×1080 | ON |
+| `05-co-working-dual.mp4` | Co-Working · Dual | 1920×1080 | ON |
+| `06-be-right-back.mp4` | Be Right Back | 1920×1080 | ON |
+| `07-ending-stream.mp4` | Ending Stream (2:30) | 1920×1080 | OFF |
+| `background.mp4` | Background (also plain gameplay) | 1920×1080 | ON |
+| `coffee-background.mp4` | Complete cabin + desk + coffee steam | 1920×1080 | ON |
+| `cabin-background.mp4` | Cabin only, for separate desk/model layers | 1920×1080 | ON |
+| `desk-foreground-hevc.mov` | Desk + animated coffee steam | 1920×1080 | ON |
+| `socials-badge-hevc.mov` | Socials badge (over anything) | 720×140 | ON |
+| `loading-barks-hevc.mov` | Loading Barks panel (over anything) | 1080×420 | ON |
+| `countdown-hevc.mov` | 5:00 countdown panel | 820×500 | **OFF** — start on going live |
+| `countdown-10m-hevc.mov` | 10:00 countdown panel | 820×500 | **OFF** — start on going live |
 
-## Stinger transition (scene-cut wipe)
+## Stinger transition
 
-`Stinger/stinger-hevc.mov` is a **transition**, not a Media Source. Set it up once:
-
-1. Scene Transitions (bottom-right) → **+** → **Stinger**.
-2. **Video File** = `Stinger/stinger-hevc.mov`.
-3. **Transition Point Type** = **Time**, **Transition Point** = **2000 ms** —
-   safely inside the fully-covered hold (covered ~1360–2890 ms; OBS swaps the
-   scene here, unseen). Adjust if you swap in a longer/shorter clip.
-4. **Audio Fade Style** = **Crossfade** (the whoosh is baked into the file).
-5. OK. Every scene cut now plays the wipe once; OBS swaps scenes behind the cover.
-
-**Format note:** WebM-alpha (VP9/VP8) is the portable/cross-platform stinger
-format, but it needs an ffmpeg built with libvpx alpha — Homebrew's build (used
-here and on the CI runner) drops the alpha. So the bundle ships **HEVC-alpha
-`.mov`**, which keeps transparency and OBS reads natively on macOS (your setup).
-On Windows OBS, re-encode the ProRes master to VP9-alpha webm with an
-alpha-capable ffmpeg.
-
-`Stinger/stinger.wav` is the raw SFX (already baked into the .mov) — kept for reference.
+The Stinger is a separate download because it has its own HEVC-alpha video and
+embedded audio. Download `OBS-stinger-<date>.zip` from the same release, then
+follow the included setup README or [`docs/stinger-setup.md`](https://github.com/MrDemonWolf/obs-setup/blob/main/docs/stinger-setup.md).
 
 ## Webcam placement (Co-Working + Just Chatting)
 
@@ -141,13 +176,36 @@ Overlay source = full-frame 1920×1080 at **0,0**. Cam source Transform
 | Scene | Source | Position (x, y) | Size (w × h) | Mask |
 |---|---|---|---|---|
 | Co-Working · Solo | Cam | 64, 136 | 1400 × 788 | `co-working-solo.png` |
-| Co-Working · Dual | Main cam | 64, 136 | 1152 × 648 | `co-working-dual-big.png` |
+| Co-Working · Dual | Main cam | 64, 136 | 1184 × 666 | `co-working-dual-big.png` |
 | Co-Working · Dual | 2nd cam | 1280, 628 | 576 × 324 | `co-working-dual-small.png` |
-| Just Chatting | Cam | 64, 198 | 1216 × 684 | `just-chatting-cam.png` |
-| Just Chatting | Chat | 1344, 198 | 512 × 684 | `just-chatting-chat.png` |
-| Just Chatting · VTuber | Chat | 1344, 198 | 512 × 684 | `just-chatting-chat.png` |
+| Just Chatting | Cam | 96, 190 | 1120 × 630 | `just-chatting-cam.png` |
+| Just Chatting | Chat | 1328, 190 | 528 × 650 | `just-chatting-chat.png` |
+| Just Chatting · VTuber | Chat | 1328, 190 | 528 × 650 | `just-chatting-chat.png` |
 
 VTuber = no cam frame (model fullscreen); chat frame is the same box.
+
+## Cabin desk foreground
+
+For VTuber scenes, add `desk-foreground-hevc.mov` as a separate Media Source,
+loop ON, at **0,0**, size **1920×1080**. Its sky and room area is transparent.
+The desk starts at **y=860** and covers the model's lower edge. In OBS Sources,
+order top to bottom: chat/widgets, desk foreground, VTuber model, cabin scene.
+The coffee mug sits near **x=1090–1247, y=785–895**; its steam loops over 8 seconds.
+Move the model behind the desk so the shoulders and head remain above y=860.
+
+## Starting Soon + BRB Chat
+
+The chat panel is at **1184, 216 · 640 × 720**, just below the moon.
+Place the browser source inside **1206, 276 · 596 × 638** to leave the header
+and inner padding clear. Ending has no chat panel.
+
+### Co-Working · Dual open placement areas
+
+The overlay leaves a clear chat or task placement above the second camera at
+**1280, 312 · 576 × 288**, plus an open lower band below the main camera at
+**64, 826 · 1184 × 190** for Timer, Tasks, Now Playing, or other OBS sources.
+These are cabin areas with no widget boxes or labels baked into the video, and
+they do not need webcam masks.
 
 ### Apply a mask (rounds the cam corners)
 
@@ -155,11 +213,44 @@ VTuber = no cam frame (model fullscreen); chat frame is the same box.
 2. Effect Filters → **+** → **Image Mask/Blend**.
 3. Type = **Alpha Mask (Alpha Channel)**, Path = the matching PNG above.
 EOF
-} > "$BUNDLE/README.md"
+} > "$OVERLAY_DIR/README.md"
 
-echo "▶ zip…"
-( cd "$HOME/Downloads" && rm -f "OBS-overlays-$DATE.zip" \
-  && zip -rq "OBS-overlays-$DATE.zip" "OBS-overlays-$DATE" )
+# Self-contained transition setup. The WAV is the source used by Remotion;
+# its sound is already baked into the video and must not be added twice in OBS.
+cat > "$STINGER_DIR/README.md" <<'EOF'
+# MrDemonWolf Stinger — OBS scene transition
 
-echo "✓ done → $HOME/Downloads/OBS-overlays-$DATE.zip"
-echo "  (unzipped copy at $BUNDLE)"
+This standalone transition package contains the encoded video, its original
+source WAV, and the OBS settings needed to install it.
+
+## Install in OBS
+
+1. Copy `stinger-hevc.mov` somewhere permanent on this Mac.
+2. In OBS, open **Scene Transitions** and select **+ → Stinger**.
+3. Set **Video File** to `stinger-hevc.mov`.
+4. Set **Transition Point Type** to **Time** and **Transition Point** to
+   **2000 ms**. The scene changes while the screen is covered.
+5. Set **Audio Fade Style** to **Crossfade**, then save.
+
+The whoosh is already embedded in `stinger-hevc.mov`. Do not add `stinger.wav`
+as another OBS audio source. It is included as the original audio source and
+for future renders. The clip is 4 seconds at 60 fps and is encoded as HEVC
+with alpha for OBS on macOS.
+EOF
+
+mkdir -p "$DOWNLOADS_DIR"
+FINAL_OVERLAY_ZIP="$DOWNLOADS_DIR/$OVERLAY_NAME.zip"
+FINAL_STINGER_ZIP="$DOWNLOADS_DIR/$STINGER_NAME.zip"
+echo "▶ zip overlay bundle…"
+( cd "$WORK" && zip -rq "$OVERLAY_ZIP" "$OVERLAY_NAME" )
+echo "▶ zip stinger bundle…"
+( cd "$WORK" && zip -rq "$STINGER_ZIP" "$STINGER_NAME" )
+
+echo "▶ validate archive contents…"
+python3 "$ROOT/scripts/validate_release_packages.py" \
+  "$OVERLAY_ZIP" "$STINGER_ZIP" --masks-dir "$ROOT/masks"
+
+mv -f "$OVERLAY_ZIP" "$FINAL_OVERLAY_ZIP"
+mv -f "$STINGER_ZIP" "$FINAL_STINGER_ZIP"
+echo "✓ overlay download → $FINAL_OVERLAY_ZIP"
+echo "✓ stinger download → $FINAL_STINGER_ZIP"

@@ -1,87 +1,48 @@
-import { useCurrentFrame } from "remotion";
-import { theme, radius, loopSin, loopBreathe } from "./theme";
-import { display, body } from "./fonts";
-import { WindowTitleBar } from "./WindowChrome";
+import { lounge } from "./fonts";
+import { interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 
-// Fixed chip width so StartingSoon / BRB / EndingStream are all the SAME size
-// (text left-aligned inside). Sized to fit the widest title ("The Pack Gathers")
-// at 108px with the L/R padding below. If you add a longer title, bump this and
-// re-check the mascot overlap (right-anchored wolf must clear the chip's right edge).
-const CHIP_WIDTH = 1160;
-
-// Frosted macOS-glass panel: window dots + rounded title + one status line,
-// ending in a blinking terminal cursor.
-export const TitleChip: React.FC<{ title: string; status: string }> = ({ title, status }) => {
+// Forest Lounge: composed lines, a long readable hold, and a masked loop reset.
+export const TitleChip: React.FC<{ title: string; status: string; lines?: string[]; hold?: boolean }> = ({ title, status, lines = [title], hold = false }) => {
   const frame = useCurrentFrame();
-  // The chip does NOT translate — it stays put. It just breathes: rests at its
-  // base size, grows ~0.7% and eases back (loopBreathe: eased in AND out).
-  // harmonic 2 → two 4s breaths per loop, matching the mascot's cadence; amp
-  // 0.007 keeps the edge travel ~8px, UNDER the mascot's breathe so the panel
-  // never out-breathes the wolf. transformOrigin left-center pins the left edge.
-  const scale = 1 + 0.007 * loopBreathe(frame, 2);
-  const glow = 14 + 8 * (0.5 + 0.5 * loopSin(frame, 0.5));
-  const cursor = Math.floor(frame / 15) % 2 === 0; // blink ~every 0.5s @30fps
-
+  const { fps } = useVideoConfig();
+  const time = hold ? Math.min(frame / fps, 20) : (frame / fps) % 36;
+  const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
+  const exit = interpolate(time, [33, 35], [0, 1], clamp);
+  const support = interpolate(time, [0.9, 1.8, 33, 35], [0, 1, 1, 0], clamp);
+  const sweep = interpolate(time, [8, 10], [-35, 135], clamp);
+  // A subtle accent breath accompanies each masked title sequence.
+  const breath = (1 - Math.cos((time / 36) * Math.PI * 2)) / 2;
   return (
-    <div
-      style={{
-        position: "absolute",
-        left: 64,
-        top: "34%",
-        width: CHIP_WIDTH, // fixed → all three card scenes are the same size
-        boxSizing: "border-box",
-        transform: `scale(${scale})`,
-        transformOrigin: "left center",
-        // roomy, even inner padding; text is left-aligned (block default)
-        padding: "44px 64px 48px",
-        borderRadius: radius.card,
-        // Opaque on purpose (equal-width boxes must read against the dark bg),
-        // but GLASS, not flat: a diagonal sheen + vertical light-from-above
-        // gradient fake the vibrancy that backdrop-filter would give (banned —
-        // render cost). Both static → zero loop/perf impact.
-        background: `linear-gradient(115deg, rgba(255,255,255,0.05) 0%, transparent 40%), linear-gradient(180deg, rgba(32,54,116,0.92) 0%, rgba(16,29,70,0.90) 100%)`,
-        border: `1px solid rgba(255,255,255,0.22)`,
-        boxShadow: `0 30px 80px rgba(0,0,0,0.45), inset 0 1.5px 0 rgba(255,255,255,0.22), 0 0 ${glow}px rgba(0,172,237,0.28)`,
-      }}
-    >
-      {/* window traffic lights + tag (shared with the transparent overlays) */}
-      <div style={{ marginBottom: 22 }}>
-        <WindowTitleBar />
-      </div>
-
-      <div
-        style={{
-          fontFamily: display,
-          fontWeight: 800,
-          fontSize: 108,
-          lineHeight: 1,
-          whiteSpace: "nowrap",
-          color: theme.white,
-          letterSpacing: -1.5, // display-size extrabold tracks TIGHT (positive tracking read loose)
-          textShadow: "0 3px 18px rgba(0,0,0,0.35)",
-        }}
-      >
-        {title}
-      </div>
-
-      <div
-        style={{
-          marginTop: 20,
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
-          fontFamily: body,
-          fontSize: 36,
-          color: theme.blueBright,
-        }}
-      >
-        {/* one metaphor only: terminal prompt + cursor. (The old pulsing green
-            LED stacked a second signifier on the line AND reused the window-dot
-            green for a different meaning.) Cursor in the text's own accent so it
-            reads as part of the prompt, not a third color. */}
-        <span>{status}</span>
-        <span style={{ opacity: cursor ? 1 : 0 }}>▊</span>
-      </div>
-    </div>
+  <div style={{ position: "absolute", left: 96, top: 344, width: 1000,
+    transform: `translateY(${-5 * breath}px)`,
+  }}>
+    <div style={{ width: 64 + 32 * breath, height: 2, marginBottom: 30,
+      background: "rgba(196,230,245,0.65)", boxShadow: "0 0 18px rgba(120,210,245,0.18)",
+    }} />
+    <div style={{
+      fontFamily: lounge, fontWeight: 800, fontSize: 104,
+      lineHeight: 1.12, color: "#f4f9fc", letterSpacing: -3,
+      maxWidth: 980,
+      textShadow: `0 4px 24px rgba(0,0,0,0.65), 0 0 ${12 + 8 * breath}px rgba(185,225,245,0.08)`,
+    }} aria-label={title}>{lines.map((word, index) => {
+      const progress = interpolate(time, [0.12 + index * 0.3, 1.1 + index * 0.3], [0, 1], clamp);
+      const enter = 1 - Math.pow(1 - progress, 3);
+      return <span key={index} style={{ display: "block", overflow: "hidden", paddingBottom: 10 }}>
+        <span style={{ display: "block", position: "relative", opacity: enter * (1 - exit),
+          transform: `translateY(${(1 - enter) * 110 - exit * 110}%)`,
+        }}>{word}<span aria-hidden style={{ position: "absolute", inset: 0, color: "transparent", textShadow: "none",
+          backgroundClip: "text", WebkitBackgroundClip: "text",
+          backgroundImage: `linear-gradient(110deg, transparent ${sweep - 15}%, #7bdcff ${sweep}%, transparent ${sweep + 15}%)`,
+        }}>{word}</span></span>
+      </span>;
+    })}</div>
+    <div style={{
+      marginTop: 28, maxWidth: 820, fontFamily: lounge, fontSize: 32,
+      fontWeight: 500, letterSpacing: 0.15, opacity: support,
+      transform: `translateY(${(1 - support) * 16}px)`,
+      lineHeight: 1.55, color: "rgba(228,244,252,0.88)",
+      textShadow: "0 2px 12px rgba(0,0,0,0.8)",
+    }}>{status}</div>
+  </div>
   );
 };

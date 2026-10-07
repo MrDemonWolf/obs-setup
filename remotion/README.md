@@ -1,8 +1,12 @@
 # MrDemonWolf Stream Overlays (Remotion)
 
-Animated, seamless-looping OBS overlays — a wolf night theme with a full moon,
-starfield, drifting embers, and a padding paw trail. Every scene is a 1920×1080,
-8-second seamless loop rendered to a plain video file you drop into OBS.
+Animated, seamless-looping OBS overlays — a quiet night forest, starry sky,
+moonlight, a soft white paw trail, and restrained blue glass. Card scenes keep
+their title and chat panels logo-free; the site label carries the brand. The
+shared visual direction is documented in
+[`../docs/overlay-design-system.md`](../docs/overlay-design-system.md).
+Full-scene videos are 1920×1080, 8-second loops. Transparent widgets use
+compact panel-sized canvases for easier placement in OBS.
 
 ## Make all the overlays — one command
 
@@ -27,8 +31,8 @@ Numbered by stream flow so they sort in order:
 | `05-be-right-back.mp4` | away / break loop |
 | `06-ending-stream.mp4` | end-of-stream loop |
 | `background.mp4` | universal background (any scene) |
-| `socials-badge.mov` | transparent socials badge (best quality) |
-| `socials-badge.gif` | lighter transparent socials badge |
+| `socials-badge.mov` | transparent socials badge (720×140, best quality) |
+| `socials-badge.gif` | lighter 720×140 transparent socials badge |
 | `background.gif` | GIF copy of the background (heavier — prefer the MP4) |
 
 ## Preview before rendering
@@ -37,6 +41,24 @@ Numbered by stream flow so they sort in order:
 npm run obs     # macOS-style previewer, a button per scene → http://localhost:5178
 npm run dev     # Remotion Studio
 ```
+
+### Stinger visual concepts
+
+The preview-only compositions `StingerPawglass`, `StingerAurora`,
+`StingerFrost`, `StingerEclipse`, and `StingerSnow` are stills for comparing
+ideas. They are not included in overlay or Stinger releases. Render the contact
+sheet with:
+
+```bash
+npx remotion still src/index.ts StingerConceptBoard out/stinger-concepts-board.png --frame=0
+```
+
+The production `Stinger` is a four-second cratered steel-blue full-moon wipe
+with a restrained cyan rim. It has no paw mark or layered paw-swipe. The old
+paw-glass transition is preserved as the `LegacyPawSwipeStingerBackup`
+composition in Remotion, but stays out of the previewer and release package.
+The active moon transition plays the original WAV once, with its measured peak
+aligned to the 2000 ms scene-swap point.
 
 ## Add to OBS (and keep it light on an M1)
 
@@ -51,19 +73,15 @@ npm run dev     # Remotion Studio
 4. Turn on **"Close file when inactive"** for sources in scenes you're not
    showing, so they cost nothing.
 
-### Fit your webcam to the Just Chatting frame
+### Fit sources to the live frames
 
-The webcam frame is **1160×1000** — position your webcam source at **x=40,
-y=40**. Its aspect is narrower than 16:9, so crop the sides:
-
-| Webcam | Crop Left | Crop Right | Crop Top | Crop Bottom |
-| ------ | --------- | ---------- | -------- | ----------- |
-| 1080p (1920×1080) | 334 | 334 | 0 | 0 |
-| 720p (1280×720)   | 222 | 222 | 0 | 0 |
-
-In OBS: select the webcam, hold **Alt** and drag the left/right edges (or
-right-click → **Transform → Edit Transform** and type the crop), then size it to
-fill the frame.
+The updated Just Chatting camera frame is **1232 × 693 at (64, 190)**, which
+keeps the webcam at 16:9. Its companion chat frame is **528 × 693 at
+(1328, 190)**. Co-Working Dual uses an **1184 × 666** main camera at (64, 136)
+and a **576 × 324** second camera at (1280, 628). Match the OBS source
+transform to those dimensions, then apply the matching PNG mask to each camera.
+The overlay files and masks are updated; the saved scene-collection JSON is
+left for you to adjust in OBS.
 
 ## Render one at a time
 
@@ -75,7 +93,8 @@ npx remotion render Socials out/socials-badge.gif --codec=gif
 
 Composition ids (left arg): `StartingSoon`, `BRB`, `JustChatting`,
 `JustChattingVtuber`, `CoworkingSolo`, `CoworkingDual`, `EndingStream`,
-`Background`, `Socials`, `Countdown`, `LoadingBarks`, and the `Stinger`
+`Background`, `Socials` (720×140), `Countdown` (5:00, 820×500),
+`Countdown10` (10:00, 820×500), `LoadingBarks` (1080×420), and the `Stinger`
 transition. The output filename (right arg) is up to you — `render:all` uses the
 numbered names above (Countdown, LoadingBarks, and Stinger render via
 `make release`).
@@ -86,8 +105,8 @@ Everything is defined in `src/`:
 
 - **Text / scene list** — `src/scenes.ts` (titles, status lines, mascot mouth).
 - **Colors / radii / timing** — `src/theme.ts`.
-- **Fonts** — `src/fonts.ts` (Montserrat; swap in Proxima Nova by dropping the
-  files in `public/fonts/`).
+- **Fonts** — `src/fonts.ts` (Plus Jakarta Sans 500/800 for lounge titles and
+  widgets; Open Sans for chat). Shared widget surfaces live in `src/ForestWidget.ts`.
 - **Socials** — `src/Socials.tsx` (which platforms + handles). Brand logos live
   in `public/brands/` (Twitch, X, YouTube, Instagram, GitHub, Discord, plus
   Bluesky / Ko-fi / Patreon / Threads / Kick / TikTok to swap in).

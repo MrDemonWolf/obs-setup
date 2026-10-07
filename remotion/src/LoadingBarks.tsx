@@ -1,23 +1,20 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { theme, radius, clamp01, glassPanel, glassPanelShadow } from "./theme";
-import { body } from "./fonts";
+import { theme, clamp01 } from "./theme";
+import { lounge as body, lounge as display } from "./fonts";
 import { Paw } from "./Paw";
-import { WindowDots } from "./WindowChrome";
+import { useForestWidget } from "./ForestWidget";
 
 const BARKS = [
-  "Loading barks…",
-  "Gathering the moons…",
-  "Warming up the howl…",
-  "Marking every tree…",
-  "Wolfing down packets…",
-  "Barking up the right tree…",
-  "Sniffing out the signal…",
-  "Howl-ding, please…",
-  "Pawsing to buffer…",
-  "Chasing my tail and the packets…",
-  "Fur real, almost there…",
-  "Awoo-most ready…",
-  "Nearly un-leashed…",
+  { headline: "Warming up the pack…", detail: "One wolf is still finding the mute button." },
+  { headline: "Tracking one last bug…", detail: "It doubled back under the desk." },
+  { headline: "Moonlight: connected…", detail: "Cloud cover: pending." },
+  { headline: "Pack signal check…", detail: "The router heard that howl." },
+  { headline: "Zoomies detected…", detail: "Progress bar under supervision." },
+  { headline: "Fetching one last treat…", detail: "Build system classified it as a dependency." },
+  { headline: "Night shift is clocking in…", detail: "Paws off the production branch." },
+  { headline: "Something moved in the code…", detail: "Probably just a feature." },
+  { headline: "Final settings check…", detail: "The menu moved. Again." },
+  { headline: "Final howl check…", detail: "If it echoes, we’re live." },
 ];
 
 // Deterministic seeded schedule, computed ONCE at module load (loop-safe — no
@@ -58,12 +55,8 @@ const curveLevel = (i: number, p: number) => {
   return 1;
 };
 
-// Glow must complete an INTEGER number of cycles over the comp (13572 % 240 ≠ 0,
-// so plain loopSin pops ~1.2px blur at the loop seam — the invariant violation).
-// H cycles over the full duration ≈ the house 8s breathe (13572/28/60 ≈ 8.08s).
-const GLOW_CYCLES = Math.round(LOADING_BARKS_DURATION / (8 * FPS));
-
 export const LoadingBarks: React.FC = () => {
+  const surface = useForestWidget();
   const f = useCurrentFrame() % LOADING_BARKS_DURATION;
 
   let i = 0;
@@ -77,9 +70,8 @@ export const LoadingBarks: React.FC = () => {
   // bar fills 0 → 100% within THIS phrase (uneven spurts), maxing out right
   // before the next phrase takes over.
   const level = curveLevel(i, clamp01(local / hold));
-  const glow = 14 + 8 * (0.5 + 0.5 * Math.sin(2 * Math.PI * (GLOW_CYCLES * f / LOADING_BARKS_DURATION + 0.5)));
 
-  const barW = 700;
+  const barW = 640;
   const fillW = Math.round(barW * level);
 
   return (
@@ -87,82 +79,118 @@ export const LoadingBarks: React.FC = () => {
       <div
         style={{
           position: "relative",
-          padding: "64px 76px 48px",
-          borderRadius: radius.card,
-          // shared over-gameplay glass panel (dot grid + sheen + dense fill)
-          background: glassPanel,
-          border: `1px solid ${theme.glassBorder}`,
-          boxShadow: glassPanelShadow(glow),
+          width: 900,
+          boxSizing: "border-box",
+          padding: "34px 40px 36px",
+          ...surface,
         }}
       >
-        {/* window dots pinned to the top-left CORNER (matches Socials) — no domain
-            tag, it's just a widget; stays put while the content below fades on swap */}
-        <div style={{ position: "absolute", top: 26, left: 30 }}>
-          <WindowDots />
-        </div>
-        {/* op wraps EVERYTHING (text + bar + %): the bar's one-frame 100%→0 reset
-            at each phrase swap happens while fully invisible. op is 0 at both
-            slot edges → the loop seam stays invisible too. */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 30, opacity: op }}>
-        <span
-          style={{
-            fontFamily: body,
-            fontSize: 60,
-            color: theme.white,
-            letterSpacing: 1,
-            whiteSpace: "nowrap",
-            textShadow: "0 3px 18px rgba(0,0,0,0.4)",
-          }}
-        >
-          {BARKS[i]}
-        </span>
-
-        <div style={{ display: "flex", alignItems: "center", gap: 22 }}>
-          {/* track */}
-          <div
-            style={{
-              position: "relative",
-              width: barW,
-              height: 20,
-              borderRadius: 8, // macOS-rounded, not a full pill
-              // track must read as the bar's denominator: 0.09/0.16 measured
-              // 1.32:1 / 1.63:1 against the card — invisible. These pass 3:1.
-              background: "rgba(255,255,255,0.16)",
-              border: `1px solid rgba(255,255,255,0.36)`,
-            }}
-          >
-            {/* fill */}
-            <div
-              style={{
-                position: "absolute",
-                left: 0,
-                top: 0,
-                bottom: 0,
-                width: fillW,
-                borderRadius: 6,
-                background: `linear-gradient(90deg, ${theme.blue}, ${theme.blueBright})`,
-                boxShadow: `0 0 10px rgba(0,172,237,0.35)`,
-              }}
-            />
-            {/* paw riding the fill edge */}
-            <div style={{ position: "absolute", left: fillW - 18, top: -8 }}>
-              <Paw size={36} color={theme.white} />
-            </div>
-          </div>
-          {/* fixed-width % so it never reflows */}
+        {/* White paw and a quiet label match the forest lounge chat header. */}
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+          <Paw size={18} color={theme.pawWhite} opacity={0.8} />
           <span
             style={{
               fontFamily: body,
-              fontSize: 36, // one status-label size everywhere (was 34 — ad-hoc near-duplicate of 36)
-              fontVariantNumeric: "tabular-nums",
-              width: 98,
-              textAlign: "right",
-              color: theme.blueBright,
+              fontSize: 14,
+              fontWeight: 500,
+              color: theme.textDim,
+              letterSpacing: 2.4,
+              lineHeight: 1,
+              whiteSpace: "nowrap",
             }}
           >
-            {Math.round(level * 100)}%
+            DEN STATUS
           </span>
+          <div
+            style={{
+              flex: 1,
+              height: 1,
+              marginLeft: 4,
+              background: "linear-gradient(90deg, rgba(255,255,255,0.16), transparent)",
+            }}
+          />
         </div>
+        {/* Fade the headline, punchline, bar, and percentage together so the
+            progress reset stays hidden at every phrase swap and loop seam. */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "stretch", gap: 14, opacity: op }}>
+          <span
+            style={{
+              fontFamily: display,
+              fontSize: 44,
+              fontWeight: 800,
+              color: theme.white,
+              letterSpacing: -1.2,
+              lineHeight: 1.16,
+              whiteSpace: "nowrap",
+              textShadow: "0 3px 18px rgba(0,0,0,0.4)",
+            }}
+          >
+            {BARKS[i].headline}
+          </span>
+
+          <span
+            style={{
+              fontFamily: body,
+              fontSize: 20,
+              fontWeight: 500,
+              color: "rgba(255,255,255,0.76)",
+              lineHeight: 1.35,
+              whiteSpace: "nowrap",
+              marginTop: -6,
+            }}
+          >
+            {BARKS[i].detail}
+          </span>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 6 }}>
+            {/* The three dim paw marks turn bright after the fill reaches them. */}
+            <div
+              style={{
+                position: "relative",
+                width: barW,
+                height: 16,
+                borderRadius: 8,
+                background: "rgba(255,255,255,0.12)",
+                border: "1px solid rgba(255,255,255,0.28)",
+                boxShadow: "inset 0 1px 3px rgba(0,0,0,0.28)",
+              }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  top: 0,
+                  bottom: 0,
+                  width: fillW,
+                  borderRadius: 7,
+                  background: "linear-gradient(90deg, #668fa9, #c4e6f5)",
+                  boxShadow: "0 0 12px rgba(196,230,245,0.2), inset 0 1px 0 rgba(255,255,255,0.35)",
+                }}
+              />
+              {[0.25, 0.5, 0.75].map((mark) => (
+                <div key={mark} style={{ position: "absolute", left: `${mark * 100}%`, top: -5, zIndex: 1 }}>
+                  <Paw size={22} color={theme.pawWhite} opacity={level >= mark ? 0.94 : 0.3} />
+                </div>
+              ))}
+              {/* One bright paw walks at the fill edge. */}
+              <div style={{ position: "absolute", left: fillW - 15, top: -8, zIndex: 2, filter: "drop-shadow(0 0 5px rgba(56,198,245,0.7))" }}>
+                <Paw size={30} color={theme.white} />
+              </div>
+            </div>
+            <span
+              style={{
+                fontFamily: body,
+                fontSize: 24,
+                fontWeight: 800,
+                fontVariantNumeric: "tabular-nums",
+                width: 78,
+                textAlign: "right",
+                color: "#c4e6f5",
+              }}
+            >
+              {Math.round(level * 100)}%
+            </span>
+          </div>
         </div>
       </div>
     </AbsoluteFill>

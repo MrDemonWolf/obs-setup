@@ -1,35 +1,49 @@
 import { useCurrentFrame } from "remotion";
 import { Paw } from "../Paw";
-import { theme, VIDEO, clamp01 } from "../theme";
+import { VIDEO, theme } from "../theme";
 
-// Footsteps walking left→right along the bottom: each print pops in as the
-// invisible wolf "lands" on it, lingers, then fades — so only the last few
-// steps are visible, marching in sequence. Toes point in the direction of
-// travel; prints alternate above/below the walk line like real footfalls.
-// Seamless: age is computed modulo the full loop, so the trail fades out
-// completely before the sequence wraps.
-export const PawTrail: React.FC<{ count?: number; y?: number; maxOpacity?: number }> = ({
-  count = 10,
-  y = 980,
-  maxOpacity = 0.2,
-}) => {
-  const f = useCurrentFrame();
-  const t = f / VIDEO.durationInFrames; // 0..1 through the loop
-  const attack = 0.03; // fast pop-in as the paw lands
-  const tail = 0.3; // slow fade — ~3 recent prints visible at once
+// The Night Forest Walk signature: small off-white paw prints appear one by
+// one across the lower trail, facing right. They all fade before the loop
+// seam, leaving a quiet reset before the next walk begins.
+export const PawTrail: React.FC<{
+  count?: number;
+  y?: number;
+  maxOpacity?: number;
+  xStart?: number;
+  xEnd?: number;
+}> = ({ count = 15, y = 946, maxOpacity = 0.3, xStart = 8, xEnd = 1820 }) => {
+  const frame = useCurrentFrame();
+  const progress = (frame % VIDEO.durationInFrames) / VIDEO.durationInFrames;
+  const firstLanding = 0.08;
+  const lastLanding = 0.64;
+  const fadeIn = 0.035;
+  const fadeOut = 0.09;
+
   return (
     <>
-      {Array.from({ length: count }).map((_, i) => {
-        const x = 100 + (i * 1720) / (count - 1);
-        const yy = y + (i % 2 ? -20 : 16);
-        const age = (t - i / count + 1) % 1; // time since this step landed
-        const o = (age < attack ? age / attack : clamp01(1 - (age - attack) / tail)) * maxOpacity;
+      {Array.from({ length: count }, (_, i) => {
+        const x = xStart + (i * (xEnd - xStart)) / Math.max(1, count - 1);
+        const landing = firstLanding + (i * (lastLanding - firstLanding)) / Math.max(1, count - 1);
+        const age = progress - landing;
+        const opacity = age < 0 || age > 0.16 + fadeOut
+          ? 0
+          : age < fadeIn
+            ? (age / fadeIn) * maxOpacity
+            : age < 0.16
+              ? maxOpacity
+              : maxOpacity * (1 - (age - 0.16) / fadeOut);
+
         return (
           <div
             key={i}
-            style={{ position: "absolute", left: x, top: yy, transform: `rotate(${90 + (i % 2 ? 12 : -12)}deg)` }}
+            style={{
+              position: "absolute",
+              left: x,
+              top: y + (i % 2 ? -20 : 16),
+              transform: `rotate(${i % 2 ? 92 : 88}deg)`,
+            }}
           >
-            <Paw size={46} color={theme.blueBright} opacity={o} />
+            <Paw size={54} color={theme.pawWhite} opacity={opacity} />
           </div>
         );
       })}

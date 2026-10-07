@@ -7,7 +7,7 @@
 # keeps the transparency, hardware-decodes everywhere, and is a fraction of the
 # ProRes size. Use these for the OBS media sources; keep the ProRes as master.
 #
-# Usage: ./to-hevc.sh out/countdown.mov out/loading-barks.mov out/socials-badge.mov
+# Usage: ./to-hevc.sh out/countdown.mov out/countdown-10m.mov out/loading-barks.mov out/socials-badge.mov
 #   writes <name>-hevc.mov next to each input.
 # ponytail: fixed 12M bitrate — plenty for a 1080p60 overlay; bump if you see blocking.
 set -euo pipefail
@@ -17,9 +17,10 @@ for f in "$@"; do
   # -allow_sw 1: virtualized macOS (CI runners) has no hardware encoder
   # session — this permits Apple's software HEVC encoder there; real Macs
   # still pick the hardware path first.
-  # -c:a aac carries a baked audio track (the stinger's SFX) through the
-  # transcode; harmless no-op for the silent overlays.
-  ffmpeg -y -i "$f" -c:v hevc_videotoolbox -allow_sw 1 -alpha_quality 0.9 \
-    -b:v 12M -tag:v hvc1 -c:a aac -b:a 256k "$o" -loglevel error
+  # Copy optional audio losslessly. The Stinger WAV is verified sample-for-
+  # sample; AAC would alter the audio and can move its strongest peak.
+  ffmpeg -y -i "$f" -map 0:v:0 -map 0:a? \
+    -c:v hevc_videotoolbox -allow_sw 1 -alpha_quality 0.9 \
+    -b:v 12M -tag:v hvc1 -c:a copy "$o" -loglevel error
   echo "→ $o"
 done

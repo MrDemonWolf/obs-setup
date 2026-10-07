@@ -10,14 +10,14 @@ const stars = (() => {
   const rnd = () => (s = (s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
   return Array.from({ length: 55 }, () => ({
     x: rnd() * VIDEO.width,
-    y: rnd() * VIDEO.height * 0.82,
+    y: rnd(),
     r: 0.8 + rnd() * 1.8,
     phase: rnd(),
     harmonic: 2 + Math.floor(rnd() * 3), // 2–4 cycles per loop (4s / 2.7s / 2s)
   }));
 })();
 
-export const Starfield: React.FC = () => {
+export const Starfield: React.FC<{ maxY?: number }> = ({ maxY = VIDEO.height * 0.82 }) => {
   const f = useCurrentFrame();
   return (
     <svg width={VIDEO.width} height={VIDEO.height} style={{ position: "absolute" }}>
@@ -25,7 +25,7 @@ export const Starfield: React.FC = () => {
         <circle
           key={i}
           cx={st.x}
-          cy={st.y}
+          cy={st.y * maxY}
           r={st.r}
           fill={theme.white}
           opacity={0.22 + 0.5 * (0.5 + 0.5 * loopSin(f, st.phase, st.harmonic))}
