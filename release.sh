@@ -18,9 +18,15 @@ ROOT="$(cd "$(dirname "$0")" && pwd)"
 R="$ROOT/remotion"
 OUT="$R/out"
 DATE="${OBS_RELEASE_DATE:-$(date +%F)}"
+VERSION="${OBS_RELEASE_VERSION:-}"
+if [ -n "$VERSION" ] && [[ ! "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+  echo "OBS_RELEASE_VERSION must be a version like v0.1.3" >&2
+  exit 2
+fi
+PACKAGE_ID="${VERSION:-$DATE}"
 DOWNLOADS_DIR="${OBS_RELEASE_OUTPUT_DIR:-$HOME/Downloads}"
-OVERLAY_NAME="OBS-overlays-$DATE"
-STINGER_NAME="OBS-stinger-$DATE"
+OVERLAY_NAME="OBS-overlays-$PACKAGE_ID"
+STINGER_NAME="OBS-stinger-$PACKAGE_ID"
 FORCE=""
 PACKAGE_ONLY=0
 RENDER_CONCURRENCY="${OBS_RENDER_CONCURRENCY:-2}"
@@ -122,7 +128,7 @@ cp "$OUT"/stinger-hevc.mov "$R"/public/stinger.wav "$STINGER_DIR/"
 {
   echo "# MrDemonWolf Stream Overlays — OBS bundle"
   echo
-  echo "_Rendered $DATE. The Stinger transition is packaged separately._"
+  echo "_Packaged $DATE ($PACKAGE_ID). The Stinger transition is packaged separately._"
   echo
   cat <<'EOF'
 This package contains the scene overlays and webcam masks.
@@ -162,7 +168,7 @@ Masks/      rounded-corner webcam masks (PNG, alpha)
 ## Stinger transition
 
 The Stinger is a separate download because it has its own HEVC-alpha video and
-embedded audio. Download `OBS-stinger-<date>.zip` from the same release, then
+embedded audio. Download the matching `OBS-stinger-*.zip` from the same release, then
 follow the included setup README or [`docs/stinger-setup.md`](https://github.com/MrDemonWolf/obs-setup/blob/main/docs/stinger-setup.md).
 
 ## Webcam placement (Co-Working + Just Chatting)

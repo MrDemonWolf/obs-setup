@@ -173,25 +173,17 @@ Architecture:
   10 phrases) built at `LOADING_BARKS_FPS` (**60**; per-comp `fps` in
   `scenes.ts`). **Heavy → NOT in `render:all`**, render manually. Edit
   `BARKS`/seed to taste.
-- **`Stinger`** (`Stinger.tsx`) = the OBS **stinger transition** (a transition,
-  NOT a Media Source): 4s @60fps full-frame alpha wipe. Navy panel (leading edge
-  welded FLUSH, ordered navy → cerulean → thin WHITE outermost tip — matches the
-  original stinger) sweeps in L→R → holds fully covered ~1.5s (OBS swaps scenes
-  behind it; Transition Point 2000ms = `STINGER_POINT_MS`, mid-hold) → exits
-  right with a back-loaded snap. Paw prints are
-  **painted ON the panel** (children of the moving layer, counter-skewed
-  `skewX(9)`) so they ride the sweep — stamp in on a slow L→R march
-  (`STAMP_FIRST/LAST`), hold through the full cover, then fade out L→R deep into
-  the exit (`UNSTAMP_FIRST/LAST`) so the swoosh carries the last prints off. The
-  real whoosh SFX is baked in via `<Audio>` (`public/stinger.wav`,
-  from `reference/Stringer.wav` — gitignored local drop folder), delayed so its
-  impact lands on the cover. Plays ONCE (like Countdown, plain `interpolate`,
-  no loop helpers). Panel sized in **composition px** (`useVideoConfig().width`),
-  NEVER `vw` — in the Player preview `vw` = browser viewport ≠ canvas and the
-  cover visibly fails. NOT in `render:all`; `release.sh` renders it (ProRes
-  4444 → HEVC-alpha) into the bundle's own `Stinger/` folder. WebM-alpha would
-  be the portable stinger format but Homebrew/CI ffmpeg lacks libvpx-alpha
-  (VP8/VP9 silently drop alpha) → ship HEVC-alpha `.mov` (fine on macOS OBS).
+- **`Stinger`** (`FullMoonStinger.tsx`) = the OBS **stinger transition**:
+  4s at 60fps, 1920×1080 with alpha. A dark navy night sky and subtle
+  `Starfield` fade in behind a steel-blue moon with soft craters. The sky is
+  fully opaque from 1650–2600ms, covering every pixel at the 2000ms
+  `STINGER_POINT_MS` scene switch. First and last frames are transparent.
+  Keep the moon a recognizable disc; the sky supplies full-screen coverage.
+  `StingerAudio` embeds `public/stinger.wav`, with its impact aligned to the
+  scene switch. Motion is a one-shot interpolation in composition pixels,
+  never viewport units. The legacy paw sweep remains in `Stinger.tsx`.
+  NOT in `render:all`; `release.sh` renders ProRes 4444 then HEVC-alpha for
+  macOS OBS and packages it in the separate Stinger ZIP.
 - **Card scenes** (`StartingSoon`, `BRB`, `EndingStream`) use `src/Scene.tsx`,
   which layers the shared forest `Background` (including the left-to-right
   white paw trail) with an optional `ChatBoxFrame` and `TitleChip`. The title
@@ -309,11 +301,13 @@ Architecture:
   a master already exists, `--force` to re-render) → render the Stinger ProRes → encode
   the five transparent masters as HEVC-alpha → validate the WAV timing and
   rendered streams → regenerate `masks/` → make separate dated downloads:
-  `OBS-overlays-<date>.zip` (12 scene videos + masks + setup README) and
+  `OBS-overlays-<date>.zip` (15 scene videos + masks + setup README) and
   `OBS-stinger-<date>.zip` (HEVC-alpha transition + source WAV + setup README).
   The stinger whoosh is embedded in the MOV; its sample-accurate WAV offset is
   checked in the ProRes render. `OBS_RELEASE_OUTPUT_DIR` changes the download
-  directory from `~/Downloads`.
+  directory from `~/Downloads`. Set `OBS_RELEASE_VERSION=v0.1.3` to replace
+  the date with a release version in both ZIP filenames and internal folders.
+  Published GitHub Releases automatically use their version tag.
 - **CI** (`.github/workflows/ci.yml`) runs Python, Remotion lint/type checks,
   and a Remotion-rendered stinger audio-timing check. **Release CI**
   (`.github/workflows/release.yml`) renders both packages on macOS, attaches

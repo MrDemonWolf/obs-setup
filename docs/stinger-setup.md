@@ -1,15 +1,18 @@
 # Stinger transition setup
 
 The Stinger is an OBS **scene transition**, not a Media Source. A cratered,
-steel-blue full moon with a restrained cyan rim expands to cover the frame,
-holds for the scene swap, then recedes to reveal the next scene. The active
-transition uses only the moon: there is no paw mark or layered paw-swipe.
+steel-blue full moon with a light navy tint grows into view against a dark,
+starry night sky, then recedes to reveal the next scene. Soft crater shading
+and a restrained blue rim keep the moon readable without a bright screen wash.
+The night sky is fully opaque across the entire canvas from 1650 to 2600 ms, with
+the OBS scene cut at 2000 ms inside that hold. The first and last frames are
+fully transparent.
 The former paw-swipe remains as `LegacyPawSwipeStingerBackup` in Remotion for
 rollback, but it is not included in the previewer or release package.
 
 ## Download
 
-Download `OBS-stinger-<date>.zip` from the
+Download `OBS-stinger-<version>.zip` from the
 [GitHub Releases page](https://github.com/MrDemonWolf/obs-setup/releases).
 The separate archive contains:
 
@@ -18,9 +21,11 @@ The separate archive contains:
 - `stinger.wav` — the original audio source used to render the embedded whoosh.
 - `README.md` — a copy of these install steps.
 
-The overlay and webcam-mask files are in the separate `OBS-overlays-<date>.zip`.
+The overlay and webcam-mask files are in the separate `OBS-overlays-<version>.zip`.
 To render both archives locally on macOS, run `make release`; the files appear
-in `~/Downloads/` (or in the folder set by `OBS_RELEASE_OUTPUT_DIR`).
+in `~/Downloads/` (or in the folder set by `OBS_RELEASE_OUTPUT_DIR`). Set
+`OBS_RELEASE_VERSION=v0.1.3` for versioned local archives; otherwise local
+builds use the packaging date in their filenames.
 
 ## Install in OBS
 

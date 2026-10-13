@@ -46,22 +46,30 @@ jobs:
           ffmpeg -version >/dev/null 2>&1 || brew install ffmpeg
           python3 -m pip install --user --quiet pillow || true
 
-      - name: Choose artifact date
+      - name: Choose artifact version and date
         id: release_date
-        run: echo "date=$(date +%F)" >> "$GITHUB_OUTPUT"
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          date="$(date +%F)"
+          echo "date=$date" >> "$GITHUB_OUTPUT"
+          echo "version=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
+          echo "package_id=${RELEASE_TAG:-$date}" >> "$GITHUB_OUTPUT"
 
       - name: Render + package bundle
         env:
           OBS_RELEASE_OUTPUT_DIR: ${{ runner.temp }}/obs-release-downloads
           OBS_RELEASE_DATE: ${{ steps.release_date.outputs.date }}
+          OBS_RELEASE_VERSION: ${{ steps.release_date.outputs.version }}
         run: ./release.sh --force
 
       - name: Locate separate downloads
         id: downloads
+        env:
+          PACKAGE_ID: ${{ steps.release_date.outputs.package_id }}
         run: |
-          date="${{ steps.release_date.outputs.date }}"
-          echo "overlays=${{ runner.temp }}/obs-release-downloads/OBS-overlays-$date.zip" >> "$GITHUB_OUTPUT"
-          echo "stinger=${{ runner.temp }}/obs-release-downloads/OBS-stinger-$date.zip" >> "$GITHUB_OUTPUT"
+          echo "overlays=${{ runner.temp }}/obs-release-downloads/OBS-overlays-$PACKAGE_ID.zip" >> "$GITHUB_OUTPUT"
+          echo "stinger=${{ runner.temp }}/obs-release-downloads/OBS-stinger-$PACKAGE_ID.zip" >> "$GITHUB_OUTPUT"
 
       # Manual/dispatch runs: keep each download as its own workflow artifact.
       - uses: actions/upload-artifact@v4

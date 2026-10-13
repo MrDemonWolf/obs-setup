@@ -13,8 +13,8 @@ position the cam source there at the given size and the mask lines up 1:1.
 
 | File | Overlay | Cam size | Position `@(x,y)` |
 |---|---|---|---|
-| `just-chatting-cam.png` | Just Chatting | 1232 × 693 | (64, 190) |
-| `just-chatting-chat.png` | Just Chatting **and** VTuber (chat) | 528 × 693 | (1328, 190) |
+| `just-chatting-cam.png` | Just Chatting | 1120 × 630 | (96, 190) |
+| `just-chatting-chat.png` | Just Chatting **and** VTuber (chat) | 528 × 650 | (1328, 190) |
 | `co-working-solo.png` | Co-Working Solo | 1400 × 788 | (64, 136) |
 | `co-working-dual-big.png` | Co-Working Dual — big cam | 1184 × 666 | (64, 136) |
 | `co-working-dual-small.png` | Co-Working Dual — small cam | 576 × 324 | (1280, 628) |

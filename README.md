@@ -199,7 +199,9 @@ If all renders are already present and only the ZIP step needs to be retried,
 run `./release.sh --package-only` from the repository root.
 
 Both archives end up in `~/Downloads/`: `OBS-overlays-<date>.zip` and
-`OBS-stinger-<date>.zip`. Set `OBS_RELEASE_OUTPUT_DIR` to choose another
+`OBS-stinger-<date>.zip`. Set `OBS_RELEASE_VERSION=v0.1.3` to name both archives
+and their enclosed folders by release version instead of date. Published GitHub
+releases use their tag automatically. Set `OBS_RELEASE_OUTPUT_DIR` to choose another
 output folder. On GitHub, `.github/workflows/release.yml` attaches both ZIPs
 to each published release; a manual workflow run uploads them as separate
 artifacts instead.
