@@ -7,7 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from validate_stinger import _find_embedded_pcm_start, read_timing  # noqa: E402
+from validate_stinger import _find_embedded_pcm_start, hold_sample_times, read_timing  # noqa: E402
 
 
 class StingerTimingTests(unittest.TestCase):
@@ -30,6 +30,15 @@ class StingerTimingTests(unittest.TestCase):
         self.assertEqual(self.timing.delay_frames, 110)
         landed_ms = (self.timing.delay_frames / self.timing.fps + self.timing.wav_peak_seconds) * 1000
         self.assertLessEqual(abs(landed_ms - self.timing.point_ms), 1000 / self.timing.fps)
+
+    def test_opaque_hold_brackets_scene_cut_with_margin(self):
+        self.assertLessEqual(self.timing.hold_start_ms, self.timing.point_ms - 300)
+        self.assertGreaterEqual(self.timing.hold_end_ms, self.timing.point_ms + 300)
+        self.assertLess(self.timing.hold_end_ms, self.timing.duration_seconds * 1000)
+        samples = hold_sample_times(self.timing)
+        self.assertEqual(samples[0] * 1000, self.timing.hold_start_ms)
+        self.assertEqual(samples[-1] * 1000, self.timing.hold_end_ms)
+        self.assertIn(self.timing.point_ms / 1000, samples)
 
     def test_lossless_transcode_finds_exact_wav_at_expected_offset(self):
         source_pcm = b"".join(

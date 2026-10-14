@@ -174,14 +174,21 @@ Architecture:
   `scenes.ts`). **Heavy → NOT in `render:all`**, render manually. Edit
   `BARKS`/seed to taste.
 - **`Stinger`** (`FullMoonStinger.tsx`) = the OBS **stinger transition**:
-  4s at 60fps, 1920×1080 with alpha. A dark navy night sky and subtle
-  `Starfield` fade in behind a steel-blue moon with soft craters. The sky is
-  fully opaque from 1650–2600ms, covering every pixel at the 2000ms
-  `STINGER_POINT_MS` scene switch. First and last frames are transparent.
-  Keep the moon a recognizable disc; the sky supplies full-screen coverage.
-  `StingerAudio` embeds `public/stinger.wav`, with its impact aligned to the
-  scene switch. Motion is a one-shot interpolation in composition pixels,
-  never viewport units. The legacy paw sweep remains in `Stinger.tsx`.
+  4s at 60fps, 1920×1080 with alpha. A steel-blue moon with soft craters
+  leaves the right pocket (1568,108 — same spot as the scenes), travels to
+  center, and pulls a dark navy night sky across the canvas as a soft-edged
+  IRIS (CSS `mask-image` radial gradient centred on the moon); the iris
+  contracts back into the moon on the way out. Stars are a stinger-local
+  seeded set, still (no `Starfield`/`loopSin` — it's a one-shot). The sky is
+  fully opaque on EVERY pixel from `STINGER_HOLD_START_MS` (1650) to
+  `STINGER_HOLD_END_MS` (2600), bracketing the 2000ms `STINGER_POINT_MS`
+  scene switch; `validate_stinger.py` reads those constants from
+  `StingerAudio.tsx` and checks the rendered alpha plane across the hold, plus
+  fully transparent first/last frames. Keep the moon a recognizable disc; the
+  sky supplies coverage. `StingerAudio` embeds `public/stinger.wav`, with its
+  impact aligned to the scene switch (the halo swells with it — no flash).
+  Motion is a one-shot interpolation in composition pixels, never viewport
+  units. The legacy paw sweep remains in `Stinger.tsx`.
   NOT in `render:all`; `release.sh` renders ProRes 4444 then HEVC-alpha for
   macOS OBS and packages it in the separate Stinger ZIP.
 - **Card scenes** (`StartingSoon`, `BRB`, `EndingStream`) use `src/Scene.tsx`,

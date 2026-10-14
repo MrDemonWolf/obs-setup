@@ -1,12 +1,14 @@
 # Stinger transition setup
 
 The Stinger is an OBS **scene transition**, not a Media Source. A cratered,
-steel-blue full moon with a light navy tint grows into view against a dark,
-starry night sky, then recedes to reveal the next scene. Soft crater shading
-and a restrained blue rim keep the moon readable without a bright screen wash.
-The night sky is fully opaque across the entire canvas from 1650 to 2600 ms, with
-the OBS scene cut at 2000 ms inside that hold. The first and last frames are
-fully transparent.
+steel-blue full moon lifts out of its usual top-right spot, travels to center,
+and pulls a dark night sky across the screen as a soft-edged iris around it.
+The sky holds, the moon's halo swells with the whoosh, then the iris contracts
+back into the moon as it returns to the corner. Soft crater shading and a
+restrained steel rim keep the moon readable without a bright screen wash; the
+stars are still and subtle. The night sky is fully opaque on every pixel from
+1650 to 2600 ms, with the OBS scene cut at 2000 ms inside that hold. The first
+and last frames are fully transparent.
 The former paw-swipe remains as `LegacyPawSwipeStingerBackup` in Remotion for
 rollback, but it is not included in the previewer or release package.
 
@@ -58,5 +60,6 @@ whoosh twice. The WAV is included for the source record and future renders.
   ProRes render master.
 
 The current render is 4 seconds at 60 fps. CI checks that the source WAV remains
-byte-for-byte in the ProRes render and that its measured peak reaches the
-2000 ms scene-cut point within one video frame.
+byte-for-byte in the ProRes render, that its measured peak reaches the 2000 ms
+scene-cut point within one video frame, that the first and last frames are fully
+transparent, and that every pixel is opaque across the 1650–2600 ms hold.

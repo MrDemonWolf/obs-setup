@@ -85,11 +85,12 @@ here opens a formula update PR after an `obs-setup` release.
   foreground, and the moon-only Stinger. The former paw-swipe is kept as a
   separate rollback composition. See the
   [`remotion/` guide](remotion/README.md) for previews, renders, and OBS setup.
-- **Branded stinger transition.** A 4-second shaded full-moon wipe (`Stinger`)
-  for OBS scene cuts, with no paw mark or layered paw sweep. The former
-  paw-swipe transition remains available in Remotion as a backup composition.
-  The whoosh is embedded in the video; a timing check
-  aligns the measured WAV peak with the covered scene-swap point.
+- **Branded stinger transition.** A 4-second steel-blue moon iris (`Stinger`)
+  for OBS scene cuts: the moon pulls a dark night sky across the screen and
+  back, with no paw mark or layered paw sweep. The former paw-swipe transition
+  remains available in Remotion as a backup composition. The whoosh is embedded
+  in the video; checks align the measured WAV peak with the covered scene-swap
+  point and prove full-screen coverage across it.
 - **Separate downloads.** `make release` renders the overlays and stinger
   with Remotion, encodes the transparent videos, regenerates the webcam
   masks, then writes two dated ZIPs to `~/Downloads`: one for scene overlays

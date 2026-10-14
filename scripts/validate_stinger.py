@@ -29,6 +29,8 @@ class Timing:
     fps: int
     duration_seconds: float
     point_ms: float
+    hold_start_ms: float
+    hold_end_ms: float
     declared_peak_ms: float
     delay_frames: int
     wav_peak_frame: int
@@ -75,6 +77,8 @@ def read_timing(wav_path: Path = SOURCE_WAV, source_path: Path = STINGER_SOURCE)
     seconds = _number_constant(source, "STINGER_SECONDS")
     cover = _number_constant(source, "STINGER_COVER")
     peak_ms = _number_constant(source, "STINGER_SFX_PEAK_MS")
+    hold_start_ms = _number_constant(source, "STINGER_HOLD_START_MS")
+    hold_end_ms = _number_constant(source, "STINGER_HOLD_END_MS")
 
     point_formula = re.search(
         r"STINGER_POINT_MS\s*=\s*Math\.round\(\s*STINGER_COVER\s*\*\s*"
@@ -119,6 +123,11 @@ def read_timing(wav_path: Path = SOURCE_WAV, source_path: Path = STINGER_SOURCE)
         raise ValueError("invalid stinger duration, frame rate, or cover position")
     if not math.isclose(seconds * fps, round(seconds * fps), abs_tol=1e-9):
         raise ValueError("stinger duration must resolve to a whole number of frames")
+    if not (0 < hold_start_ms < declared_point_ms < hold_end_ms < seconds * 1000):
+        raise ValueError(
+            f"the opaque hold ({hold_start_ms:.0f}–{hold_end_ms:.0f} ms) must bracket the "
+            f"{declared_point_ms} ms cut point inside the clip"
+        )
 
     tolerance_seconds = 1 / fps
     peak_seconds = peak_frame / sample_rate
@@ -142,6 +151,8 @@ def read_timing(wav_path: Path = SOURCE_WAV, source_path: Path = STINGER_SOURCE)
         fps=fps,
         duration_seconds=seconds,
         point_ms=declared_point_ms,
+        hold_start_ms=hold_start_ms,
+        hold_end_ms=hold_end_ms,
         declared_peak_ms=peak_ms,
         delay_frames=delay_frames,
         wav_peak_frame=peak_frame,
@@ -223,6 +234,41 @@ def _rgba_frame(path: Path, time_seconds: float, width: int, height: int) -> byt
     return result
 
 
+def _alpha_bounds(path: Path, time_seconds: float, width: int, height: int) -> tuple[int, int]:
+    """Min and max alpha over EVERY pixel of the frame at `time_seconds`."""
+    alpha = _rgba_frame(path, time_seconds, width, height)[3::4]
+    return min(alpha), max(alpha)
+
+
+def hold_sample_times(timing: Timing, step_ms: int = 100) -> list[float]:
+    """Seconds to probe across the opaque hold: both ends, the cut, and every step."""
+    times = {timing.hold_start_ms, timing.hold_end_ms, timing.point_ms}
+    ms = timing.hold_start_ms
+    while ms < timing.hold_end_ms:
+        times.add(ms)
+        ms += step_ms
+    return sorted(t / 1000 for t in times)
+
+
+def check_stinger_coverage(path: Path, timing: Timing) -> None:
+    """First and last frames fully transparent; every pixel opaque across the hold."""
+    video = _video_stream(_probe(path), path)
+    width, height = int(video["width"]), int(video["height"])
+    last_second = (round(timing.duration_seconds * timing.fps) - 1) / timing.fps
+    for label, when in (("first frame", 0.0), ("last frame", last_second)):
+        _, peak = _alpha_bounds(path, when, width, height)
+        if peak != 0:
+            raise ValueError(f"{path} {label} is not fully transparent (max alpha {peak})")
+    for when in hold_sample_times(timing):
+        floor, _ = _alpha_bounds(path, when, width, height)
+        if floor != 255:
+            raise ValueError(
+                f"{path} is not opaque on every pixel at {when * 1000:.0f} ms "
+                f"(min alpha {floor}) inside the {timing.hold_start_ms:.0f}–"
+                f"{timing.hold_end_ms:.0f} ms hold"
+            )
+
+
 def validate_hevc_alpha(path: Path, *, cover_time_ms: int | None = None) -> None:
     probe = _probe(path)
     video = _video_stream(probe, path)
@@ -287,6 +333,7 @@ def validate_rendered(
     if (timing.delay_frames * timing.sample_rate) % timing.fps:
         raise ValueError("the stinger frame delay does not land on a whole WAV sample")
     _find_embedded_pcm_start(decoded, source_pcm, timing, str(prores_path))
+    check_stinger_coverage(prores_path, timing)
 
     if encoded_path:
         encoded_probe = _probe(encoded_path)
@@ -310,11 +357,14 @@ def validate_rendered(
         ).stdout
         _find_embedded_pcm_start(encoded_pcm, source_pcm, timing, str(encoded_path))
         validate_hevc_alpha(encoded_path, cover_time_ms=timing.point_ms)
+        check_stinger_coverage(encoded_path, timing)
 
     print(
         f"✓ Stinger render: {timing.fps} fps × {round(timing.fps * timing.duration_seconds)} frames; "
         f"WAV peak at {timing.wav_peak_seconds * 1000:.3f} ms lands within one frame of "
-        f"the {timing.point_ms} ms cut point; embedded PCM is byte-for-byte intact."
+        f"the {timing.point_ms} ms cut point; embedded PCM is byte-for-byte intact; "
+        f"first/last frames transparent; every pixel opaque from "
+        f"{timing.hold_start_ms:.0f} to {timing.hold_end_ms:.0f} ms."
     )
 
 
@@ -342,7 +392,8 @@ def main() -> int:
                 f"✓ Stinger timing: {timing.sample_rate} Hz, {timing.channels} channels, "
                 f"{timing.wav_frames / timing.sample_rate:.6f}s; measured peak "
                 f"{timing.wav_peak_seconds * 1000:.3f} ms; delay {timing.delay_frames} frames; "
-                f"cut point {timing.point_ms} ms."
+                f"cut point {timing.point_ms} ms inside the "
+                f"{timing.hold_start_ms:.0f}–{timing.hold_end_ms:.0f} ms opaque hold."
             )
     except (OSError, ValueError, wave.Error, subprocess.CalledProcessError, json.JSONDecodeError) as error:
         print(f"stinger validation failed: {error}", file=__import__("sys").stderr)

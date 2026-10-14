@@ -8,6 +8,11 @@ export const STINGER_DURATION = Math.round(STINGER_SECONDS * STINGER_FPS);
 export const STINGER_COVER = 0.5;
 export const STINGER_POINT_MS = Math.round(STINGER_COVER * STINGER_SECONDS * 1000);
 export const STINGER_SFX_PEAK_MS = 170;
+// The night sky must cover EVERY pixel between these two points; the OBS cut
+// (STINGER_POINT_MS) sits inside. validate_stinger.py reads them and checks the
+// rendered alpha plane across the window, so keep them as plain integers.
+export const STINGER_HOLD_START_MS = 1650;
+export const STINGER_HOLD_END_MS = 2600;
 export const STINGER_SFX_DELAY_FRAMES = Math.max(
   0,
   Math.round(((STINGER_POINT_MS - STINGER_SFX_PEAK_MS) * STINGER_FPS) / 1000),

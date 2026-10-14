@@ -96,11 +96,14 @@ playful wolf-tech jokes.
 - **Background:** park the standalone background scene's moon on the right to
   match the other right-aligned layouts; scene-specific camera compositions
   may still move it when that keeps the sky clear.
-- **Stinger:** a lightly navy-tinted steel-blue moon grows against a dark night
-  sky with subtle stars and soft crater shading. The sky provides full opaque
-  coverage from 1650 to 2600 ms; the moon stays a visible disc instead of filling
-  the screen. No pale mist or paw sweep. The original WAV timing stays aligned
-  to the 2000 ms cut point, with fully transparent first and last frames.
+- **Stinger:** a steel-blue moon leaves the right pocket, travels to center,
+  and pulls a dark night sky across the screen as a soft-edged iris centred on
+  it; the iris contracts back into the moon on the way out. Still, subtle stars
+  and soft crater shading; the halo swells gently with the whoosh at the cut, no
+  flash. The sky covers every pixel from 1650 to 2600 ms; the moon stays a
+  visible disc instead of filling the screen. No pale mist or paw sweep. The
+  original WAV timing stays aligned to the 2000 ms cut point, with fully
+  transparent first and last frames.
 
 ## Motion
 
