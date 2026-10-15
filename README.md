@@ -56,8 +56,9 @@ flowchart LR
     Generator[scripts/gen_scene_collection.py] --> Device
     Device --> Preview["index.html<br/>scene preview"]
     Remotion[remotion/src + public] --> Release[release.sh]
-    Release --> OverlayZip[OBS-overlays ZIP]
+    Release --> ScenesZip[OBS-scenes ZIP]
     Release --> StingerZip[OBS-stinger ZIP]
+    Release --> MasksZip[OBS-masks ZIP]
 ```
 
 The `obs-backup` Homebrew formula lives in the separate
@@ -91,13 +92,14 @@ here opens a formula update PR after an `obs-setup` release.
   remains available in Remotion as a backup composition. The whoosh is embedded
   in the video; checks align the measured WAV peak with the covered scene-swap
   point and prove full-screen coverage across it.
-- **Separate downloads.** `make release` renders the overlays and stinger
+- **Separate downloads.** `make release` renders the scenes and stinger
   with Remotion, encodes the transparent videos, regenerates the webcam
-  masks, then writes two dated ZIPs to `~/Downloads`: one for scene overlays
-  and masks, another for the Stinger video, source WAV, and setup guide.
+  masks, then writes three dated ZIPs to `~/Downloads`: `OBS-scenes`,
+  `OBS-stinger`, and `OBS-masks`. Each ZIP contains only that asset group and
+  its setup guide.
 - **CI-built release assets.** GitHub Actions lints and type-checks the
   Remotion project, smoke-renders and checks the stinger timing, then renders
-  both complete downloads on a macOS runner for published GitHub Releases.
+  all three complete downloads on a macOS runner for published GitHub Releases.
 - **Rounded webcam masks.** Ready-made alpha PNGs that clip a live
   cam to match each overlay's rounded frame.
 - **OBS JSON reference.** What the files contain, how source colors
@@ -124,11 +126,11 @@ Full docs live in [`docs/`](docs/):
 
 Quick start:
 
-1. Download `OBS-overlays-<date>.zip` from the newest
-   [GitHub Release](https://github.com/MrDemonWolf/obs-setup/releases)
-   for scene overlay videos and webcam masks. Download `OBS-stinger-<date>.zip`
-   separately for the scene transition. Each archive includes its setup
-   README. (No releases yet? Build both locally with `make release`.)
+1. Download `OBS-scenes-<date>.zip`, `OBS-stinger-<date>.zip`, and
+   `OBS-masks-<date>.zip` from the newest
+   [GitHub Release](https://github.com/MrDemonWolf/obs-setup/releases).
+   Each archive contains only its named assets and a setup README. (No release
+   yet? Build them locally with `make release`.)
 2. To import the scene layout, clone the repo and in OBS use
    `Scene Collection -> Import ->`
    `devices/macbook-pro/scenes/MBP-Streaming.json` (MacBook Pro) or
@@ -145,7 +147,7 @@ Everything runs through `make`:
 | Command        | What it does                                                                                          |
 | -------------- | ----------------------------------------------------------------------------------------------------- |
 | `make backup`  | Zips live macOS OBS settings, then files a scrubbed copy into the repo for the current device.  |
-| `make release` | Renders and validates the overlays and stinger, then writes two dated ZIPs to `~/Downloads`.             |
+| `make release` | Renders and validates scenes, Stinger, and masks, then writes three dated ZIPs to `~/Downloads`.             |
 | `make preview` | Serves the color-coded previewer at <http://localhost:8000>.                                          |
 | `make gen`     | Regenerates both device scene collections (MacBook Pro + Mac Mini).                                   |
 | `make masks`   | Regenerates the rounded webcam masks from the frame geometry.                                         |
@@ -172,17 +174,15 @@ Force the device when auto-detect is wrong:
 DEVICE=mac-mini make backup
 ```
 
-### Get the overlay, scene, and mask files
+### Get the scene, Stinger, and mask files
 
 The easiest path is the release bundle - no local rendering needed:
 
-1. Go to the
-   [Releases page](https://github.com/MrDemonWolf/obs-setup/releases)
-   and download `OBS-overlays-<date>.zip` for scene videos and masks. Download
-   `OBS-stinger-<date>.zip` separately for the transition.
-2. Unzip the overlays archive: `Overlays/` has the 11 scene videos and
-   transparent widgets; `Masks/` has the rounded webcam masks. Its README
-   lists the scene mapping, loop settings, and webcam placement coordinates.
+1. From the [Releases page](https://github.com/MrDemonWolf/obs-setup/releases),
+   download `OBS-scenes-<date>.zip`, `OBS-stinger-<date>.zip`, and
+   `OBS-masks-<date>.zip`.
+2. Unzip each archive separately. The Scenes README lists scene mapping and
+   loop settings; the Masks README lists the webcam mask files and setup steps.
 3. Add the overlay videos in OBS as Media Sources. The Stinger archive
    contains `stinger-hevc.mov`, the original `stinger.wav`, and its own setup
    guide. Configure the video under **Scene Transitions → + → Stinger** with
@@ -199,13 +199,13 @@ make release FORCE=--force  # re-render everything (after overlay edits)
 If all renders are already present and only the ZIP step needs to be retried,
 run `./release.sh --package-only` from the repository root.
 
-Both archives end up in `~/Downloads/`: `OBS-overlays-<date>.zip` and
-`OBS-stinger-<date>.zip`. Set `OBS_RELEASE_VERSION=v0.1.3` to name both archives
-and their enclosed folders by release version instead of date. Published GitHub
-releases use their tag automatically. Set `OBS_RELEASE_OUTPUT_DIR` to choose another
-output folder. On GitHub, `.github/workflows/release.yml` attaches both ZIPs
-to each published release; a manual workflow run uploads them as separate
-artifacts instead.
+All three archives end up in `~/Downloads/`: `OBS-scenes-<date>.zip`,
+`OBS-stinger-<date>.zip`, and `OBS-masks-<date>.zip`. Set
+`OBS_RELEASE_VERSION=v0.1.3` to use a release version in each filename and
+enclosed folder. Published GitHub releases use their tag automatically. Set
+`OBS_RELEASE_OUTPUT_DIR` to choose another output folder. On GitHub,
+`.github/workflows/release.yml` attaches all three ZIPs to each published
+release; a manual workflow run uploads them as separate artifacts instead.
 
 ### Animated overlays
 
@@ -304,12 +304,12 @@ npm install
   the backup script.
 - `scripts/backup.sh` - detects the device, zips a raw snapshot, runs
   the sanitizer. Run with `obs-backup` or `make backup`.
-- `release.sh` - the Remotion render, audio validation, encoding, and two-ZIP
+- `release.sh` - the Remotion render, audio validation, encoding, and three-ZIP
   packaging pipeline. Run with `make release`.
 - `scripts/validate_stinger.py` - checks the measured WAV-to-cover timing and
   the rendered PCM track.
-- `scripts/validate_release_packages.py` - checks both ZIP manifests and
-  ensures the stinger stays separate from the overlay package.
+- `scripts/validate_release_packages.py` - checks all three ZIP manifests and
+  ensures Scenes, Stinger, and Masks stay separate.
 - `masks/gen_masks.py` - regenerates the webcam masks. Run with
   `make masks`.
 - In `remotion/`: `npm run obs` (previewer), `npm run dev` (Remotion
@@ -341,7 +341,7 @@ obs-setup/
 ├── assets/                   # repo art (MrDemonWolf logo)
 ├── .github/workflows/
 │   ├── ci.yml                # Python, Remotion, and Stinger checks
-│   ├── release.yml           # builds the overlays and Stinger downloads
+│   ├── release.yml           # builds the Scenes, Stinger, and Masks downloads
 │   └── update-homebrew.yml   # opens a formula update PR after a release
 ├── devices/
 │   ├── macbook-pro/          # portable rig

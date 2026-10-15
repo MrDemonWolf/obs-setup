@@ -250,15 +250,25 @@ def hold_sample_times(timing: Timing, step_ms: int = 100) -> list[float]:
     return sorted(t / 1000 for t in times)
 
 
-def check_stinger_coverage(path: Path, timing: Timing) -> None:
-    """First and last frames fully transparent; every pixel opaque across the hold."""
+def check_stinger_coverage(
+    path: Path, timing: Timing, *, endpoint_alpha_tolerance: int = 0
+) -> None:
+    """Transparent endpoints; every pixel opaque across the scene-switch hold.
+
+    Lossy HEVC alpha can decode a mathematically zero endpoint as alpha 1/255.
+    The ProRes master remains exact; callers may allow this single-level HEVC
+    quantization residue while rejecting any visibly meaningful edge alpha.
+    """
     video = _video_stream(_probe(path), path)
     width, height = int(video["width"]), int(video["height"])
     last_second = (round(timing.duration_seconds * timing.fps) - 1) / timing.fps
     for label, when in (("first frame", 0.0), ("last frame", last_second)):
         _, peak = _alpha_bounds(path, when, width, height)
-        if peak != 0:
-            raise ValueError(f"{path} {label} is not fully transparent (max alpha {peak})")
+        if peak > endpoint_alpha_tolerance:
+            raise ValueError(
+                f"{path} {label} is not transparent within alpha tolerance "
+                f"{endpoint_alpha_tolerance}/255 (max alpha {peak})"
+            )
     for when in hold_sample_times(timing):
         floor, _ = _alpha_bounds(path, when, width, height)
         if floor != 255:
@@ -357,13 +367,13 @@ def validate_rendered(
         ).stdout
         _find_embedded_pcm_start(encoded_pcm, source_pcm, timing, str(encoded_path))
         validate_hevc_alpha(encoded_path, cover_time_ms=timing.point_ms)
-        check_stinger_coverage(encoded_path, timing)
+        check_stinger_coverage(encoded_path, timing, endpoint_alpha_tolerance=1)
 
     print(
         f"✓ Stinger render: {timing.fps} fps × {round(timing.fps * timing.duration_seconds)} frames; "
         f"WAV peak at {timing.wav_peak_seconds * 1000:.3f} ms lands within one frame of "
         f"the {timing.point_ms} ms cut point; embedded PCM is byte-for-byte intact; "
-        f"first/last frames transparent; every pixel opaque from "
+        f"transparent endpoints (HEVC tolerance 1/255); every pixel opaque from "
         f"{timing.hold_start_ms:.0f} to {timing.hold_end_ms:.0f} ms."
     )
 

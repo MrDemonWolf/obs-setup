@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Render every overlay, transcode the transparent ones to HEVC-alpha, regenerate
-# the webcam masks, and package separate dated overlay and stinger ZIPs in
+# the webcam masks, and package separate dated Scenes, Stinger, and Masks ZIPs in
 # ~/Downloads — ready to copy to Google Drive.
 #
 # Usage:
@@ -25,8 +25,9 @@ if [ -n "$VERSION" ] && [[ ! "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
 fi
 PACKAGE_ID="${VERSION:-$DATE}"
 DOWNLOADS_DIR="${OBS_RELEASE_OUTPUT_DIR:-$HOME/Downloads}"
-OVERLAY_NAME="OBS-overlays-$PACKAGE_ID"
+SCENES_NAME="OBS-scenes-$PACKAGE_ID"
 STINGER_NAME="OBS-stinger-$PACKAGE_ID"
+MASKS_NAME="OBS-masks-$PACKAGE_ID"
 FORCE=""
 PACKAGE_ONLY=0
 RENDER_CONCURRENCY="${OBS_RENDER_CONCURRENCY:-2}"
@@ -107,35 +108,38 @@ python3 "$ROOT/masks/gen_masks.py" \
   || echo "⚠ mask regen skipped (need: pip install pillow) — using committed masks"
 
 # Keep the scene/overlay download independent from the separately encoded
-# stinger. Build archives in a fresh temporary directory; only the two ZIPs go
+# stinger. Build archives in a fresh temporary directory; only the three ZIPs go
 # to the requested download folder.
 WORK="$(mktemp -d "${TMPDIR:-/tmp}/obs-release-$DATE.XXXXXX")"
 trap 'rm -rf "$WORK"' EXIT
-OVERLAY_DIR="$WORK/$OVERLAY_NAME"
+SCENES_DIR="$WORK/$SCENES_NAME"
 STINGER_DIR="$WORK/$STINGER_NAME"
-OVERLAY_ZIP="$WORK/$OVERLAY_NAME.zip"
+MASKS_DIR="$WORK/$MASKS_NAME"
+SCENES_ZIP="$WORK/$SCENES_NAME.zip"
 STINGER_ZIP="$WORK/$STINGER_NAME.zip"
+MASKS_ZIP="$WORK/$MASKS_NAME.zip"
 
-echo "▶ assemble separate overlay and stinger archives…"
-mkdir -p "$OVERLAY_DIR/Overlays" "$OVERLAY_DIR/Masks" "$STINGER_DIR"
+echo "▶ assemble separate Scenes, Stinger, and Masks archives…"
+mkdir -p "$SCENES_DIR/Scenes" "$MASKS_DIR" "$STINGER_DIR"
 cp "$OUT"/0*.mp4 "$OUT"/background.mp4 "$OUT"/coffee-background.mp4 "$OUT"/cabin-background.mp4 \
    "$OUT"/socials-badge-hevc.mov "$OUT"/desk-foreground-hevc.mov "$OUT"/loading-barks-hevc.mov \
-   "$OUT"/countdown-hevc.mov "$OUT"/countdown-10m-hevc.mov "$OVERLAY_DIR/Overlays/"
-cp "$ROOT"/masks/*.png "$OVERLAY_DIR/Masks/"
+   "$OUT"/countdown-hevc.mov "$OUT"/countdown-10m-hevc.mov "$SCENES_DIR/Scenes/"
+cp "$ROOT"/masks/*.png "$MASKS_DIR/"
+cp "$ROOT"/masks/README.md "$MASKS_DIR/README.md"
 cp "$OUT"/stinger-hevc.mov "$R"/public/stinger.wav "$STINGER_DIR/"
 
-# Overlay package README — the scene transition has its own download.
+# Scene package README — masks and the scene transition have their own downloads.
 {
-  echo "# MrDemonWolf Stream Overlays — OBS bundle"
+  echo "# MrDemonWolf OBS Scenes"
   echo
-  echo "_Packaged $DATE ($PACKAGE_ID). The Stinger transition is packaged separately._"
+  echo "_Packaged $DATE ($PACKAGE_ID). Webcam masks and the Stinger are separate downloads._"
   echo
   cat <<'EOF'
-This package contains the scene overlays and webcam masks.
+This package contains the scene and widget videos. Download the matching
+`OBS-masks-*.zip` for camera masks and `OBS-stinger-*.zip` for the scene transition.
 
 ```
-Overlays/   15 videos — 10 full-frame MP4s + 5 transparent HEVC-alpha .mov
-Masks/      rounded-corner webcam masks (PNG, alpha)
+Scenes/     15 videos — 10 full-frame MP4s + 5 transparent HEVC-alpha .mov
 ```
 
 ## Add each as a Media Source
@@ -219,7 +223,7 @@ they do not need webcam masks.
 2. Effect Filters → **+** → **Image Mask/Blend**.
 3. Type = **Alpha Mask (Alpha Channel)**, Path = the matching PNG above.
 EOF
-} > "$OVERLAY_DIR/README.md"
+} > "$SCENES_DIR/README.md"
 
 # Self-contained transition setup. The WAV is the source used by Remotion;
 # its sound is already baked into the video and must not be added twice in OBS.
@@ -245,18 +249,23 @@ with alpha for OBS on macOS.
 EOF
 
 mkdir -p "$DOWNLOADS_DIR"
-FINAL_OVERLAY_ZIP="$DOWNLOADS_DIR/$OVERLAY_NAME.zip"
+FINAL_SCENES_ZIP="$DOWNLOADS_DIR/$SCENES_NAME.zip"
 FINAL_STINGER_ZIP="$DOWNLOADS_DIR/$STINGER_NAME.zip"
-echo "▶ zip overlay bundle…"
-( cd "$WORK" && zip -rq "$OVERLAY_ZIP" "$OVERLAY_NAME" )
+FINAL_MASKS_ZIP="$DOWNLOADS_DIR/$MASKS_NAME.zip"
+echo "▶ zip scene bundle…"
+( cd "$WORK" && zip -rq "$SCENES_ZIP" "$SCENES_NAME" )
 echo "▶ zip stinger bundle…"
 ( cd "$WORK" && zip -rq "$STINGER_ZIP" "$STINGER_NAME" )
+echo "▶ zip mask bundle…"
+( cd "$WORK" && zip -rq "$MASKS_ZIP" "$MASKS_NAME" )
 
 echo "▶ validate archive contents…"
 python3 "$ROOT/scripts/validate_release_packages.py" \
-  "$OVERLAY_ZIP" "$STINGER_ZIP" --masks-dir "$ROOT/masks"
+  "$SCENES_ZIP" "$STINGER_ZIP" "$MASKS_ZIP" --masks-dir "$ROOT/masks"
 
-mv -f "$OVERLAY_ZIP" "$FINAL_OVERLAY_ZIP"
+mv -f "$SCENES_ZIP" "$FINAL_SCENES_ZIP"
 mv -f "$STINGER_ZIP" "$FINAL_STINGER_ZIP"
-echo "✓ overlay download → $FINAL_OVERLAY_ZIP"
+mv -f "$MASKS_ZIP" "$FINAL_MASKS_ZIP"
+echo "✓ Scenes download → $FINAL_SCENES_ZIP"
 echo "✓ stinger download → $FINAL_STINGER_ZIP"
+echo "✓ Masks download → $FINAL_MASKS_ZIP"

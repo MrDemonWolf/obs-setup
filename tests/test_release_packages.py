@@ -9,9 +9,10 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from validate_release_packages import (  # noqa: E402
-    OVERLAY_FILES,
+    SCENE_FILES,
     STINGER_FILES,
-    validate_overlay_archive,
+    validate_mask_archive,
+    validate_scene_archive,
     validate_stinger_archive,
 )
 
@@ -29,24 +30,27 @@ class ReleasePackageTests(unittest.TestCase):
                 archive.writestr(f"{archive_path.stem}/{member}", "fixture")
         return archive_path
 
-    def test_overlay_archive_has_all_videos_masks_and_no_stinger(self):
-        self.assertEqual(len(OVERLAY_FILES), 15)
-        self.assertIn("countdown-hevc.mov", OVERLAY_FILES)
-        self.assertIn("countdown-10m-hevc.mov", OVERLAY_FILES)
-        masks = {"co-working-solo.png", "just-chatting-cam.png"}
-        members = {"README.md"}
-        members.update(f"Overlays/{name}" for name in OVERLAY_FILES)
-        members.update(f"Masks/{name}" for name in masks)
-        archive = self.make_zip("OBS-overlays-2026-10-03.zip", members)
-        validate_overlay_archive(archive, masks)
+    def test_scene_archive_has_all_videos_without_masks_or_stinger(self):
+        self.assertEqual(len(SCENE_FILES), 15)
+        self.assertIn("countdown-hevc.mov", SCENE_FILES)
+        self.assertIn("countdown-10m-hevc.mov", SCENE_FILES)
+        members = {"README.md", *(f"Scenes/{name}" for name in SCENE_FILES)}
+        archive = self.make_zip("OBS-scenes-2026-10-14.zip", members)
+        validate_scene_archive(archive)
 
-    def test_overlay_archive_rejects_stinger_leak(self):
-        members = {"README.md", "Stinger/stinger.wav"}
-        members.update(f"Overlays/{name}" for name in OVERLAY_FILES)
+    def test_scene_archive_rejects_mask_leak(self):
+        members = {"README.md", *(f"Scenes/{name}" for name in SCENE_FILES)}
         members.add("Masks/co-working-solo.png")
-        archive = self.make_zip("OBS-overlays-2026-10-03.zip", members)
-        with self.assertRaisesRegex(ValueError, "must not contain stinger"):
-            validate_overlay_archive(archive, {"co-working-solo.png"})
+        archive = self.make_zip("OBS-scenes-2026-10-14.zip", members)
+        with self.assertRaisesRegex(ValueError, "must not contain masks"):
+            validate_scene_archive(archive)
+
+    def test_scene_archive_rejects_stinger_leak(self):
+        members = {"README.md", *(f"Scenes/{name}" for name in SCENE_FILES)}
+        members.add("Stinger/stinger.wav")
+        archive = self.make_zip("OBS-scenes-2026-10-14.zip", members)
+        with self.assertRaisesRegex(ValueError, "Stinger files"):
+            validate_scene_archive(archive)
 
     def test_stinger_archive_has_video_source_audio_and_instructions(self):
         archive = self.make_zip(
@@ -62,6 +66,14 @@ class ReleasePackageTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(ValueError, "stinger.wav"):
             validate_stinger_archive(archive)
+
+    def test_mask_archive_contains_masks_and_guide_only(self):
+        masks = {"co-working-solo.png", "just-chatting-cam.png"}
+        archive = self.make_zip(
+            "OBS-masks-2026-10-14.zip",
+            {"README.md", *masks},
+        )
+        validate_mask_archive(archive, masks)
 
 
 if __name__ == "__main__":

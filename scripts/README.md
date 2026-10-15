@@ -33,7 +33,7 @@ the previewer, and Remotion are separate tools and are not part of the formula.
 | [`sanitize.py`](sanitize.py) | Copies supported scene/profile files into `devices/` after removing secrets. |
 | [`gen_scene_collection.py`](gen_scene_collection.py) | Generates the import-ready scene collections; run it with `make gen`. |
 | [`validate_stinger.py`](validate_stinger.py) | Verifies the Stinger's WAV timing and rendered audio. |
-| [`validate_release_packages.py`](validate_release_packages.py) | Checks that overlay and Stinger ZIP contents stay separate. |
+| [`validate_release_packages.py`](validate_release_packages.py) | Checks that Scenes, Stinger, and Masks ZIP contents stay separate. |
 
 ## Where the files go
 

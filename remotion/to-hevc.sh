@@ -20,7 +20,7 @@ for f in "$@"; do
   # Copy optional audio losslessly. The Stinger WAV is verified sample-for-
   # sample; AAC would alter the audio and can move its strongest peak.
   ffmpeg -y -i "$f" -map 0:v:0 -map 0:a? \
-    -c:v hevc_videotoolbox -allow_sw 1 -alpha_quality 0.9 \
+    -c:v hevc_videotoolbox -allow_sw 1 -alpha_quality 1.0 \
     -b:v 12M -tag:v hvc1 -c:a copy "$o" -loglevel error
   echo "→ $o"
 done

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check that release archives are complete and keep the stinger separate."""
+"""Check that release scene, Stinger, and mask archives stay separate."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ import zipfile
 from pathlib import Path, PurePosixPath
 
 
-OVERLAY_FILES = frozenset(
+SCENE_FILES = frozenset(
     {
         "01-starting-soon.mp4",
         "02-just-chatting.mp4",
@@ -49,28 +49,28 @@ def _relative_files(path: Path) -> tuple[str, set[str]]:
     return expected_root, relative
 
 
-def validate_overlay_archive(path: Path, expected_masks: set[str]) -> None:
+def validate_scene_archive(path: Path) -> None:
     _, files = _relative_files(path)
-    required = {f"Overlays/{name}" for name in OVERLAY_FILES}
-    required.add("README.md")
-    actual_videos = {name for name in files if name.startswith("Overlays/")}
-    if actual_videos != {f"Overlays/{name}" for name in OVERLAY_FILES}:
-        missing = sorted(required - files)
-        extra = sorted(actual_videos - {f"Overlays/{name}" for name in OVERLAY_FILES})
-        raise ValueError(f"{path} overlay files mismatch; missing={missing}, extra={extra}")
-    actual_masks = {name.removeprefix("Masks/") for name in files if name.startswith("Masks/")}
-    if actual_masks != expected_masks:
-        raise ValueError(
-            f"{path} masks mismatch; missing={sorted(expected_masks - actual_masks)}, "
-            f"extra={sorted(actual_masks - expected_masks)}"
-        )
-    if "README.md" not in files:
-        raise ValueError(f"{path} is missing README.md")
+    expected = {"README.md", *(f"Scenes/{name}" for name in SCENE_FILES)}
     if any("stinger" in name.lower() for name in files):
-        raise ValueError(f"{path} must not contain stinger files; they are in a separate download")
-    expected = required | {f"Masks/{name}" for name in expected_masks}
+        raise ValueError(f"{path} must not contain Stinger files; they are in a separate download")
+    if any(name.startswith("Masks/") for name in files):
+        raise ValueError(f"{path} must not contain masks; they are in a separate download")
     if files != expected:
-        raise ValueError(f"{path} has unexpected entries: {sorted(files - expected)}")
+        raise ValueError(
+            f"{path} scene files mismatch; missing={sorted(expected - files)}, "
+            f"extra={sorted(files - expected)}"
+        )
+
+
+def validate_mask_archive(path: Path, expected_masks: set[str]) -> None:
+    _, files = _relative_files(path)
+    expected = {"README.md", *expected_masks}
+    if files != expected:
+        raise ValueError(
+            f"{path} mask files mismatch; missing={sorted(expected - files)}, "
+            f"extra={sorted(files - expected)}"
+        )
 
 
 def validate_stinger_archive(path: Path) -> None:
@@ -82,26 +82,30 @@ def validate_stinger_archive(path: Path) -> None:
         )
 
 
-def validate_packages(overlay_zip: Path, stinger_zip: Path, mask_directory: Path) -> None:
+def validate_packages(
+    scenes_zip: Path, stinger_zip: Path, masks_zip: Path, mask_directory: Path
+) -> None:
     masks = {item.name for item in mask_directory.glob("*.png")}
     if not masks:
         raise ValueError(f"no PNG masks found in {mask_directory}")
-    validate_overlay_archive(overlay_zip, masks)
+    validate_scene_archive(scenes_zip)
     validate_stinger_archive(stinger_zip)
+    validate_mask_archive(masks_zip, masks)
     print(
-        f"✓ Release archives: {len(OVERLAY_FILES)} overlay videos, {len(masks)} masks; "
-        "the stinger video, WAV, and instructions are in their own ZIP."
+        f"✓ Release archives: {len(SCENE_FILES)} scene videos, the Stinger video/audio, "
+        f"and {len(masks)} masks are in three separate ZIPs."
     )
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("overlay_zip", type=Path)
+    parser.add_argument("scenes_zip", type=Path)
     parser.add_argument("stinger_zip", type=Path)
+    parser.add_argument("masks_zip", type=Path)
     parser.add_argument("--masks-dir", type=Path, required=True)
     args = parser.parse_args()
     try:
-        validate_packages(args.overlay_zip, args.stinger_zip, args.masks_dir)
+        validate_packages(args.scenes_zip, args.stinger_zip, args.masks_zip, args.masks_dir)
     except (OSError, ValueError, zipfile.BadZipFile) as error:
         print(f"release package validation failed: {error}", file=sys.stderr)
         return 1

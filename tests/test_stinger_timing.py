@@ -1,13 +1,19 @@
 import struct
 import sys
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from validate_stinger import _find_embedded_pcm_start, hold_sample_times, read_timing  # noqa: E402
+from validate_stinger import (  # noqa: E402
+    _find_embedded_pcm_start,
+    check_stinger_coverage,
+    hold_sample_times,
+    read_timing,
+)
 
 
 class StingerTimingTests(unittest.TestCase):
@@ -39,6 +45,29 @@ class StingerTimingTests(unittest.TestCase):
         self.assertEqual(samples[0] * 1000, self.timing.hold_start_ms)
         self.assertEqual(samples[-1] * 1000, self.timing.hold_end_ms)
         self.assertIn(self.timing.point_ms / 1000, samples)
+
+    def test_hevc_endpoint_allows_only_one_alpha_quantization_level(self):
+        duration_frames = round(self.timing.duration_seconds * self.timing.fps)
+        last_frame_time = (duration_frames - 1) / self.timing.fps
+        alpha_level = [1]
+
+        def bounds(_path, when, _width, _height):
+            if abs(when - last_frame_time) < 1e-6:
+                return 0, alpha_level[0]
+            if when == 0:
+                return 0, 0
+            return 255, 255
+
+        with patch(
+            "validate_stinger._probe",
+            return_value={"streams": [{"codec_type": "video", "width": 1, "height": 1}]},
+        ), patch("validate_stinger._alpha_bounds", side_effect=bounds):
+            with self.assertRaisesRegex(ValueError, "tolerance 0/255"):
+                check_stinger_coverage(Path("encoded.mov"), self.timing)
+            check_stinger_coverage(Path("encoded.mov"), self.timing, endpoint_alpha_tolerance=1)
+            alpha_level[0] = 2
+            with self.assertRaisesRegex(ValueError, "max alpha 2"):
+                check_stinger_coverage(Path("encoded.mov"), self.timing, endpoint_alpha_tolerance=1)
 
     def test_lossless_transcode_finds_exact_wav_at_expected_offset(self):
         source_pcm = b"".join(

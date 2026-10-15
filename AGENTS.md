@@ -21,7 +21,7 @@ make gen      # regenerate BOTH device scene collections (+ index.json each):
               #   devices/mac-mini/scenes/Mini-Streaming.json
 make backup   # zip live macOS OBS settings, then file a scrubbed copy into devices/<slug>/
 make preview  # serve the previewer at http://localhost:8000 (python3 -m http.server)
-make release  # render assets + package separate overlay and stinger ZIPs in ~/Downloads
+make release  # render assets + package separate Scenes, Stinger, and Masks ZIPs in ~/Downloads
 make          # list targets
 ```
 
@@ -307,17 +307,18 @@ Architecture:
   `render:all` → render both Countdown options + LoadingBarks ProRes (reused if
   a master already exists, `--force` to re-render) → render the Stinger ProRes → encode
   the five transparent masters as HEVC-alpha → validate the WAV timing and
-  rendered streams → regenerate `masks/` → make separate dated downloads:
-  `OBS-overlays-<date>.zip` (15 scene videos + masks + setup README) and
-  `OBS-stinger-<date>.zip` (HEVC-alpha transition + source WAV + setup README).
+  rendered streams → regenerate `masks/` → make three dated downloads:
+  `OBS-scenes-<date>.zip` (15 scene videos + setup README),
+  `OBS-stinger-<date>.zip` (HEVC-alpha transition + source WAV + setup README),
+  and `OBS-masks-<date>.zip` (mask PNGs + setup README).
   The stinger whoosh is embedded in the MOV; its sample-accurate WAV offset is
   checked in the ProRes render. `OBS_RELEASE_OUTPUT_DIR` changes the download
   directory from `~/Downloads`. Set `OBS_RELEASE_VERSION=v0.1.3` to replace
-  the date with a release version in both ZIP filenames and internal folders.
+  the date with a release version in all ZIP filenames and internal folders.
   Published GitHub Releases automatically use their version tag.
 - **CI** (`.github/workflows/ci.yml`) runs Python, Remotion lint/type checks,
   and a Remotion-rendered stinger audio-timing check. **Release CI**
-  (`.github/workflows/release.yml`) renders both packages on macOS, attaches
-  both ZIPs to each published GitHub Release, and uploads them as separate
+  (`.github/workflows/release.yml`) renders the packages on macOS, attaches
+  all three ZIPs to each published GitHub Release, and uploads them as separate
   artifacts on `workflow_dispatch`. macOS is mandatory because HEVC-alpha uses
   `hevc_videotoolbox`, which is Apple-only.

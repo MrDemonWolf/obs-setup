@@ -23,8 +23,8 @@ The separate archive contains:
 - `stinger.wav` — the original audio source used to render the embedded whoosh.
 - `README.md` — a copy of these install steps.
 
-The overlay and webcam-mask files are in the separate `OBS-overlays-<version>.zip`.
-To render both archives locally on macOS, run `make release`; the files appear
+The scene videos are in `OBS-scenes-<version>.zip`; webcam masks are in
+`OBS-masks-<version>.zip`. To render the archives locally on macOS, run `make release`; the files appear
 in `~/Downloads/` (or in the folder set by `OBS_RELEASE_OUTPUT_DIR`). Set
 `OBS_RELEASE_VERSION=v0.1.3` for versioned local archives; otherwise local
 builds use the packaging date in their filenames.
@@ -61,5 +61,7 @@ whoosh twice. The WAV is included for the source record and future renders.
 
 The current render is 4 seconds at 60 fps. CI checks that the source WAV remains
 byte-for-byte in the ProRes render, that its measured peak reaches the 2000 ms
-scene-cut point within one video frame, that the first and last frames are fully
-transparent, and that every pixel is opaque across the 1650–2600 ms hold.
+scene-cut point within one video frame, that the ProRes master has fully
+transparent first and last frames (the compressed HEVC output allows at most
+one 8-bit alpha level of codec rounding), and that every pixel is opaque across
+the 1650–2600 ms hold.
