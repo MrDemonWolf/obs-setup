@@ -92,14 +92,15 @@ here opens a formula update PR after an `obs-setup` release.
   remains available in Remotion as a backup composition. The whoosh is embedded
   in the video; checks align the measured WAV peak with the covered scene-swap
   point and prove full-screen coverage across it.
-- **Separate, organized downloads.** `make release` renders the scenes and
+- **Organized downloads.** `make release` renders the scenes and
   stinger with Remotion, encodes the transparent videos, regenerates the webcam
-  masks, then writes three ZIPs to `~/Downloads`: `OBS-scenes`, `OBS-stinger`,
-  and `OBS-masks`. The Scenes ZIP separates `Scenes/`, `Extras/`, and
-  `Backgrounds/`, and includes both `README.md` and a styled `README.pdf`.
+  masks, then writes four ZIPs to `~/Downloads`: the all-in-one `OBS-assets`,
+  plus `OBS-scenes`, `OBS-stinger`, and `OBS-masks`. The master ZIP separates
+  `Scenes/`, `Extras/`, `Backgrounds/`, `Stinger/`, and `Masks/`, with Markdown
+  and styled PDF guides.
 - **CI-built release assets.** GitHub Actions lints and type-checks the
   Remotion project, smoke-renders and checks the stinger timing, then renders
-  all three complete downloads on a macOS runner for published GitHub Releases.
+  all four downloads on a macOS runner for published GitHub Releases.
 - **Rounded webcam masks.** Ready-made alpha PNGs that clip a live
   cam to match each overlay's rounded frame.
 - **OBS JSON reference.** What the files contain, how source colors
@@ -126,11 +127,10 @@ Full docs live in [`docs/`](docs/):
 
 Quick start:
 
-1. Download the matching versioned `OBS-scenes-vX.Y.Z.zip`,
-   `OBS-stinger-vX.Y.Z.zip`, and `OBS-masks-vX.Y.Z.zip` from the newest
-   [GitHub Release](https://github.com/MrDemonWolf/obs-setup/releases).
-   Each archive contains only its named assets and a setup README. (No release
-   yet? Build them locally with `make release`.)
+1. Download `OBS-assets-vX.Y.Z.zip` from the newest
+   [GitHub Release](https://github.com/MrDemonWolf/obs-setup/releases) for all
+   assets in one archive. Separate `OBS-scenes`, `OBS-stinger`, and `OBS-masks`
+   ZIPs are also available. (No release yet? Build them locally with `make release`.)
 2. To import the scene layout, clone the repo and in OBS use
    `Scene Collection -> Import ->`
    `devices/macbook-pro/scenes/MBP-Streaming.json` (MacBook Pro) or
@@ -147,7 +147,7 @@ Everything runs through `make`:
 | Command        | What it does                                                                                          |
 | -------------- | ----------------------------------------------------------------------------------------------------- |
 | `make backup`  | Zips live macOS OBS settings, then files a scrubbed copy into the repo for the current device.  |
-| `make release` | Renders and validates scenes, Stinger, and masks, then writes three dated ZIPs to `~/Downloads`.             |
+| `make release` | Renders and validates scenes, Stinger, and masks, then writes four dated ZIPs to `~/Downloads`.             |
 | `make preview` | Serves the color-coded previewer at <http://localhost:8000>.                                          |
 | `make gen`     | Regenerates both device scene collections (MacBook Pro + Mac Mini).                                   |
 | `make masks`   | Regenerates the rounded webcam masks from the frame geometry.                                         |
@@ -179,11 +179,12 @@ DEVICE=mac-mini make backup
 The easiest path is the release bundle - no local rendering needed:
 
 1. From the [Releases page](https://github.com/MrDemonWolf/obs-setup/releases),
-   download the matching versioned `OBS-scenes-vX.Y.Z.zip`,
-   `OBS-stinger-vX.Y.Z.zip`, and `OBS-masks-vX.Y.Z.zip`.
-2. Unzip each archive separately. Open `README.pdf` for the formatted guide or
-   `README.md` for the plain-text version. The Scenes ZIP groups full scenes,
-   add-ons, and backgrounds into separate folders.
+   download `OBS-assets-vX.Y.Z.zip` for everything, or choose the three split
+   ZIPs for only the assets you need.
+2. Unzip the master archive. `Scenes/`, `Extras/`, `Backgrounds/`, `Stinger/`,
+   and `Masks/` each have their own folder. Open the root `README.pdf` for the
+   formatted guide or `README.md` for plain text; Stinger and Masks also include
+   their own setup guides.
 3. Add the overlay videos in OBS as Media Sources. The Stinger archive
    contains `stinger-hevc.mov`, the original `stinger.wav`, and its own setup
    guide. Configure the video under **Scene Transitions → + → Stinger** with
@@ -200,11 +201,11 @@ make release FORCE=--force  # re-render everything (after overlay edits)
 If all renders are already present and only the ZIP step needs to be retried,
 run `./release.sh --package-only` from the repository root.
 
-All three archives end up in `~/Downloads/`. Set
+All four archives end up in `~/Downloads/`. Set
 `OBS_RELEASE_VERSION=v0.1.4` to use a release version in each filename and
 enclosed folder. Published GitHub releases use their tag automatically. Set
 `OBS_RELEASE_OUTPUT_DIR` to choose another output folder. On GitHub,
-`.github/workflows/release.yml` attaches all three ZIPs to each published
+`.github/workflows/release.yml` attaches all four ZIPs to each published
 release; a manual workflow run uploads them as separate artifacts instead.
 
 ### Animated overlays
@@ -314,14 +315,16 @@ npm install
   the backup script.
 - `scripts/backup.sh` - detects the device, zips a raw snapshot, runs
   the sanitizer. Run with `obs-backup` or `make backup`.
-- `release.sh` - the Remotion render, audio validation, encoding, and three-ZIP
+- `release.sh` - the Remotion render, audio validation, encoding, and four-ZIP
   packaging pipeline. Run with `make release`.
 - `scripts/render_package_guide.py` - makes the styled, accessible PDF guides
   included alongside Markdown in each asset ZIP.
 - `scripts/validate_stinger.py` - checks the measured WAV-to-cover timing and
   the rendered PCM track.
-- `scripts/validate_release_packages.py` - checks all three ZIP manifests and
-  ensures Scenes, Stinger, and Masks stay separate.
+- `scripts/build_master_package.py` - combines split packages into the
+  organized all-in-one archive.
+- `scripts/validate_release_packages.py` - checks the split and master ZIP
+  manifests and their folder contents.
 - `masks/gen_masks.py` - regenerates the webcam masks. Run with
   `make masks`.
 - In `remotion/`: `npm run obs` (previewer), `npm run dev` (Remotion

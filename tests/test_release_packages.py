@@ -13,6 +13,7 @@ from validate_release_packages import (  # noqa: E402
     SCENE_GROUPS,
     STINGER_FILES,
     validate_mask_archive,
+    validate_master_archive,
     validate_scene_archive,
     validate_stinger_archive,
 )
@@ -82,6 +83,15 @@ class ReleasePackageTests(unittest.TestCase):
             {"README.md", "README.pdf", *masks},
         )
         validate_mask_archive(archive, masks)
+
+    def test_master_archive_contains_all_assets_in_named_folders(self):
+        masks = {"co-working-solo.png", "just-chatting-cam.png"}
+        members = {"README.md", "README.pdf"}
+        members.update(f"{folder}/{name}" for folder, names in SCENE_GROUPS.items() for name in names)
+        members.update(f"Stinger/{name}" for name in STINGER_FILES)
+        members.update(f"Masks/{name}" for name in (*{"README.md", "README.pdf"}, *masks))
+        archive = self.make_zip("OBS-assets-v0.1.4.zip", members)
+        validate_master_archive(archive, masks)
 
 
 if __name__ == "__main__":

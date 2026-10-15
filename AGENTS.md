@@ -21,7 +21,7 @@ make gen      # regenerate BOTH device scene collections (+ index.json each):
               #   devices/mac-mini/scenes/Mini-Streaming.json
 make backup   # zip live macOS OBS settings, then file a scrubbed copy into devices/<slug>/
 make preview  # serve the previewer at http://localhost:8000 (python3 -m http.server)
-make release  # render assets + package separate Scenes, Stinger, and Masks ZIPs in ~/Downloads
+make release  # render assets + package master and separate Scenes, Stinger, and Masks ZIPs
 make          # list targets
 ```
 
@@ -307,10 +307,12 @@ Architecture:
   `render:all` → render both Countdown options + LoadingBarks ProRes (reused if
   a master already exists, `--force` to re-render) → render the Stinger ProRes → encode
   the five transparent masters as HEVC-alpha → validate the WAV timing and
-  rendered streams → regenerate `masks/` → make three versioned downloads:
+  rendered streams → regenerate `masks/` → make four versioned downloads:
   `OBS-scenes-vX.Y.Z.zip` (`Scenes/`, `Extras/`, `Backgrounds/`, Markdown and PDF guides),
   `OBS-stinger-vX.Y.Z.zip` (HEVC-alpha transition + source WAV + guides),
-  and `OBS-masks-vX.Y.Z.zip` (mask PNGs + guides).
+  `OBS-masks-vX.Y.Z.zip` (mask PNGs + guides), and
+  `OBS-assets-vX.Y.Z.zip` (all assets organized under `Scenes/`, `Extras/`,
+  `Backgrounds/`, `Stinger/`, and `Masks/`, with a root README and PDF).
   The stinger whoosh is embedded in the MOV; its sample-accurate WAV offset is
   checked in the ProRes render. `OBS_RELEASE_OUTPUT_DIR` changes the download
   directory from `~/Downloads`. Set `OBS_RELEASE_VERSION=v0.1.4` to replace
@@ -319,6 +321,6 @@ Architecture:
 - **CI** (`.github/workflows/ci.yml`) runs Python, Remotion lint/type checks,
   and a Remotion-rendered stinger audio-timing check. **Release CI**
   (`.github/workflows/release.yml`) renders the packages on macOS, attaches
-  all three ZIPs to each published GitHub Release, and uploads them as separate
+  all four ZIPs to each published GitHub Release, and uploads them as separate
   artifacts on `workflow_dispatch`. macOS is mandatory because HEVC-alpha uses
   `hevc_videotoolbox`, which is Apple-only.

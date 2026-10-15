@@ -28,6 +28,7 @@ DOWNLOADS_DIR="${OBS_RELEASE_OUTPUT_DIR:-$HOME/Downloads}"
 SCENES_NAME="OBS-scenes-$PACKAGE_ID"
 STINGER_NAME="OBS-stinger-$PACKAGE_ID"
 MASKS_NAME="OBS-masks-$PACKAGE_ID"
+MASTER_NAME="OBS-assets-$PACKAGE_ID"
 FORCE=""
 PACKAGE_ONLY=0
 RENDER_CONCURRENCY="${OBS_RENDER_CONCURRENCY:-2}"
@@ -118,6 +119,7 @@ MASKS_DIR="$WORK/$MASKS_NAME"
 SCENES_ZIP="$WORK/$SCENES_NAME.zip"
 STINGER_ZIP="$WORK/$STINGER_NAME.zip"
 MASKS_ZIP="$WORK/$MASKS_NAME.zip"
+MASTER_ZIP="$WORK/$MASTER_NAME.zip"
 
 echo "▶ assemble separate Scenes, Stinger, and Masks archives…"
 mkdir -p "$SCENES_DIR/Scenes" "$SCENES_DIR/Extras" "$SCENES_DIR/Backgrounds" "$MASKS_DIR" "$STINGER_DIR"
@@ -260,20 +262,27 @@ mkdir -p "$DOWNLOADS_DIR"
 FINAL_SCENES_ZIP="$DOWNLOADS_DIR/$SCENES_NAME.zip"
 FINAL_STINGER_ZIP="$DOWNLOADS_DIR/$STINGER_NAME.zip"
 FINAL_MASKS_ZIP="$DOWNLOADS_DIR/$MASKS_NAME.zip"
+FINAL_MASTER_ZIP="$DOWNLOADS_DIR/$MASTER_NAME.zip"
 echo "▶ zip scene bundle…"
 ( cd "$WORK" && zip -rq "$SCENES_ZIP" "$SCENES_NAME" )
 echo "▶ zip stinger bundle…"
 ( cd "$WORK" && zip -rq "$STINGER_ZIP" "$STINGER_NAME" )
 echo "▶ zip mask bundle…"
 ( cd "$WORK" && zip -rq "$MASKS_ZIP" "$MASKS_NAME" )
+echo "▶ build master asset bundle…"
+python3 "$ROOT/scripts/build_master_package.py" \
+  "$SCENES_ZIP" "$STINGER_ZIP" "$MASKS_ZIP" "$MASTER_ZIP" \
+  --guide-renderer "$ROOT/scripts/render_package_guide.py"
 
 echo "▶ validate archive contents…"
 python3 "$ROOT/scripts/validate_release_packages.py" \
-  "$SCENES_ZIP" "$STINGER_ZIP" "$MASKS_ZIP" --masks-dir "$ROOT/masks"
+  "$SCENES_ZIP" "$STINGER_ZIP" "$MASKS_ZIP" "$MASTER_ZIP" --masks-dir "$ROOT/masks"
 
 mv -f "$SCENES_ZIP" "$FINAL_SCENES_ZIP"
 mv -f "$STINGER_ZIP" "$FINAL_STINGER_ZIP"
 mv -f "$MASKS_ZIP" "$FINAL_MASKS_ZIP"
+mv -f "$MASTER_ZIP" "$FINAL_MASTER_ZIP"
 echo "✓ Scenes download → $FINAL_SCENES_ZIP"
 echo "✓ stinger download → $FINAL_STINGER_ZIP"
 echo "✓ Masks download → $FINAL_MASKS_ZIP"
+echo "✓ Complete asset bundle → $FINAL_MASTER_ZIP"

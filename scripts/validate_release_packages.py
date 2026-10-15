@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check that release scene, Stinger, and mask archives stay separate."""
+"""Check that OBS release archives have the expected organized contents."""
 
 from __future__ import annotations
 
@@ -89,8 +89,21 @@ def validate_stinger_archive(path: Path) -> None:
         )
 
 
+def validate_master_archive(path: Path, expected_masks: set[str]) -> None:
+    _, files = _relative_files(path)
+    expected = set(GUIDE_FILES)
+    expected.update(f"{folder}/{name}" for folder, names in SCENE_GROUPS.items() for name in names)
+    expected.update(f"Stinger/{name}" for name in STINGER_FILES)
+    expected.update(f"Masks/{name}" for name in (*GUIDE_FILES, *expected_masks))
+    if files != expected:
+        raise ValueError(
+            f"{path} master files mismatch; missing={sorted(expected - files)}, "
+            f"extra={sorted(files - expected)}"
+        )
+
+
 def validate_packages(
-    scenes_zip: Path, stinger_zip: Path, masks_zip: Path, mask_directory: Path
+    scenes_zip: Path, stinger_zip: Path, masks_zip: Path, master_zip: Path, mask_directory: Path
 ) -> None:
     masks = {item.name for item in mask_directory.glob("*.png")}
     if not masks:
@@ -98,9 +111,10 @@ def validate_packages(
     validate_scene_archive(scenes_zip)
     validate_stinger_archive(stinger_zip)
     validate_mask_archive(masks_zip, masks)
+    validate_master_archive(master_zip, masks)
     print(
         f"✓ Release archives: {len(SCENE_FILES)} scene/add-on/background videos, the Stinger video/audio, "
-        f"and {len(masks)} masks are in three separate ZIPs."
+        f"and {len(masks)} masks are in three split ZIPs and one master ZIP."
     )
 
 
@@ -109,10 +123,11 @@ def main() -> int:
     parser.add_argument("scenes_zip", type=Path)
     parser.add_argument("stinger_zip", type=Path)
     parser.add_argument("masks_zip", type=Path)
+    parser.add_argument("master_zip", type=Path)
     parser.add_argument("--masks-dir", type=Path, required=True)
     args = parser.parse_args()
     try:
-        validate_packages(args.scenes_zip, args.stinger_zip, args.masks_zip, args.masks_dir)
+        validate_packages(args.scenes_zip, args.stinger_zip, args.masks_zip, args.master_zip, args.masks_dir)
     except (OSError, ValueError, zipfile.BadZipFile) as error:
         print(f"release package validation failed: {error}", file=sys.stderr)
         return 1

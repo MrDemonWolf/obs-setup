@@ -1,8 +1,8 @@
 name: Build OBS asset bundles
 
 # Renders the overlays and stinger with Remotion, validates the audio timing,
-# packages separate Scenes, Stinger, and Masks downloads, and attaches all
-# three to the GitHub Release.
+# packages separate Scenes, Stinger, and Masks downloads plus one master ZIP,
+# and attaches all four to the GitHub Release.
 #
 # macOS runner is REQUIRED: to-hevc.sh encodes HEVC-with-alpha via
 # hevc_videotoolbox, which only exists on Apple platforms (no Linux equivalent).
@@ -18,7 +18,7 @@ on:
         type: string
 
 permissions:
-  contents: write         # upload the three ZIPs as release assets
+  contents: write         # upload the four ZIPs as release assets
 
 jobs:
   bundle:
@@ -88,6 +88,7 @@ jobs:
           echo "scenes=${{ runner.temp }}/obs-release-downloads/OBS-scenes-$PACKAGE_ID.zip" >> "$GITHUB_OUTPUT"
           echo "stinger=${{ runner.temp }}/obs-release-downloads/OBS-stinger-$PACKAGE_ID.zip" >> "$GITHUB_OUTPUT"
           echo "masks=${{ runner.temp }}/obs-release-downloads/OBS-masks-$PACKAGE_ID.zip" >> "$GITHUB_OUTPUT"
+          echo "master=${{ runner.temp }}/obs-release-downloads/OBS-assets-$PACKAGE_ID.zip" >> "$GITHUB_OUTPUT"
 
       # Manual/dispatch runs: keep each download as its own workflow artifact.
       - uses: actions/upload-artifact@v4
@@ -108,10 +109,16 @@ jobs:
           path: ${{ steps.downloads.outputs.masks }}
           if-no-files-found: error
 
-      # Release runs: attach all three archives to the published release.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: obs-assets-${{ steps.release_date.outputs.package_id }}
+          path: ${{ steps.downloads.outputs.master }}
+          if-no-files-found: error
+
+      # Release runs: attach the split archives and the master archive.
       - name: Attach to release
         if: github.event_name == 'release'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_TAG: ${{ github.event.release.tag_name }}
-        run: gh release upload "$RELEASE_TAG" "${{ steps.downloads.outputs.scenes }}" "${{ steps.downloads.outputs.stinger }}" "${{ steps.downloads.outputs.masks }}" --clobber
+        run: gh release upload "$RELEASE_TAG" "${{ steps.downloads.outputs.scenes }}" "${{ steps.downloads.outputs.stinger }}" "${{ steps.downloads.outputs.masks }}" "${{ steps.downloads.outputs.master }}" --clobber
