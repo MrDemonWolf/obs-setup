@@ -92,11 +92,11 @@ here opens a formula update PR after an `obs-setup` release.
   remains available in Remotion as a backup composition. The whoosh is embedded
   in the video; checks align the measured WAV peak with the covered scene-swap
   point and prove full-screen coverage across it.
-- **Separate downloads.** `make release` renders the scenes and stinger
-  with Remotion, encodes the transparent videos, regenerates the webcam
-  masks, then writes three dated ZIPs to `~/Downloads`: `OBS-scenes`,
-  `OBS-stinger`, and `OBS-masks`. Each ZIP contains only that asset group and
-  its setup guide.
+- **Separate, organized downloads.** `make release` renders the scenes and
+  stinger with Remotion, encodes the transparent videos, regenerates the webcam
+  masks, then writes three ZIPs to `~/Downloads`: `OBS-scenes`, `OBS-stinger`,
+  and `OBS-masks`. The Scenes ZIP separates `Scenes/`, `Extras/`, and
+  `Backgrounds/`, and includes both `README.md` and a styled `README.pdf`.
 - **CI-built release assets.** GitHub Actions lints and type-checks the
   Remotion project, smoke-renders and checks the stinger timing, then renders
   all three complete downloads on a macOS runner for published GitHub Releases.
@@ -126,8 +126,8 @@ Full docs live in [`docs/`](docs/):
 
 Quick start:
 
-1. Download `OBS-scenes-<date>.zip`, `OBS-stinger-<date>.zip`, and
-   `OBS-masks-<date>.zip` from the newest
+1. Download the matching versioned `OBS-scenes-vX.Y.Z.zip`,
+   `OBS-stinger-vX.Y.Z.zip`, and `OBS-masks-vX.Y.Z.zip` from the newest
    [GitHub Release](https://github.com/MrDemonWolf/obs-setup/releases).
    Each archive contains only its named assets and a setup README. (No release
    yet? Build them locally with `make release`.)
@@ -179,10 +179,11 @@ DEVICE=mac-mini make backup
 The easiest path is the release bundle - no local rendering needed:
 
 1. From the [Releases page](https://github.com/MrDemonWolf/obs-setup/releases),
-   download `OBS-scenes-<date>.zip`, `OBS-stinger-<date>.zip`, and
-   `OBS-masks-<date>.zip`.
-2. Unzip each archive separately. The Scenes README lists scene mapping and
-   loop settings; the Masks README lists the webcam mask files and setup steps.
+   download the matching versioned `OBS-scenes-vX.Y.Z.zip`,
+   `OBS-stinger-vX.Y.Z.zip`, and `OBS-masks-vX.Y.Z.zip`.
+2. Unzip each archive separately. Open `README.pdf` for the formatted guide or
+   `README.md` for the plain-text version. The Scenes ZIP groups full scenes,
+   add-ons, and backgrounds into separate folders.
 3. Add the overlay videos in OBS as Media Sources. The Stinger archive
    contains `stinger-hevc.mov`, the original `stinger.wav`, and its own setup
    guide. Configure the video under **Scene Transitions → + → Stinger** with
@@ -199,9 +200,8 @@ make release FORCE=--force  # re-render everything (after overlay edits)
 If all renders are already present and only the ZIP step needs to be retried,
 run `./release.sh --package-only` from the repository root.
 
-All three archives end up in `~/Downloads/`: `OBS-scenes-<date>.zip`,
-`OBS-stinger-<date>.zip`, and `OBS-masks-<date>.zip`. Set
-`OBS_RELEASE_VERSION=v0.1.3` to use a release version in each filename and
+All three archives end up in `~/Downloads/`. Set
+`OBS_RELEASE_VERSION=v0.1.4` to use a release version in each filename and
 enclosed folder. Published GitHub releases use their tag automatically. Set
 `OBS_RELEASE_OUTPUT_DIR` to choose another output folder. On GitHub,
 `.github/workflows/release.yml` attaches all three ZIPs to each published
@@ -275,6 +275,7 @@ a frame.
 - Node.js 18+ (only for the `remotion/` overlays).
 - `ffmpeg` (only for `make release` HEVC-alpha transcodes).
 - Pillow (`pip install pillow`, only for `make masks`).
+- ReportLab (only for release PDFs; install in a Python virtual environment).
 
 ### Setup
 
@@ -283,6 +284,15 @@ Clone the repo:
 ```bash
 git clone git@github.com:MrDemonWolf/obs-setup.git
 cd obs-setup
+```
+
+For local release packaging, install the PDF guide dependency in an isolated
+environment before running `make release`:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -r scripts/requirements-release.txt
 ```
 
 The backup, generator, and previewer need no package install - the
@@ -306,6 +316,8 @@ npm install
   the sanitizer. Run with `obs-backup` or `make backup`.
 - `release.sh` - the Remotion render, audio validation, encoding, and three-ZIP
   packaging pipeline. Run with `make release`.
+- `scripts/render_package_guide.py` - makes the styled, accessible PDF guides
+  included alongside Markdown in each asset ZIP.
 - `scripts/validate_stinger.py` - checks the measured WAV-to-cover timing and
   the rendered PCM track.
 - `scripts/validate_release_packages.py` - checks all three ZIP manifests and

@@ -307,13 +307,13 @@ Architecture:
   `render:all` → render both Countdown options + LoadingBarks ProRes (reused if
   a master already exists, `--force` to re-render) → render the Stinger ProRes → encode
   the five transparent masters as HEVC-alpha → validate the WAV timing and
-  rendered streams → regenerate `masks/` → make three dated downloads:
-  `OBS-scenes-<date>.zip` (15 scene videos + setup README),
-  `OBS-stinger-<date>.zip` (HEVC-alpha transition + source WAV + setup README),
-  and `OBS-masks-<date>.zip` (mask PNGs + setup README).
+  rendered streams → regenerate `masks/` → make three versioned downloads:
+  `OBS-scenes-vX.Y.Z.zip` (`Scenes/`, `Extras/`, `Backgrounds/`, Markdown and PDF guides),
+  `OBS-stinger-vX.Y.Z.zip` (HEVC-alpha transition + source WAV + guides),
+  and `OBS-masks-vX.Y.Z.zip` (mask PNGs + guides).
   The stinger whoosh is embedded in the MOV; its sample-accurate WAV offset is
   checked in the ProRes render. `OBS_RELEASE_OUTPUT_DIR` changes the download
-  directory from `~/Downloads`. Set `OBS_RELEASE_VERSION=v0.1.3` to replace
+  directory from `~/Downloads`. Set `OBS_RELEASE_VERSION=v0.1.4` to replace
   the date with a release version in all ZIP filenames and internal folders.
   Published GitHub Releases automatically use their version tag.
 - **CI** (`.github/workflows/ci.yml`) runs Python, Remotion lint/type checks,

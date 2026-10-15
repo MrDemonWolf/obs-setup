@@ -120,10 +120,11 @@ STINGER_ZIP="$WORK/$STINGER_NAME.zip"
 MASKS_ZIP="$WORK/$MASKS_NAME.zip"
 
 echo "▶ assemble separate Scenes, Stinger, and Masks archives…"
-mkdir -p "$SCENES_DIR/Scenes" "$MASKS_DIR" "$STINGER_DIR"
-cp "$OUT"/0*.mp4 "$OUT"/background.mp4 "$OUT"/coffee-background.mp4 "$OUT"/cabin-background.mp4 \
-   "$OUT"/socials-badge-hevc.mov "$OUT"/desk-foreground-hevc.mov "$OUT"/loading-barks-hevc.mov \
-   "$OUT"/countdown-hevc.mov "$OUT"/countdown-10m-hevc.mov "$SCENES_DIR/Scenes/"
+mkdir -p "$SCENES_DIR/Scenes" "$SCENES_DIR/Extras" "$SCENES_DIR/Backgrounds" "$MASKS_DIR" "$STINGER_DIR"
+cp "$OUT"/0*.mp4 "$SCENES_DIR/Scenes/"
+cp "$OUT"/background.mp4 "$OUT"/coffee-background.mp4 "$OUT"/cabin-background.mp4 "$SCENES_DIR/Backgrounds/"
+cp "$OUT"/socials-badge-hevc.mov "$OUT"/desk-foreground-hevc.mov "$OUT"/loading-barks-hevc.mov \
+   "$OUT"/countdown-hevc.mov "$OUT"/countdown-10m-hevc.mov "$SCENES_DIR/Extras/"
 cp "$ROOT"/masks/*.png "$MASKS_DIR/"
 cp "$ROOT"/masks/README.md "$MASKS_DIR/README.md"
 cp "$OUT"/stinger-hevc.mov "$R"/public/stinger.wav "$STINGER_DIR/"
@@ -139,7 +140,9 @@ This package contains the scene and widget videos. Download the matching
 `OBS-masks-*.zip` for camera masks and `OBS-stinger-*.zip` for the scene transition.
 
 ```
-Scenes/     15 videos — 10 full-frame MP4s + 5 transparent HEVC-alpha .mov
+Scenes/       7 full-screen stream scenes
+Extras/       5 add-ons: socials, countdowns, loading panel, desk foreground
+Backgrounds/  3 standalone backgrounds and cabin layers
 ```
 
 ## Add each as a Media Source
@@ -153,21 +156,21 @@ Scenes/     15 videos — 10 full-frame MP4s + 5 transparent HEVC-alpha .mov
 
 | File | Scene | Source size | Loop |
 |---|---|---|---|
-| `01-starting-soon.mp4` | Starting Soon | 1920×1080 | ON |
-| `02-just-chatting.mp4` | Just Chatting | 1920×1080 | ON |
-| `03-just-chatting-vtuber.mp4` | Just Chatting · VTuber | 1920×1080 | ON |
-| `04-co-working-solo.mp4` | Co-Working · Solo | 1920×1080 | ON |
-| `05-co-working-dual.mp4` | Co-Working · Dual | 1920×1080 | ON |
-| `06-be-right-back.mp4` | Be Right Back | 1920×1080 | ON |
-| `07-ending-stream.mp4` | Ending Stream (2:30) | 1920×1080 | OFF |
-| `background.mp4` | Background (also plain gameplay) | 1920×1080 | ON |
-| `coffee-background.mp4` | Complete cabin + desk + coffee steam | 1920×1080 | ON |
-| `cabin-background.mp4` | Cabin only, for separate desk/model layers | 1920×1080 | ON |
-| `desk-foreground-hevc.mov` | Desk + animated coffee steam | 1920×1080 | ON |
-| `socials-badge-hevc.mov` | Socials badge (over anything) | 720×140 | ON |
-| `loading-barks-hevc.mov` | Loading Barks panel (over anything) | 1080×420 | ON |
-| `countdown-hevc.mov` | 5:00 countdown panel | 820×500 | **OFF** — start on going live |
-| `countdown-10m-hevc.mov` | 10:00 countdown panel | 820×500 | **OFF** — start on going live |
+| `Scenes/01-starting-soon.mp4` | Starting Soon | 1920×1080 | ON |
+| `Scenes/02-just-chatting.mp4` | Just Chatting | 1920×1080 | ON |
+| `Scenes/03-just-chatting-vtuber.mp4` | Just Chatting · VTuber | 1920×1080 | ON |
+| `Scenes/04-co-working-solo.mp4` | Co-Working · Solo | 1920×1080 | ON |
+| `Scenes/05-co-working-dual.mp4` | Co-Working · Dual | 1920×1080 | ON |
+| `Scenes/06-be-right-back.mp4` | Be Right Back | 1920×1080 | ON |
+| `Scenes/07-ending-stream.mp4` | Ending Stream (2:30) | 1920×1080 | OFF |
+| `Backgrounds/background.mp4` | Forest background (also plain gameplay) | 1920×1080 | ON |
+| `Backgrounds/coffee-background.mp4` | Complete cabin + desk + coffee steam | 1920×1080 | ON |
+| `Backgrounds/cabin-background.mp4` | Cabin only, for separate desk/model layers | 1920×1080 | ON |
+| `Extras/desk-foreground-hevc.mov` | Desk + animated coffee steam | 1920×1080 | ON |
+| `Extras/socials-badge-hevc.mov` | Mini socials badge (over anything) | 720×140 | ON |
+| `Extras/loading-barks-hevc.mov` | Loading Barks panel (over anything) | 1080×420 | ON |
+| `Extras/countdown-hevc.mov` | 5:00 countdown panel | 820×500 | **OFF** — start on going live |
+| `Extras/countdown-10m-hevc.mov` | 10:00 countdown panel | 820×500 | **OFF** — start on going live |
 
 ## Stinger transition
 
@@ -196,7 +199,7 @@ VTuber = no cam frame (model fullscreen); chat frame is the same box.
 
 ## Cabin desk foreground
 
-For VTuber scenes, add `desk-foreground-hevc.mov` as a separate Media Source,
+For VTuber scenes, add `Extras/desk-foreground-hevc.mov` as a separate Media Source,
 loop ON, at **0,0**, size **1920×1080**. Its sky and room area is transparent.
 The desk starts at **y=860** and covers the model's lower edge. In OBS Sources,
 order top to bottom: chat/widgets, desk foreground, VTuber model, cabin scene.
@@ -247,6 +250,11 @@ as another OBS audio source. It is included as the original audio source and
 for future renders. The clip is 4 seconds at 60 fps and is encoded as HEVC
 with alpha for OBS on macOS.
 EOF
+
+echo "▶ render PDF setup guides…"
+python3 "$ROOT/scripts/render_package_guide.py" "$SCENES_DIR/README.md" "$SCENES_DIR/README.pdf"
+python3 "$ROOT/scripts/render_package_guide.py" "$STINGER_DIR/README.md" "$STINGER_DIR/README.pdf"
+python3 "$ROOT/scripts/render_package_guide.py" "$MASKS_DIR/README.md" "$MASKS_DIR/README.pdf"
 
 mkdir -p "$DOWNLOADS_DIR"
 FINAL_SCENES_ZIP="$DOWNLOADS_DIR/$SCENES_NAME.zip"

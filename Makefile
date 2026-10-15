@@ -15,7 +15,7 @@ preview: ## Serve the HTML previewer at http://localhost:8000
 gen: ## Regenerate both device scene collections (MacBook Pro + Mac Mini)
 	@python3 scripts/gen_scene_collection.py
 
-release: ## Render overlays + package separate overlays and Stinger ZIPs in ~/Downloads
+release: ## Render overlays + package versioned Scenes, Stinger, and Masks ZIPs
 	@bash release.sh $(FORCE)
 
 masks: ## Regenerate the rounded webcam masks (needs: pip install pillow)

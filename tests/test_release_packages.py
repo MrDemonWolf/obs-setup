@@ -10,6 +10,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from validate_release_packages import (  # noqa: E402
     SCENE_FILES,
+    SCENE_GROUPS,
     STINGER_FILES,
     validate_mask_archive,
     validate_scene_archive,
@@ -30,23 +31,30 @@ class ReleasePackageTests(unittest.TestCase):
                 archive.writestr(f"{archive_path.stem}/{member}", "fixture")
         return archive_path
 
-    def test_scene_archive_has_all_videos_without_masks_or_stinger(self):
+    def test_scene_archive_groups_scenes_extras_and_backgrounds(self):
         self.assertEqual(len(SCENE_FILES), 15)
         self.assertIn("countdown-hevc.mov", SCENE_FILES)
         self.assertIn("countdown-10m-hevc.mov", SCENE_FILES)
-        members = {"README.md", *(f"Scenes/{name}" for name in SCENE_FILES)}
+        self.assertEqual(set(SCENE_GROUPS), {"Scenes", "Extras", "Backgrounds"})
+        self.assertEqual(len(SCENE_GROUPS["Scenes"]), 7)
+        self.assertEqual(len(SCENE_GROUPS["Extras"]), 5)
+        self.assertEqual(len(SCENE_GROUPS["Backgrounds"]), 3)
+        members = {"README.md", "README.pdf"}
+        members.update(f"{folder}/{name}" for folder, names in SCENE_GROUPS.items() for name in names)
         archive = self.make_zip("OBS-scenes-2026-10-14.zip", members)
         validate_scene_archive(archive)
 
     def test_scene_archive_rejects_mask_leak(self):
-        members = {"README.md", *(f"Scenes/{name}" for name in SCENE_FILES)}
+        members = {"README.md", "README.pdf"}
+        members.update(f"{folder}/{name}" for folder, names in SCENE_GROUPS.items() for name in names)
         members.add("Masks/co-working-solo.png")
         archive = self.make_zip("OBS-scenes-2026-10-14.zip", members)
         with self.assertRaisesRegex(ValueError, "must not contain masks"):
             validate_scene_archive(archive)
 
     def test_scene_archive_rejects_stinger_leak(self):
-        members = {"README.md", *(f"Scenes/{name}" for name in SCENE_FILES)}
+        members = {"README.md", "README.pdf"}
+        members.update(f"{folder}/{name}" for folder, names in SCENE_GROUPS.items() for name in names)
         members.add("Stinger/stinger.wav")
         archive = self.make_zip("OBS-scenes-2026-10-14.zip", members)
         with self.assertRaisesRegex(ValueError, "Stinger files"):
@@ -71,7 +79,7 @@ class ReleasePackageTests(unittest.TestCase):
         masks = {"co-working-solo.png", "just-chatting-cam.png"}
         archive = self.make_zip(
             "OBS-masks-2026-10-14.zip",
-            {"README.md", *masks},
+            {"README.md", "README.pdf", *masks},
         )
         validate_mask_archive(archive, masks)
 

@@ -9,8 +9,8 @@ import zipfile
 from pathlib import Path, PurePosixPath
 
 
-SCENE_FILES = frozenset(
-    {
+SCENE_GROUPS = {
+    "Scenes": frozenset({
         "01-starting-soon.mp4",
         "02-just-chatting.mp4",
         "03-just-chatting-vtuber.mp4",
@@ -18,17 +18,23 @@ SCENE_FILES = frozenset(
         "05-co-working-dual.mp4",
         "06-be-right-back.mp4",
         "07-ending-stream.mp4",
+    }),
+    "Backgrounds": frozenset({
         "background.mp4",
         "coffee-background.mp4",
         "cabin-background.mp4",
+    }),
+    "Extras": frozenset({
         "socials-badge-hevc.mov",
         "loading-barks-hevc.mov",
         "countdown-hevc.mov",
         "countdown-10m-hevc.mov",
         "desk-foreground-hevc.mov",
-    }
-)
-STINGER_FILES = frozenset({"README.md", "stinger-hevc.mov", "stinger.wav"})
+    }),
+}
+SCENE_FILES = frozenset().union(*SCENE_GROUPS.values())
+GUIDE_FILES = frozenset({"README.md", "README.pdf"})
+STINGER_FILES = GUIDE_FILES | frozenset({"stinger-hevc.mov", "stinger.wav"})
 
 
 def _relative_files(path: Path) -> tuple[str, set[str]]:
@@ -51,7 +57,8 @@ def _relative_files(path: Path) -> tuple[str, set[str]]:
 
 def validate_scene_archive(path: Path) -> None:
     _, files = _relative_files(path)
-    expected = {"README.md", *(f"Scenes/{name}" for name in SCENE_FILES)}
+    expected = set(GUIDE_FILES)
+    expected.update(f"{folder}/{name}" for folder, names in SCENE_GROUPS.items() for name in names)
     if any("stinger" in name.lower() for name in files):
         raise ValueError(f"{path} must not contain Stinger files; they are in a separate download")
     if any(name.startswith("Masks/") for name in files):
@@ -65,7 +72,7 @@ def validate_scene_archive(path: Path) -> None:
 
 def validate_mask_archive(path: Path, expected_masks: set[str]) -> None:
     _, files = _relative_files(path)
-    expected = {"README.md", *expected_masks}
+    expected = {*GUIDE_FILES, *expected_masks}
     if files != expected:
         raise ValueError(
             f"{path} mask files mismatch; missing={sorted(expected - files)}, "
@@ -92,7 +99,7 @@ def validate_packages(
     validate_stinger_archive(stinger_zip)
     validate_mask_archive(masks_zip, masks)
     print(
-        f"✓ Release archives: {len(SCENE_FILES)} scene videos, the Stinger video/audio, "
+        f"✓ Release archives: {len(SCENE_FILES)} scene/add-on/background videos, the Stinger video/audio, "
         f"and {len(masks)} masks are in three separate ZIPs."
     )
 

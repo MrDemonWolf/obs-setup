@@ -31,6 +31,9 @@ jobs:
       - name: Run Python checks
         run: python3 -m unittest discover -s tests -v
 
+      - name: Check release script syntax
+        run: bash -n release.sh
+
       - name: Set up Node.js for Remotion
         uses: actions/setup-node@v4
         with:
