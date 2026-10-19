@@ -3,6 +3,7 @@
   "label": "MacBook Pro",
   "scenes": [
     "scenes/MBP-Streaming.json",
+    "scenes/SRT_Sender.json",
     "scenes/Streaming.json",
     "scenes/Untitled.json"
   ]

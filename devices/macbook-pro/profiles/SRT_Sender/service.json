@@ -1,0 +1,9 @@
+{
+  "type": "rtmp_custom",
+  "settings": {
+    "server": "srt://192.168.1.55:9000?mode=listener&passphrase=f79bb79faac2c5915516ddb8c4188b3f&pbkeylen=32&latency=120000",
+    "use_auth": "",
+    "bwtest": false,
+    "key": ""
+  }
+}

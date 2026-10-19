@@ -1453,7 +1453,7 @@
             "private_settings": {
               "color-preset": 7,
               "color": "",
-              "collapsed": false
+              "collapsed": true
             }
           },
           {
@@ -1684,7 +1684,7 @@
               "duration": 0
             },
             "private_settings": {
-              "collapsed": false,
+              "collapsed": true,
               "color-preset": 5,
               "color": ""
             }
@@ -3467,7 +3467,7 @@
               "duration": 0
             },
             "private_settings": {
-              "collapsed": false,
+              "collapsed": true,
               "color-preset": 5,
               "color": ""
             }
@@ -4011,7 +4011,7 @@
             "private_settings": {
               "color-preset": 7,
               "color": "",
-              "collapsed": false
+              "collapsed": true
             }
           },
           {
@@ -4416,7 +4416,7 @@
               "duration": 300
             },
             "private_settings": {
-              "collapsed": false,
+              "collapsed": true,
               "color-preset": 9,
               "color": ""
             }
@@ -4878,7 +4878,7 @@
               "y": 947.0
             },
             "pos_rel": {
-              "x": 0.23888902366161346,
+              "x": 0.23888906836509705,
               "y": 0.7537037134170532
             },
             "scale": {
@@ -5097,20 +5097,20 @@
       "name": "Starting Soon"
     },
     {
-      "name": "Be Right Back"
-    },
-    {
       "name": "Live"
     },
     {
       "name": "Co-Working"
     },
     {
+      "name": "Be Right Back"
+    },
+    {
       "name": "Ending"
     }
   ],
-  "current_scene": "Live",
-  "current_program_scene": "Live",
+  "current_scene": "Starting Soon",
+  "current_program_scene": "Starting Soon",
   "canvases": [],
   "current_transition": "Fade",
   "transition_duration": 50,
