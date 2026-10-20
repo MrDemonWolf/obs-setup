@@ -12,6 +12,10 @@ model sit behind the desk instead of looking like a floating head.
   and the transparent `desk-foreground-hevc.mov` above your model.
 
 Both options are 1920×1080, loop every 8 seconds, and have no baked chat box.
+The cabin plate is animated: lantern flicker and wall spill, dust motes in the
+lantern light, a mist band drifting across the valley, twinkling window stars,
+and a breathing halo on the window moon. Co-Working Solo and Dual use the same
+plate, so all four cabin videos share the motion.
 Use one option per scene. Adding the transparent desk over the full coffee
 background would double the coffee steam.
 

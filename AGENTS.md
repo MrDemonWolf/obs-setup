@@ -174,8 +174,10 @@ Architecture:
   `scenes.ts`). **Heavy → NOT in `render:all`**, render manually. Edit
   `BARKS`/seed to taste.
 - **`Stinger`** (`FullMoonStinger.tsx`) = the OBS **stinger transition**:
-  4s at 60fps, 1920×1080 with alpha. A steel-blue moon with soft craters
-  leaves the right pocket (1568,108 — same spot as the scenes), travels to
+  4s at 60fps, 1920×1080 with alpha. The overlay moon (pale body, cerulean
+  halo — the `wolf/Moon` palette) leaves the right pocket (1568,108 — same spot
+  as the scenes), crossfades to the steel-blue "dark mode" moon with soft
+  craters on the way in (`darken`, fully dark before centre), travels to
   center, and pulls a dark navy night sky across the canvas as a soft-edged
   IRIS (CSS `mask-image` radial gradient centred on the moon); the iris
   contracts back into the moon on the way out. Stars are a stinger-local
@@ -222,7 +224,7 @@ Architecture:
   (A plain-gameplay "Streaming" scene was removed — use `Background` instead;
   it's the same animated bg to stack game capture / cam / widgets over.)
 - **Co-Working** = one data-driven `Cowork` comp (`CoworkFrame.tsx`):
-  `Background variant="forest"` + baked **16:9** `CamFrame`(s) from
+  `CabinBackground` (the moonlit cabin plate) + baked **16:9** `CamFrame`(s) from
   `COWORK_LAYOUTS` (no bar, no widget boxes — the open space is for timer /
   tasks / chat / now-playing OBS sources). Both layouts share ONE top-left pin
   (`x64,y136` — nudged down from the old y40 to open a wider bottom widget
@@ -243,6 +245,16 @@ Architecture:
 - **`Background`** = `BackdropScene.tsx` → the shared forest photograph, sky
   stars, moon, and soft rightward paw trail; no handle or widget boxes. The most
   flexible overlay.
+- **`CabinBackground`** (`CabinBackground.tsx`) = the moonlit cabin plate used by
+  Co-Working (both layouts), `CoffeeBackground` (plate + `DeskForeground`), and
+  the cabin-only export. The photo (`public/cabin-office.png`) is still; the
+  motion is layered on top and loop-safe: lantern flicker (three integer
+  harmonics, warm core + wide wall spill, screen-blended), dust motes rising
+  through the lantern light (each climbs exactly `rise` px per loop and
+  wraps), a mist band drifting across the window (two tiled copies, exactly
+  one window-width per loop), 40 twinkling window stars kept off the posts,
+  a breathing halo on the painted window moon, and a lit-leaf glint. Lantern
+  flame / moon / leaf coordinates are constants at the top of the file.
 - **`Socials`** = `Socials.tsx` `SocialsScene` (720×140, transparent) that fades
   through brand logos one at a time, in their **real brand colors** (no recolor
   filter; dark marks like x/instagram/tiktok's note are whitened in the SVG files

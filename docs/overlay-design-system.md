@@ -89,14 +89,18 @@ playful wolf-tech jokes.
   rail. A separate transparent desk and coffee-steam video layers above the
   VTuber model to hide its lower crop. See [cabin setup](cabin-setup.md).
 - **Co-Working:** the same cabin with clean camera frames and open space for OBS
-  timers, tasks, music, and chat sources.
+  timers, tasks, music, and chat sources. The cabin plate itself moves: the
+  lanterns flicker and spill warm light, dust motes drift through it, mist
+  slides across the valley, the window stars twinkle, and the painted moon's
+  halo breathes. None of it changes the framing.
 - **Transparent widgets:** use `ForestWidget` moonlit glass so labels stay
   legible over gameplay. No traffic-light dots or window bars. Use white paws,
   silver-blue progress, and real platform marks for Socials.
 - **Background:** park the standalone background scene's moon on the right to
   match the other right-aligned layouts; scene-specific camera compositions
   may still move it when that keeps the sky clear.
-- **Stinger:** a steel-blue moon leaves the right pocket, travels to center,
+- **Stinger:** the overlay moon leaves the right pocket, goes dark-mode steel
+  blue on the way in, travels to center,
   and pulls a dark night sky across the screen as a soft-edged iris centred on
   it; the iris contracts back into the moon on the way out. Still, subtle stars
   and soft crater shading; the halo swells gently with the whoosh at the cut, no
@@ -112,9 +116,8 @@ playful wolf-tech jokes.
   catch a moonlight sweep at 8–10 seconds, and exit at 33–35 seconds.
   This repeats every 36 seconds, giving the headline a longer readable hold.
   Supporting text uses Plus Jakarta Sans 500 and follows the title with a fade.
-  The existing fursona artwork peeks from the upper-left edge at 37–43.8 seconds;
-  this is a predetermined cameo once per loop, not runtime randomness. It stays
-  above the text and away from the lower-left widget area and right-side chat.
+  No artwork or logo cameo: the cards carry only the chip, the chat frame, and
+  the forest. (The fursona peek that used to slide in at 37 seconds was removed.)
   Forest motion repeats nine eight-second cycles, including the white paw trail.
 - Ending plays once for 150 seconds (4500 frames at 30 fps), with no chat.
   Its headline reveals once and remains readable. This is the 90-second raid

@@ -6,7 +6,8 @@ import {
   STINGER_POINT_MS,
 } from "./StingerAudio";
 
-// OBS stinger: a steel-blue full moon leaves its right-pocket rest position
+// OBS stinger: the overlay moon (pale body, cerulean halo) leaves its right-pocket
+// rest position, goes "dark mode" (steel blue) on the way in, and
 // (the same spot it occupies on the live scenes), travels to center, and pulls a
 // dark night sky across the canvas as a soft-edged IRIS centred on the moon. The
 // sky holds every pixel opaque from STINGER_HOLD_START_MS to STINGER_HOLD_END_MS
@@ -80,6 +81,9 @@ export const FullMoonStinger: React.FC = () => {
   });
   const haloOpacity = 0.14 + 0.12 * impact;
   const moonlight = 0.16 + 0.1 * impact;
+  // Light → dark: the moon leaves the pocket in the overlay palette and is fully
+  // dark before it reaches centre; it stays dark through the hold and the recede.
+  const darken = interpolate(seconds, [0.45, HOLD_START - 0.25], [0, 1], { ...clamp, easing: Easing.inOut(Easing.sin) });
 
   return (
     <AbsoluteFill style={{ overflow: "hidden" }}>
@@ -129,12 +133,46 @@ export const FullMoonStinger: React.FC = () => {
             <stop offset="45%" stopColor="#497991" stopOpacity="0.18" />
             <stop offset="100%" stopColor="#497991" stopOpacity="0" />
           </radialGradient>
+          {/* light (overlay) palette — same stops as wolf/Moon */}
+          <radialGradient id="lunar-surface-light" cx="42%" cy="38%">
+            <stop offset="0%" stopColor="#F4F8FF" />
+            <stop offset="100%" stopColor="#C9D6EA" />
+          </radialGradient>
+          <radialGradient id="lunar-crater-light">
+            <stop offset="0%" stopColor="#AEBEDA" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#AEBEDA" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="lunar-limb-light">
+            <stop offset="0%" stopColor="rgba(9,21,51,0)" />
+            <stop offset="68%" stopColor="rgba(9,21,51,0)" />
+            <stop offset="100%" stopColor="rgba(9,21,51,0.26)" />
+          </radialGradient>
+          <radialGradient id="lunar-glow-light">
+            <stop offset="0%" stopColor="rgba(0,172,237,0.45)" />
+            <stop offset="55%" stopColor="rgba(0,172,237,0.12)" />
+            <stop offset="100%" stopColor="rgba(0,172,237,0)" />
+          </radialGradient>
           <filter id="lunar-halo" x="-25%" y="-25%" width="150%" height="150%">
             <feGaussianBlur stdDeviation="10" />
           </filter>
           <clipPath id="lunar-clip"><circle r="180" /></clipPath>
         </defs>
         <g transform={`translate(${x} ${y}) scale(${radius / 180})`}>
+          {/* light moon (fades out on the way in) */}
+          <g opacity={1 - darken}>
+            <circle r="330" fill="url(#lunar-glow-light)" opacity={0.5 + 0.35 * impact} />
+            <circle r="186" fill="#00ACED" opacity={0.16 + 0.12 * impact} filter="url(#lunar-halo)" />
+            <circle r="180" fill="url(#lunar-surface-light)" />
+            <g clipPath="url(#lunar-clip)">
+              <ellipse cx="-50" cy="-22" rx="61" ry="47" fill="url(#lunar-crater-light)" />
+              <ellipse cx="54" cy="14" rx="40" ry="31" fill="url(#lunar-crater-light)" />
+              <circle cx="4" cy="86" r="23" fill="url(#lunar-crater-light)" />
+              <circle cx="76" cy="-68" r="18" fill="url(#lunar-crater-light)" />
+              <circle cx="22" cy="22" r="215" fill="url(#lunar-limb-light)" />
+            </g>
+          </g>
+          {/* dark-mode moon (fades in on the way in) */}
+          <g opacity={darken}>
           <circle r="330" fill="url(#lunar-glow)" opacity={haloOpacity} />
           <circle r="186" fill="#497991" opacity={0.16 + 0.12 * impact} filter="url(#lunar-halo)" />
           <circle r="180" fill="url(#lunar-surface)" stroke="#70A1BA" strokeOpacity="0.35" strokeWidth="1" />
@@ -152,6 +190,7 @@ export const FullMoonStinger: React.FC = () => {
               <circle cx="-23" cy="42" r="11" />
             </g>
             <circle r="180" fill="url(#lunar-rim-light)" />
+          </g>
           </g>
         </g>
       </svg>

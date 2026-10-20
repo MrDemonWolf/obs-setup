@@ -86,9 +86,10 @@ here opens a formula update PR after an `obs-setup` release.
   foreground, and the moon-only Stinger. The former paw-swipe is kept as a
   separate rollback composition. See the
   [`remotion/` guide](remotion/README.md) for previews, renders, and OBS setup.
-- **Branded stinger transition.** A 4-second steel-blue moon iris (`Stinger`)
-  for OBS scene cuts: the moon pulls a dark night sky across the screen and
-  back, with no paw mark or layered paw sweep. The former paw-swipe transition
+- **Branded stinger transition.** A 4-second moon iris (`Stinger`) for OBS
+  scene cuts: the overlay moon leaves its pocket, goes dark-mode steel blue on
+  the way in, and pulls a dark night sky across the screen and back, with no
+  paw mark, logo, or layered paw sweep. The former paw-swipe transition
   remains available in Remotion as a backup composition. The whoosh is embedded
   in the video; checks align the measured WAV peak with the covered scene-swap
   point and prove full-screen coverage across it.
@@ -234,7 +235,9 @@ the exported desk is a separate foreground video placed above your model in OBS.
 See the [cabin layer setup guide](docs/cabin-setup.md) for source order and bounds.
 The preview's **Coffee cabin** section offers a complete cabin/desk/steam
 background and a cabin-only option for stacking the model and transparent desk separately.
-The cabin artwork was generated with imagegen; animation is implemented in Remotion.
+The cabin artwork was generated with imagegen; animation is implemented in Remotion
+(lantern flicker, dust motes, drifting valley mist, twinkling window stars, and a
+breathing window-moon halo, all loop-safe over the 8-second cycle).
 The heavy
 `Countdown` options and `LoadingBarks` ProRes masters are excluded from
 `render:all`; `make release` (or a manual `npx remotion render`)

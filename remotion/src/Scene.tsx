@@ -2,7 +2,6 @@ import { AbsoluteFill } from "remotion";
 import { Background } from "./Background";
 import { TitleChip } from "./TitleChip";
 import { Mascot } from "./Mascot";
-import { FursonaCameo } from "./FursonaCameo";
 import { ChatBoxFrame } from "./ChatBoxFrame";
 import { theme } from "./theme";
 
@@ -37,7 +36,6 @@ export const Scene: React.FC<SceneProps> = ({
     }} />
     {showChatBox && <ChatBoxFrame />}
     {showTitle && <TitleChip title={title} status={subtitle} lines={titleLines} hold={holdTitle} />}
-    {showTitle && <FursonaCameo src={mascotSrc} />}
     {showMascot && <Mascot src={mascotSrc} />}
   </AbsoluteFill>
 );
