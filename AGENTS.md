@@ -122,8 +122,6 @@ npm run obs         # macOS-style previewer at http://localhost:5178 (Vite + @re
 npm run dev         # Remotion Studio
 npm run lint        # eslint + tsc for src and preview
 npm run render:all  # render every scene into out/ (see render-all.mjs)
-npm run alerts:prepare # prepare transparent inputs from the existing Drive masters
-npm run alerts:render  # render animated alert GIF/ProRes review outputs
 # one at a time (comp ids):
 npx remotion render <CompId> out/<name>.mp4
 #   StartingSoon | BRB | JustChatting | JustChattingVtuber
@@ -133,7 +131,7 @@ npx remotion render <CompId> out/<name>.mp4
 
 Architecture:
 
-- **`src/scenes.ts` is the single source of truth** for the **17** scenes, each
+- **`src/scenes.ts` is the single source of truth** for the **13** scenes, each
   with `id`, `label`, `component`, `props`, and optional `width`/`height`.
   `src/Root.tsx` registers a `<Composition>` per scene (applying per-scene
   `width ?? VIDEO.width` / `height ?? VIDEO.height` — transparent widgets use
@@ -279,20 +277,6 @@ Architecture:
   `PawTrail` runs inside the shared `Background` on the full forest scenes, so
   its timing and soft-white color stay consistent across cards, live layouts,
   and the flexible Background composition.
-- **Twitch alerts** (`AlertAnimation.tsx`) use the current 3D wolf performances
-  from the Drive `Alerts/Exports` ProRes masters. The four variants add a subtle,
-  seamless hover/breathing motion plus event-specific rings, glints, Bits tokens,
-  or celebration accents around that footage; the mascot render itself is never
-  regenerated or warped. Run
-  `npm run alerts:prepare` to create ignored, 480×270 transparent PNG frame sources
-  under `public/alerts/source/`, then `npm run alerts:render` to write GIF and
-  ProRes 4444 drafts to ignored `out/alerts/` and GIF review copies to
-  `public/alerts/review/`. The render script enforces Twitch's current 25 MB
-  image upload limit; these GIFs are under 7 MB each. Review at
-  `http://localhost:5178/alert-review.html` after `npm run obs`. These are
-  review exports; Twitch upload is a separate step. Twitch currently supports
-  GIF/MP4/WebM alert media and caps images at 25 MB and videos at 100 MB:
-  https://help.twitch.tv/s/article/alerts-by-twitch-customization.
 - **Seamless loop is the invariant.** All motion is `loopSin`/`loopTri`/
   `loopBreathe` (from `theme.ts`) over the full `durationInFrames`, so frame 0
   flows into the last frame with no jump. Do NOT add entrance-once animations or

@@ -31,8 +31,6 @@
     "dev": "remotion studio",
     "obs": "vite --config preview/vite.config.ts",
     "render:all": "node render-all.mjs",
-    "alerts:prepare": "bash scripts/prepare-alert-sources.sh",
-    "alerts:render": "bash scripts/render-alerts.sh",
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
     "lint": "eslint src preview && tsc && tsc -p preview/tsconfig.json"

@@ -11,7 +11,6 @@ import { FullMoonStinger as Stinger } from "./FullMoonStinger";
 import { DeskForeground } from "./DeskForeground";
 import { CabinBackground } from "./CabinBackground";
 import { CoffeeBackground } from "./CoffeeBackground";
-import { AlertAnimation, ALERT_DURATION } from "./AlertAnimation";
 
 // Single source of truth for every scene. `component` picks the layout.
 // `width`/`height` override the default 1920×1080 for compact alpha widgets.
@@ -59,10 +58,4 @@ export const SCENES: SceneDef[] = [
   // OBS stinger: standalone shaded full moon, with no paw or legacy sweep.
   // Transparent full-frame, 60fps, plays ONCE (not a loop), and stays out of render:all.
   { id: "Stinger", label: "Stinger", component: Stinger, fps: STINGER_FPS, durationInFrames: STINGER_DURATION, props: {} },
-  // Twitch alerts reuse Nathanial's current transparent 3D animations and add
-  // event-specific motion around the existing character performance.
-  { id: "AlertFollow", label: "Alert · Follow", component: AlertAnimation, width: 480, height: 270, durationInFrames: ALERT_DURATION.follow, props: { kind: "follow" } },
-  { id: "AlertSubscribe", label: "Alert · Subscription", component: AlertAnimation, width: 480, height: 270, durationInFrames: ALERT_DURATION.subscribe, props: { kind: "subscribe" } },
-  { id: "AlertBits", label: "Alert · Bits", component: AlertAnimation, width: 480, height: 270, durationInFrames: ALERT_DURATION.bits, props: { kind: "bits" } },
-  { id: "AlertGift", label: "Alert · Gifted Sub", component: AlertAnimation, width: 480, height: 270, durationInFrames: ALERT_DURATION.gift, props: { kind: "gift" } },
 ];
