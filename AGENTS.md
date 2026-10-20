@@ -280,9 +280,10 @@ Architecture:
   its timing and soft-white color stay consistent across cards, live layouts,
   and the flexible Background composition.
 - **Twitch alerts** (`AlertAnimation.tsx`) use the current 3D wolf performances
-  from the Drive `Alerts/Exports` ProRes masters. The four one-shot variants add
-  event-specific rings, glints, Bits tokens, or celebration accents around that
-  footage; the mascot render itself is never regenerated or warped. Run
+  from the Drive `Alerts/Exports` ProRes masters. The four variants add a subtle,
+  seamless hover/breathing motion plus event-specific rings, glints, Bits tokens,
+  or celebration accents around that footage; the mascot render itself is never
+  regenerated or warped. Run
   `npm run alerts:prepare` to create ignored, 480×270 transparent PNG frame sources
   under `public/alerts/source/`, then `npm run alerts:render` to write GIF and
   ProRes 4444 drafts to ignored `out/alerts/` and GIF review copies to

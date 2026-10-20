@@ -72,11 +72,14 @@ const Star: React.FC<{ frame: number; start: number; index: number; color: strin
 
 export const AlertAnimation: React.FC<{ kind: AlertKind }> = ({ kind }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, durationInFrames } = useVideoConfig();
   const event = EVENT[kind];
   const first = burst(frame, 8, 46);
   const second = burst(frame, kind === "gift" ? 186 : 86, 46);
   const glow = 0.16 + 0.22 * Math.max(first.opacity, second.opacity);
+  const cycle = (frame / durationInFrames) * Math.PI * 2;
+  const hover = Math.sin(cycle * 2) * 3;
+  const breathe = 1 + ((1 - Math.cos(cycle * 2)) / 2) * 0.018;
   const rings = kind === "follow" ? [8, 62, 154] : kind === "gift" ? [8, 84, 186, 304] : [8, 58, 116];
   const stars = kind === "gift" ? 18 : 12;
 
@@ -85,10 +88,12 @@ export const AlertAnimation: React.FC<{ kind: AlertKind }> = ({ kind }) => {
       <AbsoluteFill style={{ background: `radial-gradient(ellipse at 50% 58%, ${event.color}${Math.round(glow * 255).toString(16).padStart(2, "0")} 0%, transparent 58%)` }} />
       {rings.map((start, index) => <Ring key={`left-${start}-${index}`} frame={frame} start={start} color={event.color} x={44} delay={index * 10} />)}
       {rings.map((start, index) => <Ring key={`right-${start}-${index}`} frame={frame} start={start + 12} color={event.color} x={436} delay={index * 10} />)}
-      <Img
-        src={staticFile(`alerts/source/${event.source}/${String(frame).padStart(4, "0")}.png`)}
-        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain" }}
-      />
+      <AbsoluteFill style={{ transform: `translateY(${hover}px) scale(${breathe})`, transformOrigin: "center 55%" }}>
+        <Img
+          src={staticFile(`alerts/source/${event.source}/${String(frame).padStart(4, "0")}.png`)}
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain" }}
+        />
+      </AbsoluteFill>
       {Array.from({ length: stars }, (_, index) => (
         <Star key={index} frame={frame} start={8 + (index % 3) * 16 + (kind === "gift" ? 180 : 0)} index={index} color={index % 4 === 0 ? "#FFFFFF" : event.color} />
       ))}
