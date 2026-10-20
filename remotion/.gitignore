@@ -6,6 +6,9 @@ dist
 # Ignore the output video from Git but not videos you import into src/.
 out
 
+# Local Twitch alert source/review renders are prepared from the approved Drive masters.
+public/alerts/
+
 # Local-only stinger reference media (mov/wav) — keep the folder, ignore contents.
 reference/*
 !reference/.gitkeep

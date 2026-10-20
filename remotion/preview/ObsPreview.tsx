@@ -30,6 +30,11 @@ const PREVIEW_GROUPS: PreviewGroup[] = [
     sceneIds: ["Background", "Socials", "Countdown", "Countdown10", "LoadingBarks", "Stinger"],
   },
   {
+    title: "Twitch alerts",
+    description: "Four one-shot alerts built around the current 3D wolf animations",
+    sceneIds: ["AlertFollow", "AlertSubscribe", "AlertBits", "AlertGift"],
+  },
+  {
     title: "Stinger concepts",
     description: "Alternative visual directions; the full moon is the main Stinger",
     sceneIds: ["StingerConceptBoard"],
@@ -61,9 +66,9 @@ const GROUPS_WITH_FALLBACK: PreviewGroup[] = UNGROUPED_SCENE_IDS.length
     ]
   : PREVIEW_GROUPS;
 
-const NO_LOOP = new Set(["Countdown", "Countdown10", "Stinger", "StingerConceptBoard"]);
+const NO_LOOP = new Set(["Countdown", "Countdown10", "Stinger", "StingerConceptBoard", "AlertFollow", "AlertSubscribe", "AlertBits", "AlertGift"]);
 const AUDIO_PREVIEW_SCENES = new Set(["Stinger"]);
-const ALPHA_SCENES = new Set(["Socials", "Countdown", "Countdown10", "LoadingBarks", "Stinger", "DeskForeground"]);
+const ALPHA_SCENES = new Set(["Socials", "Countdown", "Countdown10", "LoadingBarks", "Stinger", "DeskForeground", "AlertFollow", "AlertSubscribe", "AlertBits", "AlertGift"]);
 type StageBackground = "forest" | "checker" | "midnight";
 
 const formatTime = (frame: number, fps: number) => {
