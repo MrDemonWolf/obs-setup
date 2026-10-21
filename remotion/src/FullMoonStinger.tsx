@@ -72,7 +72,6 @@ export const FullMoonStinger: React.FC = () => {
   const irisIn = interpolate(seconds, [0.1, SKY_IN_END], [POCKET.r + 60, IRIS_FULL], { ...clamp, easing: easeInOut });
   const irisOut = interpolate(seconds, [HOLD_END, SKY_OUT_END], [IRIS_FULL, POCKET.r + 70], { ...clamp, easing: easeInOut });
   const iris = seconds < HOLD_END ? irisIn : irisOut;
-  const mask = `radial-gradient(circle at ${x}px ${y}px, #000 ${iris}px, transparent ${iris + IRIS_FEATHER}px)`;
   const pushIn = interpolate(seconds, [0, lastSecond], [1, 1.035], { ...clamp, easing: Easing.inOut(Easing.sin) });
 
   // --- whoosh impact: the halo swells into the cut, never a flash --------------
@@ -87,29 +86,43 @@ export const FullMoonStinger: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ overflow: "hidden" }}>
-      <AbsoluteFill style={{
-        opacity: skyOpacity,
-        WebkitMaskImage: mask,
-        maskImage: mask,
-      }}>
-        <AbsoluteFill style={{
-          transform: `scale(${pushIn})`,
-          background: "radial-gradient(ellipse at 50% 45%, #0E1E36 0%, #081430 45%, #03070F 100%)",
-        }}>
-          <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ position: "absolute" }}>
-            {STARS.map((st, i) => (
-              <g key={i}>
-                {st.glow && <circle cx={st.x} cy={st.y} r={st.r * 3.2} fill="#CFE3F5" opacity={0.1} />}
-                <circle cx={st.x} cy={st.y} r={st.r} fill="#E8F1FA" opacity={st.o} />
-              </g>
-            ))}
-          </svg>
-        </AbsoluteFill>
-        {/* moonlight follows the moon so the sky lifts near it and stays near-black at the corners */}
-        <AbsoluteFill style={{
-          background: `radial-gradient(circle at ${x}px ${y}px, rgba(120,160,200,${moonlight}) 0px, rgba(70,105,150,${moonlight * 0.45}) ${radius * 1.7}px, rgba(70,105,150,0) ${radius * 3.4}px)`,
-        }} />
-      </AbsoluteFill>
+      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ position: "absolute", opacity: skyOpacity }}>
+        <defs>
+          <radialGradient id="stinger-iris" gradientUnits="userSpaceOnUse" cx={x} cy={y} r={iris + IRIS_FEATHER}>
+            <stop offset="0" stopColor="white" />
+            <stop offset={`${(iris / (iris + IRIS_FEATHER)) * 100}%`} stopColor="white" />
+            <stop offset="100%" stopColor="white" stopOpacity="0" />
+          </radialGradient>
+          <mask id="stinger-iris-mask" maskUnits="userSpaceOnUse" x="0" y="0" width={width} height={height}>
+            <rect width={width} height={height} fill="url(#stinger-iris)" />
+          </mask>
+          <radialGradient id="stinger-night-sky" cx="50%" cy="45%" r="75%">
+            <stop offset="0%" stopColor="#0E1E36" />
+            <stop offset="45%" stopColor="#081430" />
+            <stop offset="100%" stopColor="#03070F" />
+          </radialGradient>
+          <radialGradient id="stinger-moonlight" gradientUnits="userSpaceOnUse" cx={x} cy={y} r={radius * 3.4}>
+            <stop offset="0%" stopColor="#78A0C8" stopOpacity={moonlight} />
+            <stop offset="50%" stopColor="#466996" stopOpacity={moonlight * 0.45} />
+            <stop offset="100%" stopColor="#466996" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <g mask="url(#stinger-iris-mask)">
+          <g transform={`translate(${width / 2} ${height / 2}) scale(${pushIn}) translate(${-width / 2} ${-height / 2})`}>
+            <rect width={width} height={height} fill="url(#stinger-night-sky)" />
+            <g>
+              {STARS.map((st, i) => (
+                <g key={i}>
+                  {st.glow && <circle cx={st.x} cy={st.y} r={st.r * 3.2} fill="#CFE3F5" opacity={0.1} />}
+                  <circle cx={st.x} cy={st.y} r={st.r} fill="#E8F1FA" opacity={st.o} />
+                </g>
+              ))}
+            </g>
+          </g>
+          {/* moonlight follows the moon so the sky lifts near it and stays near-black at the corners */}
+          <rect width={width} height={height} fill="url(#stinger-moonlight)" />
+        </g>
+      </svg>
       <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ position: "absolute", opacity: moonOpacity }}>
         <defs>
           <radialGradient id="lunar-surface" cx="34%" cy="28%">
