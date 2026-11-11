@@ -25,6 +25,14 @@ make release  # render assets + package master and separate Scenes, Stinger, and
 make          # list targets
 ```
 
+`./scripts/package-moblin.sh` builds a separate iPad Moblin ZIP in Downloads:
+six PNG stills for Starting Soon, Live, Just Chatting, Co-working Solo, BRB and Ending, plus
+instructions for camera-based layouts. It does not edit OBS or
+Moblin settings; the ZIP must still be tested on the iPad. Pass an absolute ZIP
+path to choose a different output. Existing output is never overwritten.
+The three Live stills come from the existing Drive Backgrounds videos; use
+`MOBLIN_BACKGROUND_DIR` to point to another folder with those three MP4s.
+
 - **Tests:** run `python3 -m unittest discover -s tests -v` for sanitizer,
   stinger timing, and archive-content checks. `scripts/validate_stinger.py`
   checks the WAV peak and, when given rendered files, the exact embedded PCM

@@ -19,8 +19,8 @@ bounds, and the Stinger is a one-shot full-frame scene transition.
   stars, moonlight, right-facing white paw trail, and logo-free glass title
   chip. Starting Soon and BRB also have a matching chat frame for an OBS browser
   source. Edit titles / status text in `src/scenes.ts`.
-- **Just Chatting** — `JustChatting`: forest background + a 16:9 cam frame
-  (1216×684 at 64,198) + a tall chat frame (512×684 at 1344,198). Drop your
+- **Just Chatting** — `JustChatting`: cabin background + a 16:9 cam frame
+  (1120×630 at 96,190) + a labeled chat panel (528×650 at 1328,190). Drop your
   real cam + chat sources over the frames. `JustChattingVtuber` is the same
   scene minus the cam frame (VTuber model goes full-screen, chat frame stays).
 - **Co-Working** — `CoworkingSolo`: one 1400×788 hero cam at 64,136.
